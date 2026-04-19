@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Dev tools (local only)
+temporary screenshots/
+screenshot.mjs
+serve.mjs
+
+# Claude dev files
+.claude/
+CLAUDE.md
+DESIGN.md
+prompt.txt
+brand-guidelines.png
+index-copy.html
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
