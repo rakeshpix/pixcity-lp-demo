@@ -530,103 +530,21 @@
         background: rgba(255, 255, 255, 0.6);
       }
 
-      /* ── REVÊTEMENTS ── */
-      #revetements {
-        background: var(--s);
-        padding: 9rem 7%;
-        position: relative;
-        overflow: hidden;
-      }
-      #revetements::before {
-        content: "REVÊTEMENTS";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-family: "Epilogue", sans-serif;
-        font-size: 16vw;
-        font-weight: 900;
-        color: rgba(255, 255, 255, 0.025);
-        letter-spacing: -0.05em;
-        pointer-events: none;
-        white-space: nowrap;
-      }
-      .rev-in {
-        max-width: 1240px;
-        margin: 0 auto;
-        position: relative;
-        z-index: 1;
-      }
-      .rev-tag {
-        color: var(--pl);
-      }
-      .rev-tag::before {
-        background: var(--pl) !important;
-      }
-      .rev-hd-title {
-        font-family: "Epilogue", sans-serif;
-        font-size: clamp(1.9rem, 3.2vw, 2.75rem);
-        font-weight: 800;
-        letter-spacing: -0.025em;
-        color: #fff;
-        margin-bottom: 3rem;
-      }
-      .rev-g {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1px;
-        background: rgba(255, 255, 255, 0.07);
-        border-radius: 8px;
-        overflow: hidden;
-      }
-      .rev-c {
-        background: rgba(255, 255, 255, 0.03);
-        padding: 2.5rem 2rem;
-        transition: background 0.3s;
-      }
-      .rev-c:hover {
-        background: rgba(255, 255, 255, 0.07);
-      }
-      .rev-tier {
-        font-family: "Inter", sans-serif;
-        font-size: 0.5625rem;
-        font-weight: 600;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: var(--pl);
-        margin-bottom: 1.25rem;
-      }
-      .rev-name {
-        font-family: "Epilogue", sans-serif;
-        font-size: 1.3125rem;
-        font-weight: 700;
-        color: #fff;
-        letter-spacing: -0.01em;
-        line-height: 1.2;
-        margin-bottom: 0.75rem;
-      }
-      .rev-desc {
-        font-size: 0.875rem;
-        line-height: 1.65;
-        color: rgba(255, 255, 255, 0.52);
-        margin-bottom: 1.5rem;
-      }
-      .rev-pill {
-        display: inline-block;
-        padding: 0.25rem 0.625rem;
-        background: rgba(18, 159, 181, 0.15);
-        border-radius: 3px;
-        font-family: "Inter", sans-serif;
-        font-size: 0.6875rem;
-        font-weight: 500;
-        color: var(--pl);
-        letter-spacing: 0.04em;
-      }
-
       /* ── GALLERY ── */
       #gallery {
-        background: var(--sur);
+        background: var(--surLL);
         padding: 9rem 7%;
+        position: relative;
+        overflow: hidden;
+      }
+      #gallery::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--grad);
       }
       .gal-in {
         max-width: 1240px;
@@ -670,77 +588,6 @@
       }
       .gal-item:hover .gal-ov {
         opacity: 1;
-      }
-
-      /* ── TECH ── */
-      #tech {
-        background: var(--surL);
-        padding: 9rem 7%;
-      }
-      .tech-in {
-        max-width: 1240px;
-        margin: 0 auto;
-      }
-      .tech-g {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.25rem;
-        margin-top: 3rem;
-      }
-      .tech-c {
-        background: var(--surLL);
-        border-radius: 8px;
-        padding: 2.25rem;
-        display: flex;
-        gap: 1.5rem;
-        align-items: flex-start;
-        min-width: 0;
-        overflow: hidden;
-        transition:
-          transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
-          box-shadow 0.28s ease;
-        box-shadow: 0 2px 8px rgba(25, 28, 29, 0.05);
-      }
-      .tech-c:hover {
-        transform: translateY(-4px);
-        box-shadow:
-          0 14px 36px rgba(0, 104, 119, 0.09),
-          0 4px 12px rgba(25, 28, 29, 0.05);
-      }
-      .tech-ico {
-        width: 44px;
-        height: 44px;
-        background: var(--grad);
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        color: #fff;
-      }
-      .tech-name {
-        font-family: "Epilogue", sans-serif;
-        font-size: 1.125rem;
-        font-weight: 700;
-        letter-spacing: -0.01em;
-        color: var(--s);
-        margin-bottom: 0.5rem;
-      }
-      .tech-c > div {
-        min-width: 0;
-      }
-      .tech-desc {
-        font-size: 0.9375rem;
-        line-height: 1.65;
-        color: var(--t);
-      }
-      .tech-hi {
-        font-family: "Inter", sans-serif;
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: var(--p);
-        margin-top: 0.75rem;
-        letter-spacing: 0.04em;
       }
 
       /* ── FORM ── */
@@ -900,57 +747,6 @@
         color: var(--pl);
         margin-bottom: 1.75rem;
       }
-      .sr-row {
-        display: flex;
-        align-items: flex-start;
-        gap: 1rem;
-        margin-bottom: 1.25rem;
-      }
-      .sr-ico {
-        color: var(--pl);
-        flex-shrink: 0;
-        margin-top: 2px;
-      }
-      .sr-lbl {
-        font-size: 0.9375rem;
-        line-height: 1.55;
-        color: rgba(255, 255, 255, 0.82);
-      }
-      .sr-sub {
-        font-family: "Inter", sans-serif;
-        font-size: 0.8125rem;
-        color: rgba(255, 255, 255, 0.4);
-        margin-top: 2px;
-      }
-      .btn-outline {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.625rem;
-        padding: 0.875rem 2rem;
-        background: transparent;
-        color: #fff;
-        font-family: "Manrope", sans-serif;
-        font-size: 0.875rem;
-        font-weight: 600;
-        border: 1px solid rgba(255, 255, 255, 0.28);
-        border-radius: 6px;
-        text-decoration: none;
-        transition:
-          background 0.2s,
-          border-color 0.2s,
-          transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
-        margin-top: 1.5rem;
-        display: inline-flex;
-      }
-      .btn-outline:hover {
-        background: rgba(255, 255, 255, 0.08);
-        border-color: rgba(255, 255, 255, 0.5);
-        transform: translateY(-2px);
-      }
-      .btn-outline:active {
-        transform: translateY(0);
-      }
-
       /* ── FOOTER ── */
       footer {
         background: #0d1314;
@@ -1031,13 +827,363 @@
         }
       }
 
+      /* ── ACHIEVEMENTS ── */
+      #achievements {
+        background: var(--surLL);
+        padding: 9rem 7%;
+        position: relative;
+        overflow: hidden;
+      }
+      #achievements::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--grad);
+      }
+      .ach-in {
+        max-width: 1240px;
+        margin: 0 auto;
+      }
+      .ach-hd {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 2rem;
+        margin-bottom: 5rem;
+      }
+      .ach-hd-title {
+        font-family: "Epilogue", sans-serif;
+        font-size: clamp(1.9rem, 3.2vw, 2.75rem);
+        font-weight: 800;
+        line-height: 1.1;
+        letter-spacing: -0.025em;
+        color: var(--s);
+      }
+      .ach-hd-desc {
+        font-size: 0.9375rem;
+        line-height: 1.7;
+        color: var(--t);
+        max-width: 340px;
+        text-align: right;
+      }
+      .ach-g {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0;
+      }
+      .ach-item {
+        padding: 0 4rem 0 0;
+        position: relative;
+      }
+      .ach-item + .ach-item {
+        padding: 0 4rem 0 4rem;
+        box-shadow: inset 1px 0 0 rgba(25, 28, 29, 0.07);
+      }
+      .ach-item:last-child {
+        padding-right: 0;
+      }
+      .ach-accent {
+        width: 36px;
+        height: 3px;
+        background: var(--grad);
+        border-radius: 2px;
+        margin-bottom: 2rem;
+      }
+      .ach-num {
+        font-family: "Epilogue", sans-serif;
+        font-size: clamp(4.5rem, 9vw, 8.5rem);
+        font-weight: 900;
+        line-height: 0.85;
+        letter-spacing: -0.04em;
+        background: linear-gradient(135deg, #006877 0%, #129fb5 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+        display: block;
+      }
+      .ach-num-unit {
+        font-size: 0.32em;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        vertical-align: 0.15em;
+      }
+      .ach-unit {
+        font-family: "Inter", sans-serif;
+        font-size: 0.5875rem;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--p);
+        display: block;
+        margin-bottom: 2rem;
+      }
+      .ach-label {
+        font-family: "Epilogue", sans-serif;
+        font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        color: var(--s);
+        margin-bottom: 1rem;
+      }
+      .ach-desc {
+        font-size: 0.9375rem;
+        line-height: 1.75;
+        color: var(--t);
+      }
+      @media (max-width: 1024px) {
+        #achievements {
+          padding: 2.75rem 5%;
+        }
+        .ach-hd {
+          flex-direction: column;
+          align-items: flex-start;
+          margin-bottom: 3rem;
+        }
+        .ach-hd-desc {
+          text-align: left;
+        }
+        .ach-g {
+          grid-template-columns: 1fr;
+          gap: 3rem;
+        }
+        .ach-item,
+        .ach-item + .ach-item {
+          padding: 0;
+          box-shadow: none;
+        }
+        .ach-item + .ach-item {
+          padding-top: 3rem;
+          box-shadow: inset 0 1px 0 rgba(25, 28, 29, 0.07);
+        }
+      }
+      @media (max-width: 768px) {
+        #achievements {
+          padding: 1.5rem 5%;
+        }
+        .ach-hd {
+          margin-bottom: 2rem;
+        }
+        .ach-g {
+          gap: 2rem;
+        }
+        .ach-item + .ach-item {
+          padding-top: 2rem;
+        }
+      }
+
+      /* ── REVIEWS ── */
+      #reviews {
+        background: #0d1314;
+        padding: 9rem 7%;
+        position: relative;
+        overflow: hidden;
+      }
+      #reviews::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 900px;
+        height: 450px;
+        background: radial-gradient(
+          ellipse,
+          rgba(18, 159, 181, 0.07) 0%,
+          transparent 65%
+        );
+        pointer-events: none;
+        z-index: 0;
+      }
+      .reviews-in {
+        max-width: 1240px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+      }
+      .reviews-hd {
+        margin-bottom: 3.5rem;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 2rem;
+      }
+      .reviews-title {
+        font-family: "Epilogue", sans-serif;
+        font-size: clamp(1.9rem, 3.2vw, 2.75rem);
+        font-weight: 800;
+        line-height: 1.1;
+        letter-spacing: -0.025em;
+        color: #fff;
+      }
+      .reviews-meta {
+        text-align: right;
+        flex-shrink: 0;
+      }
+      .reviews-overall {
+        font-family: "Epilogue", sans-serif;
+        font-size: 2.5rem;
+        font-weight: 900;
+        line-height: 1;
+        letter-spacing: -0.03em;
+        color: var(--pl);
+      }
+      .reviews-overall-stars {
+        display: flex;
+        gap: 3px;
+        justify-content: flex-end;
+        margin: 0.375rem 0 0.25rem;
+        color: #f5b400;
+      }
+      .reviews-overall-sub {
+        font-family: "Inter", sans-serif;
+        font-size: 0.5625rem;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.32);
+      }
+      .reviews-g {
+        display: grid;
+        grid-template-columns: 1.15fr 0.92fr 0.92fr;
+        gap: 1.25rem;
+        align-items: start;
+      }
+      .review-card {
+        background: rgba(255, 255, 255, 0.034);
+        border-radius: 8px;
+        padding: 2.5rem 2.25rem 2rem;
+        position: relative;
+        overflow: hidden;
+        transition:
+          transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+          background 0.3s ease;
+      }
+      .review-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--grad);
+      }
+      .review-card:hover {
+        background: rgba(255, 255, 255, 0.065);
+        transform: translateY(-5px);
+      }
+      .review-card:nth-child(2) {
+        margin-top: 1.75rem;
+      }
+      .review-card:nth-child(3) {
+        margin-top: 3.25rem;
+      }
+      .review-q {
+        display: block;
+        font-family: "Epilogue", sans-serif;
+        font-size: 5rem;
+        line-height: 0.5;
+        color: var(--pl);
+        opacity: 0.15;
+        margin-bottom: 1.5rem;
+        letter-spacing: -0.02em;
+        user-select: none;
+      }
+      .review-stars {
+        display: flex;
+        gap: 3px;
+        margin-bottom: 1.375rem;
+        color: #f5b400;
+      }
+      .review-text {
+        font-family: "Manrope", sans-serif;
+        font-size: 0.9375rem;
+        line-height: 1.78;
+        color: rgba(255, 255, 255, 0.62);
+        margin-bottom: 1.875rem;
+      }
+      .review-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding-top: 1.25rem;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+      }
+      .review-name {
+        font-family: "Epilogue", sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: -0.015em;
+      }
+      .review-verified {
+        font-family: "Inter", sans-serif;
+        font-size: 0.6rem;
+        font-weight: 500;
+        color: var(--pl);
+        letter-spacing: 0.06em;
+        margin-top: 3px;
+        opacity: 0.85;
+      }
+      .review-google {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        flex-shrink: 0;
+        opacity: 0.55;
+      }
+      .review-google-txt {
+        font-family: "Inter", sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.6);
+        letter-spacing: 0.04em;
+      }
+      @media (max-width: 1024px) {
+        #reviews {
+          padding: 2.75rem 5%;
+        }
+        .reviews-hd {
+          flex-direction: column;
+          align-items: flex-start;
+          margin-bottom: 2rem;
+        }
+        .reviews-meta {
+          text-align: left;
+        }
+        .reviews-overall-stars {
+          justify-content: flex-start;
+        }
+        .reviews-g {
+          grid-template-columns: 1fr;
+        }
+        .review-card:nth-child(2),
+        .review-card:nth-child(3) {
+          margin-top: 0;
+        }
+      }
+      @media (max-width: 768px) {
+        #reviews {
+          padding: 1.5rem 5%;
+        }
+        .reviews-hd {
+          margin-bottom: 1.25rem;
+        }
+        .review-card {
+          padding: 1.5rem 1.25rem 1.25rem;
+        }
+      }
+
       /* ── RESPONSIVE ── */
       @media (max-width: 1024px) {
         #about,
         #services,
-        #revetements,
-        #gallery,
-        #tech {
+        #gallery {
           padding: 2.75rem 5%;
         }
         #stats {
@@ -1050,16 +1196,12 @@
           margin-bottom: 1.75rem;
         }
         .svc-g,
-        .tech-g,
-        .gal-g,
-        .rev-g {
+        .gal-g {
           margin-top: 1.25rem;
         }
         .about-in {
-          gap: 2rem;
-        }
-        .about-in {
           grid-template-columns: 1fr;
+          gap: 2rem;
         }
         .about-img-w {
           display: none;
@@ -1074,12 +1216,6 @@
         .svc-g .svc-card:nth-child(5) {
           grid-column: span 2;
         }
-        .rev-g {
-          grid-template-columns: repeat(2, 1fr);
-        }
-        .tech-g {
-          grid-template-columns: 1fr;
-        }
         .cta-in {
           grid-template-columns: 1fr;
           gap: 3rem;
@@ -1087,45 +1223,80 @@
         .stats-g {
           grid-template-columns: repeat(3, 1fr);
         }
-        .stats-g .stat {
-          border-right: 1px solid rgba(255, 255, 255, 0.07);
-          border-bottom: none;
-        }
         .stats-g .stat:nth-child(3),
         .stats-g .stat:last-child {
           border-right: none;
         }
-        .stats-g .stat:nth-child(4) {
-          border-top: 1px solid rgba(255, 255, 255, 0.07);
-        }
+        .stats-g .stat:nth-child(4),
         .stats-g .stat:nth-child(5) {
           border-top: 1px solid rgba(255, 255, 255, 0.07);
         }
       }
       @media (max-width: 768px) {
+        #about,
+        #services,
+        #gallery {
+          padding: 1.5rem 5%;
+        }
+        #stats {
+          padding: 1.25rem 5%;
+        }
+        #cta {
+          padding: 1.5rem 5%;
+        }
+        #hero {
+          min-height: 480px;
+        }
+        .sec-hd {
+          flex-direction: column;
+          align-items: flex-start;
+          margin-bottom: 1rem;
+        }
+        .sec-desc {
+          text-align: left;
+          max-width: 100%;
+        }
         .svc-g {
           grid-template-columns: 1fr;
+          margin-top: 0.75rem;
+          gap: 0.75rem;
         }
         .svc-g .svc-card,
         .svc-g .svc-card:nth-child(4),
         .svc-g .svc-card:nth-child(5) {
           grid-column: span 1;
         }
-        .rev-g {
-          grid-template-columns: repeat(2, 1fr);
+        .svc-card {
+          padding: 1rem 1.125rem;
+        }
+        .svc-ico {
+          margin-bottom: 1rem;
+          width: 38px;
+          height: 38px;
+        }
+        .svc-name {
+          margin-bottom: 0.375rem;
+        }
+        .svc-list {
+          margin-top: 0.625rem;
+        }
+        .svc-list li {
+          padding: 0.25rem 0;
         }
         .gal-g {
           grid-template-columns: 1fr 1fr;
           grid-template-rows: auto;
+          margin-top: 0.75rem;
+          gap: 5px;
         }
         .gal-item:first-child {
           grid-column: span 2;
         }
         .gal-g .gal-item {
-          height: 220px;
+          height: 140px;
         }
         .gal-g .gal-item:first-child {
-          height: 280px;
+          height: 180px;
         }
         .stats-g {
           grid-template-columns: repeat(2, 1fr);
@@ -1138,65 +1309,16 @@
         .stats-g .stat:nth-child(even) {
           border-right: none;
         }
-        .stats-g .stat:nth-child(3),
-        .stats-g .stat:nth-child(4) {
-          border-top: none;
-        }
         .stats-g .stat:last-child {
           grid-column: span 2;
           border-right: none;
           border-bottom: none;
         }
-        .sec-hd {
-          flex-direction: column;
-          align-items: flex-start;
-        }
-        .sec-desc {
-          text-align: left;
-          max-width: 100%;
-        }
-        .cf-row {
-          grid-template-columns: 1fr;
-        }
-        #about,
-        #services,
-        #revetements,
-        #gallery,
-        #tech {
-          padding: 1.5rem 5%;
-        }
-        #stats {
-          padding: 1.25rem 5%;
-        }
-        #cta {
-          padding: 1.5rem 5%;
-        }
-        .sec-hd {
-          margin-bottom: 1rem;
-        }
-        .svc-g,
-        .tech-g,
-        .rev-g {
-          margin-top: 0.75rem;
-          gap: 0.75rem;
-        }
-        .gal-g {
-          margin-top: 0.75rem;
-          gap: 5px;
+        .stat {
+          padding: 1rem 0.875rem;
         }
         .about-in {
           gap: 1.5rem;
-        }
-        .svc-card,
-        .rev-c {
-          padding: 1rem 1.125rem;
-        }
-        .tech-c {
-          padding: 1rem 1.125rem;
-          gap: 0.875rem;
-        }
-        .stat {
-          padding: 1rem 0.875rem;
         }
         .about-h {
           margin-bottom: 0.75rem;
@@ -1206,28 +1328,8 @@
           margin-bottom: 0.5rem;
           font-size: 0.9375rem;
         }
-        .svc-list {
-          margin-top: 0.625rem;
-        }
-        .svc-list li {
-          padding: 0.25rem 0;
-        }
-        .rev-hd-title {
-          margin-bottom: 1.25rem;
-        }
-        .tech-g {
-          margin-top: 0.75rem;
-          gap: 0.75rem;
-          grid-template-columns: repeat(2, 1fr);
-        }
-        .gal-g .gal-item {
-          height: 140px;
-        }
-        .gal-g .gal-item:first-child {
-          height: 180px;
-        }
-        #hero {
-          min-height: 480px;
+        .tag {
+          margin-bottom: 1rem;
         }
         .cta-in {
           gap: 1.5rem;
@@ -1238,37 +1340,11 @@
         .cf {
           gap: 0.625rem;
         }
-        .sr-row {
-          margin-bottom: 0.875rem;
+        .cf-row {
+          grid-template-columns: 1fr;
         }
         .sr-title {
           margin-bottom: 1.25rem;
-        }
-        .tag {
-          margin-bottom: 1rem;
-        }
-        .svc-ico {
-          margin-bottom: 1rem;
-          width: 38px;
-          height: 38px;
-        }
-        .svc-name {
-          margin-bottom: 0.375rem;
-        }
-        .rev-tier {
-          margin-bottom: 0.875rem;
-        }
-        .rev-name {
-          margin-bottom: 0.5rem;
-        }
-        .rev-desc {
-          margin-bottom: 1rem;
-        }
-        .tech-name {
-          margin-bottom: 0.375rem;
-        }
-        .tech-hi {
-          margin-top: 0.5rem;
         }
       }
     </style>
@@ -1397,252 +1473,6 @@
       </div>
     </section>
 
-    <!-- ═══════════════════ SERVICES ═══════════════════ -->
-    <section id="services">
-      <div class="sec-hd rv">
-        <div>
-          <p class="tag" style="margin-bottom: 0.875rem">Nos expertises</p>
-          <h2 class="sec-title">De la structure<br />à la mise en eau</h2>
-        </div>
-        <p class="sec-desc">
-          Une maîtrise complète de chaque corps de métier pour une piscine
-          parfaite, sans compromis.
-        </p>
-      </div>
-      <div class="svc-g">
-        <!-- Structure -->
-        <div class="svc-card rv d1">
-          <div class="svc-ico">
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.75"
-              stroke-linecap="round"
-              stroke-linejoin="round">
-              <rect x="2" y="3" width="20" height="14" rx="2" />
-              <path d="M8 21h8M12 17v4" />
-            </svg>
-          </div>
-          <h3 class="svc-name">Structure & Fondations</h3>
-          <p class="svc-desc">
-            L'assurance d'une piscine bien conçue. Béton armé fibré, armature
-            périphérique et PVC rigide 16 bars pour une durabilité exemplaire.
-          </p>
-          <ul class="svc-list">
-            <li>Radier béton armé fibré</li>
-            <li>PVC rigide 16 bars (vs souple 3,5 bars)</li>
-            <li>Parois isolées : jusqu'à +4°C de confort</li>
-          </ul>
-        </div>
-        <!-- Revêtements -->
-        <div class="svc-card rv d2">
-          <div class="svc-ico">
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.75"
-              stroke-linecap="round"
-              stroke-linejoin="round">
-              <path d="M12 2L2 7l10 5 10-5-10-5z" />
-              <path d="M2 17l10 5 10-5" />
-              <path d="M2 12l10 5 10-5" />
-            </svg>
-          </div>
-          <h3 class="svc-name">Revêtements & Finitions</h3>
-          <p class="svc-desc">
-            Du liner classique à la mosaïque d'exception, nous maîtrisons chaque
-            revêtement pour sublimer votre bassin.
-          </p>
-          <ul class="svc-list">
-            <li>Liner 75/100 — 10 à 15 ans</li>
-            <li>PVC Armé 150/100 — ~20 ans</li>
-            <li>Carrelage & Mosaïque — double décennale</li>
-          </ul>
-        </div>
-        <!-- Filtration — Featured -->
-        <div class="svc-card feat rv d3">
-          <div class="svc-ico">
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.75"
-              stroke-linecap="round"
-              stroke-linejoin="round">
-              <path d="M3 6h18M7 12h10M11 18h2" />
-            </svg>
-          </div>
-          <h3 class="svc-name">Filtration & Traitement</h3>
-          <p class="svc-desc">
-            Une qualité d'eau irréprochable. Système évolutif pompe + filtre à
-            sable, compatible chauffage et traitement automatisé.
-          </p>
-          <ul class="svc-list">
-            <li>Pompe d'aspiration haute performance</li>
-            <li>Filtre à sable ou verre concassé</li>
-            <li>Système évolutif et modulable</li>
-          </ul>
-        </div>
-        <!-- Fermeture -->
-        <div class="svc-card rv d1">
-          <div class="svc-ico">
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.75"
-              stroke-linecap="round"
-              stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>
-          </div>
-          <h3 class="svc-name">Fermeture & Sécurité</h3>
-          <p class="svc-desc">
-            Discrétion, sécurité, performance. Volets immergés et fonds mobiles
-            qui s'intègrent parfaitement à votre décor.
-          </p>
-          <ul class="svc-list">
-            <li>Volet hors sol Dream — commande à clé</li>
-            <li>Volet immergé Dive Système — norme NF P 308</li>
-            <li>Fond mobile connecté — usage multi-fonctions</li>
-          </ul>
-        </div>
-        <!-- Options -->
-        <div class="svc-card rv d2">
-          <div class="svc-ico">
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.75"
-              stroke-linecap="round"
-              stroke-linejoin="round">
-              <circle cx="12" cy="12" r="3" />
-              <path
-                d="M19.07 4.93A10 10 0 1 1 4.93 19.07 10 10 0 0 1 19.07 4.93z" />
-              <path d="M12 2v2M12 20v2M2 12h2M20 12h2" />
-            </svg>
-          </div>
-          <h3 class="svc-name">Options Connectées</h3>
-          <p class="svc-desc">
-            Votre piscine, intelligente. Automatisation, économies d'énergie et
-            contrôle à distance pour une expérience sans effort.
-          </p>
-          <ul class="svc-list">
-            <li>AquaRite+ — jusqu'à 7 équipements connectés</li>
-            <li>PoolCop Evolution — traitement autonome</li>
-            <li>Pompes à vitesses variables — économies d'énergie</li>
-          </ul>
-        </div>
-      </div>
-      <div
-        style="max-width: 1240px; margin: 2rem auto 0; text-align: center"
-        class="rv">
-        <a href="#cta" class="btn-p">
-          Demander un devis sur-mesure
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </a>
-      </div>
-    </section>
-
-    <!-- ═══════════════════ REVÊTEMENTS ═══════════════════ -->
-    <section id="revetements">
-      <div class="rev-in">
-        <div style="margin-bottom: 3rem">
-          <p class="tag rev-tag rv">Revêtements disponibles</p>
-          <h2 class="rev-hd-title rv d1">Choisissez votre finition</h2>
-        </div>
-        <div class="rev-g">
-          <div class="rev-c rv d1">
-            <p class="rev-tier">Classique</p>
-            <h3 class="rev-name">Liner 75/100</h3>
-            <p class="rev-desc">
-              Le revêtement classique des piscines enterrées. Soudé en usine,
-              grande palette de coloris, parfaitement adapté à toutes les
-              formes.
-            </p>
-            <span class="rev-pill">Durée 10–15 ans</span>
-          </div>
-          <div class="rev-c rv d2">
-            <p class="rev-tier">Premium</p>
-            <h3 class="rev-name">PVC Armé 150/100</h3>
-            <p class="rev-desc">
-              Revêtement phare pour une garantie d'étanchéité optimale. Armature
-              polyester, 2× plus résistant que le liner, traitement anti-algues
-              et anti-UV.
-            </p>
-            <span class="rev-pill">Durée ~20 ans</span>
-          </div>
-          <div class="rev-c rv d3">
-            <p class="rev-tier">Prestige</p>
-            <h3 class="rev-name">PVC Armé Sensitive 3D</h3>
-            <p class="rev-desc">
-              Membrane texturée reproduisant l'effet des matériaux naturels.
-              Double vernis UV, structure en relief, esthétique céramique ou
-              mosaïque.
-            </p>
-            <span class="rev-pill">Effet naturel 180/100</span>
-          </div>
-          <div class="rev-c rv d4">
-            <p class="rev-tier">Exception</p>
-            <h3 class="rev-name">Carrelage & Mosaïque</h3>
-            <p class="rev-desc">
-              L'élément le plus esthétique pour une piscine. Membrane
-              intermédiaire étanche, résistance exceptionnelle, entretien
-              facile, double garantie décennale.
-            </p>
-            <span class="rev-pill">Double garantie décennale</span>
-          </div>
-        </div>
-      </div>
-      <div
-        style="
-          max-width: 1240px;
-          margin: 2rem auto 0;
-          text-align: center;
-          position: relative;
-          z-index: 1;
-        "
-        class="rv">
-        <a href="#cta" class="btn-p">
-          Obtenir un conseil finition
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </a>
-      </div>
-    </section>
-
     <!-- ═══════════════════ GALLERY ═══════════════════ -->
     <section id="gallery">
       <div class="gal-in">
@@ -1708,126 +1538,382 @@
       </div>
     </section>
 
-    <!-- ═══════════════════ TECH / OPTIONS ═══════════════════ -->
-    <section id="tech">
-      <div class="tech-in">
-        <div class="sec-hd rv">
+    <!-- ═══════════════════ ACHIEVEMENTS ═══════════════════ -->
+    <section id="achievements">
+      <div class="ach-in">
+        <div class="ach-hd rv">
           <div>
-            <p class="tag" style="margin-bottom: 0.875rem">Technologies</p>
-            <h2 class="sec-title">Une piscine<br />intelligente</h2>
+            <p class="tag" style="margin-bottom: 1rem">Nos engagements</p>
+            <h2 class="ach-hd-title">L'excellence<br />en chiffres</h2>
           </div>
-          <p class="sec-desc">
-            Les meilleurs équipements pour votre confort, vos économies et votre
-            tranquillité d'esprit.
+          <p class="ach-hd-desc">
+            Vingt ans de terrain, des centaines de familles satisfaites et un
+            délai de livraison que peu de piscinistes peuvent tenir.
           </p>
         </div>
-        <div class="tech-g">
-          <div class="tech-c rv d1">
-            <div class="tech-ico">
+        <div class="ach-g">
+          <!-- 135 réalisations -->
+          <div class="ach-item rv d1">
+            <div class="ach-accent"></div>
+            <span class="ach-num">135</span>
+            <span class="ach-unit">réalisations · depuis 9 ans</span>
+            <h3 class="ach-label">Chaque bassin,<br />une œuvre sur-mesure</h3>
+            <p class="ach-desc">
+              Du bassin traditionnel à la piscine à débordement d'exception —
+              chaque projet est traité avec la même exigence, de la conception à
+              la livraison clés en main.
+            </p>
+          </div>
+
+          <!-- 20 ans d'expérience -->
+          <div class="ach-item rv d2">
+            <div class="ach-accent"></div>
+            <span class="ach-num">20<span class="ach-num-unit">ans</span></span>
+            <span class="ach-unit">d'expertise · depuis 2005</span>
+            <h3 class="ach-label">
+              Un savoir-faire<br />qui ne s'improvise pas
+            </h3>
+            <p class="ach-desc">
+              Fondée en 2005 à Saint-Priest, Beaulieu Piscines a bâti deux
+              décennies de maîtrise technique. Notre connaissance du terrain
+              lyonnais garantit des résultats sans surprise.
+            </p>
+          </div>
+
+          <!-- 1 mois de chantier -->
+          <div class="ach-item rv d3">
+            <div class="ach-accent"></div>
+            <span class="ach-num">1<span class="ach-num-unit">mois</span></span>
+            <span class="ach-unit">du terrassement à la mise en eau</span>
+            <h3 class="ach-label">
+              La rapidité,<br />sans jamais sacrifier la qualité
+            </h3>
+            <p class="ach-desc">
+              Pour une piscine remblayée, nous maîtrisons l'intégralité du
+              chantier en un seul mois. Un délai rare dans la région — hors
+              terrasse et aménagements extérieurs.
+            </p>
+          </div>
+        </div>
+        <div style="margin-top: 4rem; text-align: center" class="rv">
+          <a href="#cta" class="btn-p">
+            Demander un devis gratuit
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ REVIEWS ═══════════════════ -->
+    <section id="reviews">
+      <div class="reviews-in">
+        <div class="reviews-hd rv">
+          <div>
+            <p class="tag rev-tag" style="margin-bottom: 1.25rem">
+              Avis clients
+            </p>
+            <h2 class="reviews-title">Ce que disent<br />nos clients</h2>
+          </div>
+          <div class="reviews-meta">
+            <div class="reviews-overall">5.0</div>
+            <div class="reviews-overall-stars">
               <svg
-                width="20"
-                height="20"
+                width="13"
+                height="13"
                 viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round">
-                <path d="M5 12.55a11 11 0 0 1 14.08 0" />
-                <path d="M1.42 9a16 16 0 0 1 21.16 0" />
-                <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
-                <circle cx="12" cy="20" r="1" fill="currentColor" />
+                fill="currentColor">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="currentColor">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="currentColor">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="currentColor">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="currentColor">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
               </svg>
             </div>
-            <div>
-              <h3 class="tech-name">AquaRite+</h3>
-              <p class="tech-desc">
-                Contrôle et régulation à distance de la qualité de l'eau et de
-                l'ensemble de vos équipements depuis votre smartphone.
-              </p>
-              <p class="tech-hi">
-                Jusqu'à 7 équipements connectés · 5 modes de filtration
-              </p>
+            <div class="reviews-overall-sub">Note Google · 3 avis</div>
+          </div>
+        </div>
+
+        <div class="reviews-g">
+          <!-- Review 1 — Maeva Eyraud -->
+          <div class="review-card rv d1">
+            <span class="review-q">"</span>
+            <div class="review-stars">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="currentColor">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="currentColor">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="currentColor">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="currentColor">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="currentColor">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+            </div>
+            <p class="review-text">
+              Satisfaction totale concernant la réalisation de ma piscine
+              traditionnelle : Excellents conseils, respect des délais, qualité
+              des matériaux, exécution parfaite, résultat final entièrement
+              satisfaisant.
+            </p>
+            <div class="review-footer">
+              <div>
+                <p class="review-name">Maeva Eyraud</p>
+                <p class="review-verified">Avis vérifié</p>
+              </div>
+              <div class="review-google">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                    fill="#4285F4" />
+                  <path
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                    fill="#34A853" />
+                  <path
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                    fill="#FBBC05" />
+                  <path
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                    fill="#EA4335" />
+                </svg>
+                <span class="review-google-txt">Google</span>
+              </div>
             </div>
           </div>
-          <div class="tech-c rv d2">
-            <div class="tech-ico">
+
+          <!-- Review 2 — Tony Cozar -->
+          <div class="review-card rv d2">
+            <span class="review-q">"</span>
+            <div class="review-stars">
               <svg
-                width="20"
-                height="20"
+                width="14"
+                height="14"
                 viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round">
-                <circle cx="12" cy="12" r="3" />
-                <path d="M19.07 4.93A10 10 0 0 0 12 2v2a8 8 0 0 1 5.66 2.34" />
-                <path d="M4.93 4.93A10 10 0 0 0 2 12h2a8 8 0 0 1 2.34-5.66" />
-                <path
-                  d="M19.07 19.07A10 10 0 0 1 12 22v-2a8 8 0 0 0 5.66-2.34" />
-                <path
-                  d="M4.93 19.07A10 10 0 0 0 12 22v-2a8 8 0 0 1-5.66-2.34" />
+                fill="currentColor">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="currentColor">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="currentColor">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="currentColor">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="currentColor">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
               </svg>
             </div>
-            <div>
-              <h3 class="tech-name">PoolCop Evolution</h3>
-              <p class="tech-desc">
-                Technologie autonome et intelligente pour la gestion de votre
-                environnement piscine — eau limpide, niveau idéal, équilibre
-                parfait.
-              </p>
-              <p class="tech-hi">
-                Traitement autonome · Eau équilibrée & saine
-              </p>
+            <p class="review-text">
+              J'ai fait appel à leur service pour la construction de ma piscine
+              et je suis très satisfait. Un professionnalisme assez rare de nos
+              jours. Une formation post construction limpide et une
+              disponibilité qui rime avec réactivité. Les matériaux sont de
+              bonne facture. Les différents corps de métier s'accordent
+              parfaitement dans le timing.
+            </p>
+            <div class="review-footer">
+              <div>
+                <p class="review-name">Tony Cozar</p>
+                <p class="review-verified">Avis vérifié</p>
+              </div>
+              <div class="review-google">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                    fill="#4285F4" />
+                  <path
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                    fill="#34A853" />
+                  <path
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                    fill="#FBBC05" />
+                  <path
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                    fill="#EA4335" />
+                </svg>
+                <span class="review-google-txt">Google</span>
+              </div>
             </div>
           </div>
-          <div class="tech-c rv d3">
-            <div class="tech-ico">
+
+          <!-- Review 3 — Remi Rousset -->
+          <div class="review-card rv d3">
+            <span class="review-q">"</span>
+            <div class="review-stars">
               <svg
-                width="20"
-                height="20"
+                width="14"
+                height="14"
                 viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                fill="currentColor">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="currentColor">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="currentColor">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="currentColor">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="currentColor">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
               </svg>
             </div>
-            <div>
-              <h3 class="tech-name">Pompes à Vitesses Variables</h3>
-              <p class="tech-desc">
-                Fonctionnement en permanence à faible vitesse. Économies
-                d'énergie substantielles, eau traitée en continu, silencieux
-                incomparable.
-              </p>
-              <p class="tech-hi">Réduction significative de la consommation</p>
-            </div>
-          </div>
-          <div class="tech-c rv d4">
-            <div class="tech-ico">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round">
-                <path
-                  d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />
-              </svg>
-            </div>
-            <div>
-              <h3 class="tech-name">Pompe à Chaleur Rotax</h3>
-              <p class="tech-desc">
-                Profitez de votre piscine toute l'année. Jusqu'à 180 m³ chauffés
-                dès −5°C, contrôle WiFi à distance, gaz R410A écologique.
-              </p>
-              <p class="tech-hi">Jusqu'à 180 m³ · Opérationnel dès −5°C</p>
+            <p class="review-text">
+              Je recommande vivement Beaulieu Piscine pour la construction et
+              l'entretien de ma piscine. Depuis le début du projet, l'équipe a
+              toujours été à l'écoute, professionnelle et réactive. La
+              construction s'est déroulée sans accroc et à hauteur de mes
+              attentes. Aujourd'hui les interventions d'entretien sont
+              régulières et réalisées avec soin.
+            </p>
+            <div class="review-footer">
+              <div>
+                <p class="review-name">Remi Rousset</p>
+                <p class="review-verified">Avis vérifié</p>
+              </div>
+              <div class="review-google">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                    fill="#4285F4" />
+                  <path
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                    fill="#34A853" />
+                  <path
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                    fill="#FBBC05" />
+                  <path
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                    fill="#EA4335" />
+                </svg>
+                <span class="review-google-txt">Google</span>
+              </div>
             </div>
           </div>
         </div>
