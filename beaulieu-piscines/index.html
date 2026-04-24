@@ -2263,14 +2263,15 @@
     <script>
       // ===== Configuration =====
       const CONFIG = {
-        FORM_ENDPOINT: "", // e.g. "https://formspree.io/f/xxxx" — empty = mailto fallback
+        FORM_ENDPOINT: "https://main.pix.city/api/marketing-lead/en",
         GTM_ID: "GTM-XXXXXXX",
         GA4_ID: "G-XXXXXXXXXX",
         ADS_CONV_ID: "AW-XXXXXXXXX",
         ADS_CONV_LABEL: "XXXXXXX",
-        RECAPTCHA_KEY: "", // optional
+        RECAPTCHA_KEY: "", // set window.PIX_RECAPTCHA_KEY or CONFIG.RECAPTCHA_KEY
         PHONE: "+33610218226",
         EMAIL: "lr@beaulieugroupe.com",
+        PAGE_NAME: "fr-beaulieu-piscines",
       };
 
       // ===== Helpers =====
@@ -2452,34 +2453,51 @@
             return;
           }
 
+          // UTM helper — reads from sessionStorage written by form-handler.js
+          const getUtm = (k) => { try { return sessionStorage.getItem("pix_" + k) || ""; } catch(_) { return ""; } };
+
           const payload = {
             name: form.querySelector("#name" + suffix).value.trim(),
             phone: form.querySelector("#phone" + suffix).value.trim(),
             email: form.querySelector("#email" + suffix).value.trim(),
             zip: form.querySelector("#zip" + suffix).value.trim(),
-            source: "landing-page-beaulieu-lyon",
-            submitted_at: new Date().toISOString(),
+            page_name: CONFIG.PAGE_NAME,
+            utm_source: getUtm("utm_source"),
+            utm_medium: getUtm("utm_medium"),
+            utm_campaign: getUtm("utm_campaign"),
+            utm_term: getUtm("utm_term"),
+            utm_content: getUtm("utm_content"),
+            gclid: getUtm("gclid"),
           };
 
           const submitBtn = form.querySelector('button[type="submit"]');
           submitBtn.disabled = true;
           submitBtn.textContent = "Envoi en cours…";
 
+          const siteKey = window.PIX_RECAPTCHA_KEY || CONFIG.RECAPTCHA_KEY;
+
+          const doFetch = async (token) => {
+            if (token) payload["g-recaptcha-response"] = token;
+            const res = await fetch(CONFIG.FORM_ENDPOINT, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+            if (!res.ok) throw new Error("Endpoint returned " + res.status);
+          };
+
           try {
             if (CONFIG.FORM_ENDPOINT) {
-              const res = await fetch(CONFIG.FORM_ENDPOINT, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  Accept: "application/json",
-                },
-                body: JSON.stringify(payload),
-              });
-              if (!res.ok) throw new Error("Endpoint returned " + res.status);
+              if (siteKey && window.grecaptcha) {
+                const token = await window.grecaptcha.execute(siteKey, { action: "submit" });
+                await doFetch(token);
+              } else {
+                await doFetch(null);
+              }
             } else {
-              // Mailto fallback
+              // Mailto fallback (no endpoint configured)
               const body = encodeURIComponent(
-                `Nom: ${payload.name}\nTéléphone: ${payload.phone}\nEmail: ${payload.email}\nCode postal: ${payload.zip}\n\nSource: ${payload.source}`,
+                `Nom: ${payload.name}\nTéléphone: ${payload.phone}\nEmail: ${payload.email}\nCode postal: ${payload.zip}`,
               );
               const subject = encodeURIComponent(
                 "Demande de devis piscine — " + payload.name,
@@ -2570,5 +2588,7 @@
           });
       })();
     </script>
+    <!-- Shared UTM capture (form submission handled by inline script above) -->
+    <script src="/js/form-handler.js"></script>
   </body>
 </html>

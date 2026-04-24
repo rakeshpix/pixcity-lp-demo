@@ -2,2144 +2,311 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="brand-assets/beaulieu-piscines-favicon-32x32.png" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="192x192"
-      href="brand-assets/beaulieu-piscines-favicon-192x192.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      Beaulieu Piscines — Architectes de l'eau et de la pierre | Saint-Priest,
-      Lyon
-    </title>
-    <meta
-      name="description"
-      content="Beaulieu Piscines conçoit des piscines d'exception sur-mesure en région lyonnaise depuis 2005. Piscines à débordement, miroir, carrelage haut de gamme — gestion complète de A à Z." />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pix.city — LP Demos</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,300;0,400;0,700;0,800;0,900;1,300;1,700;1,800&family=Manrope:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
-      rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet" />
     <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
       :root {
-        --p: #006877;
-        --pl: #129fb5;
-        --pc: #a5eeff;
-        --s: #1a1a1b;
-        --t: #4f4f4f;
-        --sur: #f8f9fa;
-        --surL: #f2f4f5;
-        --surLL: #ffffff;
-        --os: #191c1d;
-        --grad: linear-gradient(135deg, #006877 0%, #129fb5 100%);
+        --primary: #129FB5;
+        --primary-dark: #006877;
+        --bg: #F8F9FA;
+        --surface: #ffffff;
+        --border: #E9EAEB;
+        --text: #1A1A1B;
+        --muted: #6B7280;
+        --tag-bg: rgba(18,159,181,0.10);
       }
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-      html {
-        scroll-behavior: smooth;
-        overflow-x: hidden;
-        max-width: 100%;
-      }
+
       body {
-        font-family: "Manrope", sans-serif;
-        background: var(--sur);
-        color: var(--os);
-        overflow-x: hidden;
-        max-width: 100%;
+        font-family: 'Manrope', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
         -webkit-font-smoothing: antialiased;
       }
 
-      /* ── HERO ── */
-      #hero {
-        position: relative;
-        height: 100vh;
-        min-height: 680px;
-        overflow: hidden;
-        max-width: 100%;
-      }
-      .h-bg {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        background: url("brand-assets/hero-piscine-debordement.webp") center
-          55% / cover no-repeat;
-        transform: scale(1.06);
-        transition: transform 9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      }
-      .h-bg.loaded {
-        transform: scale(1);
-      }
-      .h-ov {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-          155deg,
-          rgba(0, 24, 30, 0.1) 0%,
-          rgba(0, 24, 30, 0.42) 35%,
-          rgba(0, 24, 30, 0.88) 100%
-        );
-      }
-      .h-content {
-        position: relative;
+      /* ── TOP BAR ── */
+      header {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: 0 32px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
         z-index: 10;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        padding: 0 7% 7%;
-      }
-      .h-logo {
-        position: absolute;
-        top: 36px;
-        left: 7%;
-        height: 46px;
-      }
-      .h-eye {
-        font-family: "Inter", sans-serif;
-        font-size: 0.625rem;
-        font-weight: 600;
-        letter-spacing: 0.22em;
-        text-transform: uppercase;
-        color: var(--pl);
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 1.25rem;
-        opacity: 0;
-        animation: fadeUp 0.8s ease forwards 0.3s;
-      }
-      .h-eye::before {
-        content: "";
-        display: block;
-        width: 32px;
-        height: 1.5px;
-        background: var(--grad);
-      }
-      .h-title {
-        font-family: "Epilogue", sans-serif;
-        font-size: clamp(2.8rem, 7vw, 6.25rem);
-        font-weight: 900;
-        line-height: 0.93;
-        letter-spacing: -0.03em;
-        color: #fff;
-        max-width: 840px;
-        opacity: 0;
-        animation: fadeUp 0.9s ease forwards 0.5s;
-      }
-      .h-title em {
-        font-style: italic;
-        color: var(--pl);
-      }
-      .h-sub {
-        font-size: clamp(0.9rem, 1.4vw, 1.0625rem);
-        font-weight: 400;
-        line-height: 1.7;
-        color: rgba(255, 255, 255, 0.65);
-        max-width: 460px;
-        margin-top: 1.75rem;
-        opacity: 0;
-        animation: fadeUp 0.9s ease forwards 0.7s;
-      }
-      .h-cta {
-        display: flex;
-        align-items: center;
-        gap: 1.5rem;
-        margin-top: 2.5rem;
-        opacity: 0;
-        animation: fadeUp 0.9s ease forwards 0.9s;
-      }
-      .btn-p {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.625rem;
-        padding: 0.875rem 2rem;
-        background: var(--grad);
-        color: #fff;
-        font-family: "Manrope", sans-serif;
-        font-size: 0.875rem;
-        font-weight: 600;
-        letter-spacing: 0.02em;
-        border-radius: 6px;
-        border: none;
-        text-decoration: none;
-        cursor: pointer;
-        transition:
-          transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
-          box-shadow 0.22s ease;
-        box-shadow: 0 8px 28px rgba(0, 104, 119, 0.38);
-      }
-      .btn-p:hover {
-        transform: translateY(-3px) scale(1.02);
-        box-shadow: 0 14px 36px rgba(0, 104, 119, 0.5);
-      }
-      .btn-p:active {
-        transform: translateY(0) scale(0.99);
-      }
-      .btn-g {
-        color: rgba(255, 255, 255, 0.7);
-        font-family: "Manrope", sans-serif;
-        font-size: 0.875rem;
-        font-weight: 500;
-        text-decoration: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-        padding-bottom: 2px;
-        transition:
-          color 0.2s,
-          border-color 0.2s;
-      }
-      .btn-g:hover {
-        color: #fff;
-        border-color: rgba(255, 255, 255, 0.55);
-      }
-      .scroll-hint {
-        position: absolute;
-        bottom: 36px;
-        right: 7%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
-        opacity: 0;
-        animation: fadeIn 1s ease forwards 1.4s;
-      }
-      .sh-line {
-        width: 1px;
-        height: 52px;
-        background: linear-gradient(
-          to bottom,
-          transparent,
-          rgba(255, 255, 255, 0.45)
-        );
-        position: relative;
-        overflow: hidden;
-      }
-      .sh-line::after {
-        content: "";
-        position: absolute;
-        top: -52px;
-        left: 0;
-        width: 100%;
-        height: 52px;
-        background: #fff;
-        animation: scrollDrop 2s ease infinite;
-      }
-      .sh-txt {
-        font-family: "Inter", sans-serif;
-        font-size: 0.5625rem;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.4);
-        writing-mode: vertical-rl;
       }
 
-      /* ── STATS ── */
-      #stats {
-        background: var(--s);
-        padding: 4.5rem 7%;
-        position: relative;
+      .logo {
+        font-family: 'Epilogue', sans-serif;
+        font-weight: 700;
+        font-size: 1.1rem;
+        letter-spacing: -0.04em;
+        color: var(--text);
+        text-decoration: none;
       }
-      #stats::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: var(--grad);
+      .logo span { color: var(--primary); }
+
+      .header-badge {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        background: var(--tag-bg);
+        color: var(--primary);
+        padding: 3px 10px;
+        border-radius: 999px;
       }
-      .stats-g {
-        max-width: 1240px;
+
+      /* ── MAIN LAYOUT ── */
+      main {
+        max-width: 900px;
         margin: 0 auto;
+        padding: 40px 24px 64px;
+      }
+
+      /* ── PAGE HEADER ── */
+      .page-header {
+        margin-bottom: 32px;
+      }
+      .page-header h1 {
+        font-family: 'Epilogue', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        color: var(--text);
+        margin-bottom: 4px;
+      }
+      .page-header p {
+        font-size: 0.875rem;
+        color: var(--muted);
+      }
+
+      /* ── SECTION LABEL ── */
+      .section-label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 12px;
+      }
+
+      /* ── LP CARDS ── */
+      .cards-grid {
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 0;
-        align-items: center;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 40px;
       }
-      .stat {
-        text-align: center;
-        padding: 2rem 1.5rem;
-        border-right: 1px solid rgba(255, 255, 255, 0.07);
+      @media (max-width: 600px) {
+        .cards-grid { grid-template-columns: 1fr; }
       }
-      .stat:last-child {
-        border-right: none;
+
+      .lp-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        transition: border-color 0.15s, box-shadow 0.15s;
       }
-      .stat-v {
-        font-family: "Epilogue", sans-serif;
-        font-size: clamp(1.75rem, 3vw, 3rem);
-        font-weight: 800;
-        line-height: 1;
-        letter-spacing: -0.025em;
-        color: var(--pl);
+      .lp-card:hover {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(18,159,181,0.08);
+      }
+
+      .card-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .card-tag {
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        background: var(--tag-bg);
+        color: var(--primary);
+        padding: 3px 8px;
+        border-radius: 999px;
         white-space: nowrap;
       }
-      .stat-v .su {
-        font-size: 0.55em;
-        letter-spacing: -0.01em;
-        vertical-align: baseline;
-        color: var(--p);
-      }
-      .stat-l {
-        font-family: "Inter", sans-serif;
-        font-size: 0.5875rem;
-        font-weight: 500;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.38);
-        margin-top: 0.625rem;
-      }
 
-      /* ── ABOUT ── */
-      #about {
-        background: var(--sur);
-        padding: 9rem 7%;
-      }
-      .about-in {
-        max-width: 1240px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: 1.15fr 0.85fr;
-        gap: 6rem;
-        align-items: center;
-      }
-      .tag {
-        font-family: "Inter", sans-serif;
-        font-size: 0.5875rem;
-        font-weight: 600;
-        letter-spacing: 0.22em;
-        text-transform: uppercase;
-        color: var(--p);
+      .card-status {
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 1.5rem;
+        gap: 5px;
+        font-size: 0.7rem;
+        color: var(--muted);
       }
-      .tag::before {
-        content: "";
-        display: block;
-        width: 28px;
-        height: 1.5px;
-        background: var(--grad);
-      }
-      .about-h {
-        font-family: "Epilogue", sans-serif;
-        font-size: clamp(2rem, 3.8vw, 3.5rem);
-        font-weight: 800;
-        line-height: 1.06;
-        letter-spacing: -0.03em;
-        color: var(--s);
-        margin-bottom: 2rem;
-      }
-      .about-h span {
-        color: var(--p);
-      }
-      .about-b {
-        font-size: 1.0625rem;
-        line-height: 1.78;
-        color: var(--t);
-        margin-bottom: 1.5rem;
-      }
-      .about-img-w {
-        position: relative;
-      }
-      .about-img {
-        width: 100%;
-        aspect-ratio: 4/3;
-        object-fit: cover;
-        border-radius: 6px;
-        display: block;
-      }
-      .about-badge {
-        position: absolute;
-        bottom: -1.25rem;
-        left: -1.25rem;
-        background: var(--grad);
-        color: #fff;
-        padding: 1.25rem 1.5rem;
-        border-radius: 6px;
-      }
-      .ab-num {
-        font-family: "Epilogue", sans-serif;
-        font-size: 2.25rem;
-        font-weight: 900;
-        line-height: 1;
-        letter-spacing: -0.02em;
-      }
-      .ab-txt {
-        font-family: "Inter", sans-serif;
-        font-size: 0.625rem;
-        font-weight: 500;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        opacity: 0.9;
-        margin-top: 3px;
-      }
-
-      /* ── SERVICES ── */
-      #services {
-        background: var(--surL);
-        padding: 9rem 7%;
-      }
-      .sec-hd {
-        max-width: 1240px;
-        margin: 0 auto 3.5rem;
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 2rem;
-      }
-      .sec-title {
-        font-family: "Epilogue", sans-serif;
-        font-size: clamp(1.9rem, 3.2vw, 2.75rem);
-        font-weight: 800;
-        line-height: 1.1;
-        letter-spacing: -0.025em;
-        color: var(--s);
-      }
-      .sec-desc {
-        font-size: 0.9375rem;
-        line-height: 1.7;
-        color: var(--t);
-        max-width: 320px;
-        text-align: right;
-      }
-      .svc-g {
-        max-width: 1240px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 1.25rem;
-      }
-      .svc-g .svc-card {
-        grid-column: span 2;
-      }
-      .svc-g .svc-card:nth-child(4),
-      .svc-g .svc-card:nth-child(5) {
-        grid-column: span 3;
-      }
-      .svc-card {
-        background: var(--surLL);
-        border-radius: 8px;
-        padding: 2.25rem;
-        position: relative;
-        overflow: hidden;
-        transition:
-          transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
-          box-shadow 0.28s ease;
-        box-shadow: 0 2px 8px rgba(25, 28, 29, 0.05);
-      }
-      .svc-card::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: var(--grad);
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform 0.36s cubic-bezier(0.34, 1.56, 0.64, 1);
-      }
-      .svc-card:hover {
-        transform: translateY(-5px);
-        box-shadow:
-          0 18px 44px rgba(0, 104, 119, 0.1),
-          0 4px 14px rgba(25, 28, 29, 0.06);
-      }
-      .svc-card:hover::after {
-        transform: scaleX(1);
-      }
-      .svc-card.feat {
-        background: var(--grad);
-        color: #fff;
-      }
-      .svc-card.feat::after {
-        display: none;
-      }
-      .svc-ico {
-        width: 46px;
-        height: 46px;
-        background: rgba(0, 104, 119, 0.08);
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 1.625rem;
-        color: var(--p);
-      }
-      .svc-card.feat .svc-ico {
-        background: rgba(255, 255, 255, 0.16);
-        color: #fff;
-      }
-      .svc-name {
-        font-family: "Epilogue", sans-serif;
-        font-size: 1.1875rem;
-        font-weight: 700;
-        letter-spacing: -0.01em;
-        color: var(--s);
-        margin-bottom: 0.625rem;
-      }
-      .svc-card.feat .svc-name {
-        color: #fff;
-      }
-      .svc-desc {
-        font-size: 0.9375rem;
-        line-height: 1.7;
-        color: var(--t);
-      }
-      .svc-card.feat .svc-desc {
-        color: rgba(255, 255, 255, 0.78);
-      }
-      .svc-list {
-        list-style: none;
-        margin-top: 1.25rem;
-      }
-      .svc-list li {
-        font-family: "Inter", sans-serif;
-        font-size: 0.8rem;
-        color: var(--t);
-        padding: 0.375rem 0;
-        border-bottom: 1px solid rgba(25, 28, 29, 0.06);
-        display: flex;
-        align-items: center;
-        gap: 0.625rem;
-      }
-      .svc-card.feat .svc-list li {
-        color: rgba(255, 255, 255, 0.72);
-        border-bottom-color: rgba(255, 255, 255, 0.12);
-      }
-      .svc-list li::before {
-        content: "";
-        width: 4px;
-        height: 4px;
+      .status-dot {
+        width: 6px;
+        height: 6px;
         border-radius: 50%;
-        background: var(--pl);
+        background: #22c55e;
         flex-shrink: 0;
       }
-      .svc-card.feat .svc-list li::before {
-        background: rgba(255, 255, 255, 0.6);
-      }
 
-      /* ── GALLERY ── */
-      #gallery {
-        background: var(--surLL);
-        padding: 9rem 7%;
-        position: relative;
-        overflow: hidden;
-      }
-      #gallery::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: var(--grad);
-      }
-      .gal-in {
-        max-width: 1240px;
-        margin: 0 auto;
-      }
-      .gal-g {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: 380px 260px;
-        gap: 10px;
-        margin-top: 3rem;
-      }
-      .gal-item {
-        position: relative;
-        overflow: hidden;
-        border-radius: 4px;
-      }
-      .gal-item:first-child {
-        grid-column: span 2;
-      }
-      .gal-item img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        display: block;
-      }
-      .gal-item:hover img {
-        transform: scale(1.05);
-      }
-      .gal-ov {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-          to top,
-          rgba(0, 24, 30, 0.62) 0%,
-          transparent 55%
-        );
-        opacity: 0;
-        transition: opacity 0.3s;
-      }
-      .gal-item:hover .gal-ov {
-        opacity: 1;
-      }
-
-      /* ── FORM ── */
-      .cf {
-        display: flex;
-        flex-direction: column;
-        gap: 0.875rem;
-      }
-      .cf-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.875rem;
-      }
-      .cf-field {
-        display: flex;
-        flex-direction: column;
-        gap: 0.375rem;
-      }
-      .cf-label {
-        font-family: "Inter", sans-serif;
-        font-size: 0.675rem;
-        font-weight: 600;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.71);
-      }
-      .cf-input,
-      .cf-textarea {
-        background: rgba(255, 255, 255, 0.06);
-        border: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.18);
-        border-radius: 4px 4px 0 0;
-        padding: 0.75rem 0.875rem;
-        color: #fff;
-        font-family: "Manrope", sans-serif;
-        font-size: 0.9375rem;
-        font-weight: 400;
-        outline: none;
-        width: 100%;
-        transition:
-          border-color 0.2s ease,
-          background 0.2s ease;
-      }
-      .cf-input::placeholder,
-      .cf-textarea::placeholder {
-        color: rgba(255, 255, 255, 0.28);
-        font-style: italic;
-      }
-      .cf-input:focus,
-      .cf-textarea:focus {
-        background: rgba(255, 255, 255, 0.09);
-        border-bottom-color: var(--pl);
-      }
-      .cf-textarea {
-        resize: none;
-        min-height: 110px;
-        line-height: 1.6;
-      }
-      .cf-submit {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.625rem;
-        padding: 0.9375rem 2rem;
-        background: var(--grad);
-        color: #fff;
-        font-family: "Manrope", sans-serif;
-        font-size: 0.9375rem;
-        font-weight: 600;
-        letter-spacing: 0.02em;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        width: 100%;
-        transition:
-          transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
-          box-shadow 0.22s ease,
-          opacity 0.2s;
-        box-shadow: 0 8px 28px rgba(0, 104, 119, 0.4);
-        margin-top: 0.25rem;
-      }
-      .cf-submit:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 14px 36px rgba(0, 104, 119, 0.5);
-      }
-      .cf-submit:active {
-        transform: translateY(0);
-        opacity: 0.9;
-      }
-
-      /* ── CTA ── */
-      #cta {
-        position: relative;
-        background: var(--s);
-        padding: 9rem 7%;
-        overflow: hidden;
-      }
-      .cta-bg-img {
-        position: absolute;
-        inset: 0;
-        background: url("brand-assets/gallery-piscine-debordement-villette.webp")
-          center / cover no-repeat;
-        opacity: 0.1;
-      }
-      .cta-in {
-        position: relative;
-        z-index: 1;
-        max-width: 1240px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 7rem;
-        align-items: center;
-      }
-      .cta-h {
-        font-family: "Epilogue", sans-serif;
-        font-size: clamp(2.25rem, 4vw, 3.5rem);
-        font-weight: 800;
-        line-height: 1.06;
-        letter-spacing: -0.03em;
-        color: #fff;
-        margin-bottom: 1.25rem;
-      }
-      .cta-h em {
-        font-style: italic;
-        color: var(--pl);
-      }
-      .cta-b {
-        font-size: 0.9375rem;
-        line-height: 1.75;
-        color: rgba(255, 255, 255, 0.6);
-        margin-bottom: 2rem;
-      }
-      .showroom {
-        background: rgba(0, 60, 75, 0.55);
-        border: 1px solid rgba(18, 159, 181, 0.35);
-        border-radius: 8px;
-        padding: 2.25rem;
-        position: relative;
-      }
-      .showroom::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: var(--grad);
-        border-radius: 8px 8px 0 0;
-      }
-      .sr-title {
-        font-family: "Inter", sans-serif;
-        font-size: 0.5875rem;
-        font-weight: 600;
-        letter-spacing: 0.22em;
-        text-transform: uppercase;
-        color: var(--pl);
-        margin-bottom: 1.75rem;
-      }
-      /* ── FOOTER ── */
-      footer {
-        background: #0d1314;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-        padding: 1.125rem 7%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-      }
-      .ft-copy {
-        font-family: "Inter", sans-serif;
-        font-size: 0.75rem;
-        color: rgba(255, 255, 255, 0.28);
-        letter-spacing: 0.02em;
-      }
-      .ft-brand {
-        font-family: "Epilogue", sans-serif;
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: rgba(255, 255, 255, 0.18);
-        letter-spacing: 0.04em;
-      }
-
-      /* ── REVEAL ── */
-      .rv {
-        opacity: 0;
-        transform: translateY(28px);
-        transition:
-          opacity 0.7s ease,
-          transform 0.7s ease;
-      }
-      .rv.vis {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      .rv.d1 {
-        transition-delay: 0.1s;
-      }
-      .rv.d2 {
-        transition-delay: 0.2s;
-      }
-      .rv.d3 {
-        transition-delay: 0.3s;
-      }
-      .rv.d4 {
-        transition-delay: 0.4s;
-      }
-      .rv.d5 {
-        transition-delay: 0.5s;
-      }
-
-      /* ── KEYFRAMES ── */
-      @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(28px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-      @keyframes scrollDrop {
-        0% {
-          top: -52px;
-        }
-        100% {
-          top: 52px;
-        }
-      }
-
-      /* ── ACHIEVEMENTS ── */
-      #achievements {
-        background: var(--surLL);
-        padding: 9rem 7%;
-        position: relative;
-        overflow: hidden;
-      }
-      #achievements::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: var(--grad);
-      }
-      .ach-in {
-        max-width: 1240px;
-        margin: 0 auto;
-      }
-      .ach-hd {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 2rem;
-        margin-bottom: 5rem;
-      }
-      .ach-hd-title {
-        font-family: "Epilogue", sans-serif;
-        font-size: clamp(1.9rem, 3.2vw, 2.75rem);
-        font-weight: 800;
-        line-height: 1.1;
-        letter-spacing: -0.025em;
-        color: var(--s);
-      }
-      .ach-hd-desc {
-        font-size: 0.9375rem;
-        line-height: 1.7;
-        color: var(--t);
-        max-width: 340px;
-        text-align: right;
-      }
-      .ach-g {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0;
-      }
-      .ach-item {
-        padding: 0 4rem 0 0;
-        position: relative;
-      }
-      .ach-item + .ach-item {
-        padding: 0 4rem 0 4rem;
-        box-shadow: inset 1px 0 0 rgba(25, 28, 29, 0.07);
-      }
-      .ach-item:last-child {
-        padding-right: 0;
-      }
-      .ach-accent {
-        width: 36px;
-        height: 3px;
-        background: var(--grad);
-        border-radius: 2px;
-        margin-bottom: 2rem;
-      }
-      .ach-num {
-        font-family: "Epilogue", sans-serif;
-        font-size: clamp(4.5rem, 9vw, 8.5rem);
-        font-weight: 900;
-        line-height: 0.85;
-        letter-spacing: -0.04em;
-        background: linear-gradient(135deg, #006877 0%, #129fb5 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 0.5rem;
-        display: block;
-      }
-      .ach-num-unit {
-        font-size: 0.32em;
-        font-weight: 700;
-        letter-spacing: -0.01em;
-        vertical-align: 0.15em;
-      }
-      .ach-unit {
-        font-family: "Inter", sans-serif;
-        font-size: 0.5875rem;
-        font-weight: 600;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        color: var(--p);
-        display: block;
-        margin-bottom: 2rem;
-      }
-      .ach-label {
-        font-family: "Epilogue", sans-serif;
-        font-size: clamp(1.2rem, 1.8vw, 1.5rem);
-        font-weight: 700;
-        line-height: 1.2;
-        letter-spacing: -0.02em;
-        color: var(--s);
-        margin-bottom: 1rem;
-      }
-      .ach-desc {
-        font-size: 0.9375rem;
-        line-height: 1.75;
-        color: var(--t);
-      }
-      @media (max-width: 1024px) {
-        #achievements {
-          padding: 2.75rem 5%;
-        }
-        .ach-hd {
-          flex-direction: column;
-          align-items: flex-start;
-          margin-bottom: 3rem;
-        }
-        .ach-hd-desc {
-          text-align: left;
-        }
-        .ach-g {
-          grid-template-columns: 1fr;
-          gap: 3rem;
-        }
-        .ach-item,
-        .ach-item + .ach-item {
-          padding: 0;
-          box-shadow: none;
-        }
-        .ach-item + .ach-item {
-          padding-top: 3rem;
-          box-shadow: inset 0 1px 0 rgba(25, 28, 29, 0.07);
-        }
-      }
-      @media (max-width: 768px) {
-        #achievements {
-          padding: 1.5rem 5%;
-        }
-        .ach-hd {
-          margin-bottom: 2rem;
-        }
-        .ach-g {
-          gap: 2rem;
-        }
-        .ach-item + .ach-item {
-          padding-top: 2rem;
-        }
-      }
-
-      /* ── REVIEWS ── */
-      #reviews {
-        background: #0d1314;
-        padding: 9rem 7%;
-        position: relative;
-        overflow: hidden;
-      }
-      #reviews::after {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 900px;
-        height: 450px;
-        background: radial-gradient(
-          ellipse,
-          rgba(18, 159, 181, 0.07) 0%,
-          transparent 65%
-        );
-        pointer-events: none;
-        z-index: 0;
-      }
-      .reviews-in {
-        max-width: 1240px;
-        margin: 0 auto;
-        position: relative;
-        z-index: 1;
-      }
-      .reviews-hd {
-        margin-bottom: 3.5rem;
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 2rem;
-      }
-      .reviews-title {
-        font-family: "Epilogue", sans-serif;
-        font-size: clamp(1.9rem, 3.2vw, 2.75rem);
-        font-weight: 800;
-        line-height: 1.1;
-        letter-spacing: -0.025em;
-        color: #fff;
-      }
-      .reviews-meta {
-        text-align: right;
-        flex-shrink: 0;
-      }
-      .reviews-overall {
-        font-family: "Epilogue", sans-serif;
-        font-size: 2.5rem;
-        font-weight: 900;
-        line-height: 1;
-        letter-spacing: -0.03em;
-        color: var(--pl);
-      }
-      .reviews-overall-stars {
-        display: flex;
-        gap: 3px;
-        justify-content: flex-end;
-        margin: 0.375rem 0 0.25rem;
-        color: #f5b400;
-      }
-      .reviews-overall-sub {
-        font-family: "Inter", sans-serif;
-        font-size: 0.5625rem;
-        font-weight: 600;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.32);
-      }
-      .reviews-g {
-        display: grid;
-        grid-template-columns: 1.15fr 0.92fr 0.92fr;
-        gap: 1.25rem;
-        align-items: start;
-      }
-      .review-card {
-        background: rgba(255, 255, 255, 0.034);
-        border-radius: 8px;
-        padding: 2.5rem 2.25rem 2rem;
-        position: relative;
-        overflow: hidden;
-        transition:
-          transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-          background 0.3s ease;
-      }
-      .review-card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: var(--grad);
-      }
-      .review-card:hover {
-        background: rgba(255, 255, 255, 0.065);
-        transform: translateY(-5px);
-      }
-      .review-card:nth-child(2) {
-        margin-top: 1.75rem;
-      }
-      .review-card:nth-child(3) {
-        margin-top: 3.25rem;
-      }
-      .review-q {
-        display: block;
-        font-family: "Epilogue", sans-serif;
-        font-size: 5rem;
-        line-height: 0.5;
-        color: var(--pl);
-        opacity: 0.15;
-        margin-bottom: 1.5rem;
-        letter-spacing: -0.02em;
-        user-select: none;
-      }
-      .review-stars {
-        display: flex;
-        gap: 3px;
-        margin-bottom: 1.375rem;
-        color: #f5b400;
-      }
-      .review-text {
-        font-family: "Manrope", sans-serif;
-        font-size: 0.9375rem;
-        line-height: 1.78;
-        color: rgba(255, 255, 255, 0.62);
-        margin-bottom: 1.875rem;
-      }
-      .review-footer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.75rem;
-        padding-top: 1.25rem;
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
-      }
-      .review-name {
-        font-family: "Epilogue", sans-serif;
+      .card-title {
+        font-family: 'Epilogue', sans-serif;
         font-size: 1rem;
         font-weight: 700;
-        color: #fff;
-        letter-spacing: -0.015em;
-      }
-      .review-verified {
-        font-family: "Inter", sans-serif;
-        font-size: 0.6rem;
-        font-weight: 500;
-        color: var(--pl);
-        letter-spacing: 0.06em;
-        margin-top: 3px;
-        opacity: 0.85;
-      }
-      .review-google {
-        display: flex;
-        align-items: center;
-        gap: 0.3rem;
-        flex-shrink: 0;
-        opacity: 0.55;
-      }
-      .review-google-txt {
-        font-family: "Inter", sans-serif;
-        font-size: 0.6875rem;
-        font-weight: 600;
-        color: rgba(255, 255, 255, 0.6);
-        letter-spacing: 0.04em;
-      }
-      @media (max-width: 1024px) {
-        #reviews {
-          padding: 2.75rem 5%;
-        }
-        .reviews-hd {
-          flex-direction: column;
-          align-items: flex-start;
-          margin-bottom: 2rem;
-        }
-        .reviews-meta {
-          text-align: left;
-        }
-        .reviews-overall-stars {
-          justify-content: flex-start;
-        }
-        .reviews-g {
-          grid-template-columns: 1fr;
-        }
-        .review-card:nth-child(2),
-        .review-card:nth-child(3) {
-          margin-top: 0;
-        }
-      }
-      @media (max-width: 768px) {
-        #reviews {
-          padding: 1.5rem 5%;
-        }
-        .reviews-hd {
-          margin-bottom: 1.25rem;
-        }
-        .review-card {
-          padding: 1.5rem 1.25rem 1.25rem;
-        }
+        color: var(--text);
+        letter-spacing: -0.02em;
       }
 
-      /* ── RESPONSIVE ── */
-      @media (max-width: 1024px) {
-        #about,
-        #services,
-        #gallery {
-          padding: 2.75rem 5%;
-        }
-        #stats {
-          padding: 2rem 5%;
-        }
-        #cta {
-          padding: 2.75rem 5%;
-        }
-        .sec-hd {
-          margin-bottom: 1.75rem;
-        }
-        .svc-g,
-        .gal-g {
-          margin-top: 1.25rem;
-        }
-        .about-in {
-          grid-template-columns: 1fr;
-          gap: 2rem;
-        }
-        .about-img-w {
-          display: none;
-        }
-        .svc-g {
-          grid-template-columns: repeat(4, 1fr);
-        }
-        .svc-g .svc-card {
-          grid-column: span 2;
-        }
-        .svc-g .svc-card:nth-child(4),
-        .svc-g .svc-card:nth-child(5) {
-          grid-column: span 2;
-        }
-        .cta-in {
-          grid-template-columns: 1fr;
-          gap: 3rem;
-        }
-        .stats-g {
-          grid-template-columns: repeat(3, 1fr);
-        }
-        .stats-g .stat:nth-child(3),
-        .stats-g .stat:last-child {
-          border-right: none;
-        }
-        .stats-g .stat:nth-child(4),
-        .stats-g .stat:nth-child(5) {
-          border-top: 1px solid rgba(255, 255, 255, 0.07);
-        }
+      .card-desc {
+        font-size: 0.8rem;
+        line-height: 1.55;
+        color: var(--muted);
       }
-      @media (max-width: 768px) {
-        #about,
-        #services,
-        #gallery {
-          padding: 1.5rem 5%;
-        }
-        #stats {
-          padding: 1.25rem 5%;
-        }
-        #cta {
-          padding: 1.5rem 5%;
-        }
-        #hero {
-          min-height: 480px;
-        }
-        .sec-hd {
-          flex-direction: column;
-          align-items: flex-start;
-          margin-bottom: 1rem;
-        }
-        .sec-desc {
-          text-align: left;
-          max-width: 100%;
-        }
-        .svc-g {
-          grid-template-columns: 1fr;
-          margin-top: 0.75rem;
-          gap: 0.75rem;
-        }
-        .svc-g .svc-card,
-        .svc-g .svc-card:nth-child(4),
-        .svc-g .svc-card:nth-child(5) {
-          grid-column: span 1;
-        }
-        .svc-card {
-          padding: 1rem 1.125rem;
-        }
-        .svc-ico {
-          margin-bottom: 1rem;
-          width: 38px;
-          height: 38px;
-        }
-        .svc-name {
-          margin-bottom: 0.375rem;
-        }
-        .svc-list {
-          margin-top: 0.625rem;
-        }
-        .svc-list li {
-          padding: 0.25rem 0;
-        }
-        .gal-g {
-          grid-template-columns: 1fr 1fr;
-          grid-template-rows: auto;
-          margin-top: 0.75rem;
-          gap: 5px;
-        }
-        .gal-item:first-child {
-          grid-column: span 2;
-        }
-        .gal-g .gal-item {
-          height: 140px;
-        }
-        .gal-g .gal-item:first-child {
-          height: 180px;
-        }
-        .stats-g {
-          grid-template-columns: repeat(2, 1fr);
-        }
-        .stats-g .stat {
-          border-right: 1px solid rgba(255, 255, 255, 0.07);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-          padding: 1.75rem 1rem;
-        }
-        .stats-g .stat:nth-child(even) {
-          border-right: none;
-        }
-        .stats-g .stat:last-child {
-          grid-column: span 2;
-          border-right: none;
-          border-bottom: none;
-        }
-        .stat {
-          padding: 1rem 0.875rem;
-        }
-        .about-in {
-          gap: 1.5rem;
-        }
-        .about-h {
-          margin-bottom: 0.75rem;
-          font-size: 1.75rem;
-        }
-        .about-b {
-          margin-bottom: 0.5rem;
-          font-size: 0.9375rem;
-        }
-        .tag {
-          margin-bottom: 1rem;
-        }
-        .cta-in {
-          gap: 1.5rem;
-        }
-        .showroom {
-          padding: 1.25rem;
-        }
-        .cf {
-          gap: 0.625rem;
-        }
-        .cf-row {
-          grid-template-columns: 1fr;
-        }
-        .sr-title {
-          margin-bottom: 1.25rem;
-        }
+
+      .card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 12px;
+        border-top: 1px solid var(--border);
+      }
+
+      .card-meta {
+        font-size: 0.72rem;
+        color: var(--muted);
+      }
+
+      .card-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--primary);
+      }
+      .card-link svg { transition: transform 0.15s; }
+      .lp-card:hover .card-link svg { transform: translateX(3px); }
+
+      /* ── INFO ROW ── */
+      .info-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .info-box {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 16px 20px;
+        flex: 1;
+        min-width: 160px;
+      }
+      .info-box .val {
+        font-family: 'Epilogue', sans-serif;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.03em;
+      }
+      .info-box .lbl {
+        font-size: 0.75rem;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+
+      /* ── FOOTER ── */
+      footer {
+        text-align: center;
+        font-size: 0.72rem;
+        color: var(--muted);
+        padding-bottom: 32px;
       }
     </style>
   </head>
   <body>
-    <!-- ═══════════════════ HERO ═══════════════════ -->
-    <section id="hero">
-      <div class="h-bg" id="heroBg"></div>
-      <div class="h-ov"></div>
 
-      <img
-        src="brand-assets/logo.webp"
-        alt="Beaulieu Piscines"
-        class="h-logo" />
+    <header>
+      <a href="/" class="logo">pix<span>.</span>city</a>
+      <span class="header-badge">LP Demos</span>
+    </header>
 
-      <div class="h-content">
-        <p class="h-eye">Depuis 2005 · Saint-Priest, Lyon</p>
-        <h1 class="h-title">
-          Le reflet<br />
-          de votre <em>imagination</em>
-        </h1>
-        <p class="h-sub">
-          Nous concevons des piscines d'exception sur-mesure — piscines à
-          débordement, miroir, carrelage grand format — avec une rigueur
-          architecturale qui s'intègre parfaitement à votre cadre de vie.
-        </p>
-        <div class="h-cta">
-          <a href="#cta" class="btn-p">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round">
-              <path d="M12 5v14M5 12l7 7 7-7" />
-            </svg>
-            Découvrir nos prestations
-          </a>
-          <a href="#gallery" class="btn-g">Voir nos réalisations</a>
-        </div>
+    <main>
+
+      <div class="page-header">
+        <h1>Landing Pages</h1>
+        <p>Démos clients — cliquez sur une carte pour ouvrir la page.</p>
       </div>
 
-      <div class="scroll-hint">
-        <div class="sh-line"></div>
-        <span class="sh-txt">Scroll</span>
-      </div>
-    </section>
+      <p class="section-label">Réalisations</p>
+      <div class="cards-grid">
 
-    <!-- ═══════════════════ STATS ═══════════════════ -->
-    <section id="stats">
-      <div class="stats-g">
-        <div class="stat rv">
-          <div class="stat-v" data-target="30">0</div>
-          <div class="stat-l">Projets réalisés</div>
-        </div>
-        <div class="stat rv d1">
-          <div class="stat-v">
-            <span data-target="17400">0</span><span class="su"> m²</span>
+        <!-- M. Lobry -->
+        <a href="/m-lobry/" class="lp-card">
+          <div class="card-top">
+            <span class="card-tag">Toiture</span>
+            <span class="card-status"><span class="status-dot"></span>En ligne</span>
           </div>
-          <div class="stat-l">de travaux</div>
-        </div>
-        <div class="stat rv d2">
-          <div class="stat-v" data-target="120">0</div>
-          <div class="stat-l">Consultations clients</div>
-        </div>
-        <div class="stat rv d3">
-          <div class="stat-v" data-target="200">0</div>
-          <div class="stat-l">Plans conçus</div>
-        </div>
-        <div class="stat rv d4">
-          <div class="stat-v">2005</div>
-          <div class="stat-l">Année de création</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════ ABOUT ═══════════════════ -->
-    <section id="about">
-      <div class="about-in">
-        <div>
-          <p class="tag rv">Notre savoir-faire</p>
-          <h2 class="about-h rv d1">
-            Votre piscine<br />
-            <span>d'exception</span>
-          </h2>
-          <p class="about-b rv d2">
-            Beaulieu Piscines révolutionne l'univers aquatique avec une approche
-            globale et une charte de qualité rigoureuse. Chaque projet est une
-            œuvre unique, pensée sur-mesure pour s'intégrer parfaitement à votre
-            architecture.
-          </p>
-          <p class="about-b rv d3">
-            De la conception à la livraison clés en main, nous orchestrons
-            chaque détail : structure en béton armé fibré, revêtements grand
-            format, équipements connectés et aménagements paysagers. Votre
-            vision, notre exécution.
-          </p>
-          <a href="#cta" class="btn-p rv d4" style="margin-top: 0.75rem">
-            Prendre rendez-vous
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </a>
-        </div>
-        <div class="about-img-w rv d2">
-          <img
-            src="brand-assets/about-piscine-miroir-terrasse.webp"
-            alt="Piscine miroir Beaulieu"
-            class="about-img" />
-          <div class="about-badge">
-            <div class="ab-num">+20</div>
-            <div class="ab-txt">ans de garantie<br />sur nos revêtements</div>
+          <div class="card-title">M. Lobry Couvreur</div>
+          <div class="card-desc">Expert toiture à Argenteuil. Devis rapide, garantie décennale, formulaire de contact intégré.</div>
+          <div class="card-footer">
+            <span class="card-meta">Argenteuil · 95100</span>
+            <span class="card-link">Ouvrir <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════ GALLERY ═══════════════════ -->
-    <section id="gallery">
-      <div class="gal-in">
-        <div class="sec-hd rv">
-          <div>
-            <p class="tag" style="margin-bottom: 0.875rem">Nos réalisations</p>
-            <h2 class="sec-title">Chaque piscine<br />est unique</h2>
-          </div>
-          <p class="sec-desc">
-            Un aperçu de nos derniers projets réalisés en région lyonnaise.
-          </p>
-        </div>
-        <div class="gal-g">
-          <div class="gal-item rv">
-            <img
-              src="brand-assets/gallery-piscine-debordement-villette.webp"
-              alt="Piscine à débordement Villette" />
-            <div class="gal-ov"></div>
-          </div>
-          <div class="gal-item rv d1">
-            <img
-              src="brand-assets/gallery-piscine-crepuscule.webp"
-              alt="Piscine miroir Villette" />
-            <div class="gal-ov"></div>
-          </div>
-          <div class="gal-item rv d1">
-            <img
-              src="brand-assets/gallery-piscine-pierre-naturelle.webp"
-              alt="Réalisation Beaulieu Piscines" />
-            <div class="gal-ov"></div>
-          </div>
-          <div class="gal-item rv d2">
-            <img
-              src="brand-assets/gallery-piscine-contemporaine.webp"
-              alt="Piscine contemporaine" />
-            <div class="gal-ov"></div>
-          </div>
-          <div class="gal-item rv d3">
-            <img
-              src="brand-assets/gallery-piscine-interieure-carrelage.webp"
-              alt="Piscine intérieure carrelage" />
-            <div class="gal-ov"></div>
-          </div>
-        </div>
-      </div>
-      <div
-        style="max-width: 1240px; margin: 2rem auto 0; text-align: center"
-        class="rv">
-        <a href="#cta" class="btn-p">
-          Réaliser ma piscine
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
         </a>
+
+        <!-- Beaulieu Piscines -->
+        <a href="/beaulieu-piscines/" class="lp-card">
+          <div class="card-top">
+            <span class="card-tag">Piscines</span>
+            <span class="card-status"><span class="status-dot"></span>En ligne</span>
+          </div>
+          <div class="card-title">Beaulieu Piscines</div>
+          <div class="card-desc">Constructeur de piscines sur-mesure. Page premium orientée conversion pour projets haut de gamme.</div>
+          <div class="card-footer">
+            <span class="card-meta">Région SUD</span>
+            <span class="card-link">Ouvrir <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          </div>
+        </a>
+
       </div>
-    </section>
 
-    <!-- ═══════════════════ ACHIEVEMENTS ═══════════════════ -->
-    <section id="achievements">
-      <div class="ach-in">
-        <div class="ach-hd rv">
-          <div>
-            <p class="tag" style="margin-bottom: 1rem">Nos engagements</p>
-            <h2 class="ach-hd-title">L'excellence<br />en chiffres</h2>
-          </div>
-          <p class="ach-hd-desc">
-            Vingt ans de terrain, des centaines de familles satisfaites et un
-            délai de livraison que peu de piscinistes peuvent tenir.
-          </p>
+      <p class="section-label">Vue d'ensemble</p>
+      <div class="info-row">
+        <div class="info-box">
+          <div class="val">2</div>
+          <div class="lbl">Landing pages</div>
         </div>
-        <div class="ach-g">
-          <!-- 135 réalisations -->
-          <div class="ach-item rv d1">
-            <div class="ach-accent"></div>
-            <span class="ach-num">135</span>
-            <span class="ach-unit">réalisations · depuis 9 ans</span>
-            <h3 class="ach-label">Chaque bassin,<br />une œuvre sur-mesure</h3>
-            <p class="ach-desc">
-              Du bassin traditionnel à la piscine à débordement d'exception —
-              chaque projet est traité avec la même exigence, de la conception à
-              la livraison clés en main.
-            </p>
-          </div>
-
-          <!-- 20 ans d'expérience -->
-          <div class="ach-item rv d2">
-            <div class="ach-accent"></div>
-            <span class="ach-num">20<span class="ach-num-unit">ans</span></span>
-            <span class="ach-unit">d'expertise · depuis 2005</span>
-            <h3 class="ach-label">
-              Un savoir-faire<br />qui ne s'improvise pas
-            </h3>
-            <p class="ach-desc">
-              Fondée en 2005 à Saint-Priest, Beaulieu Piscines a bâti deux
-              décennies de maîtrise technique. Notre connaissance du terrain
-              lyonnais garantit des résultats sans surprise.
-            </p>
-          </div>
-
-          <!-- 1 mois de chantier -->
-          <div class="ach-item rv d3">
-            <div class="ach-accent"></div>
-            <span class="ach-num">1<span class="ach-num-unit">mois</span></span>
-            <span class="ach-unit">du terrassement à la mise en eau</span>
-            <h3 class="ach-label">
-              La rapidité,<br />sans jamais sacrifier la qualité
-            </h3>
-            <p class="ach-desc">
-              Pour une piscine remblayée, nous maîtrisons l'intégralité du
-              chantier en un seul mois. Un délai rare dans la région — hors
-              terrasse et aménagements extérieurs.
-            </p>
-          </div>
+        <div class="info-box">
+          <div class="val">2</div>
+          <div class="lbl">En ligne</div>
         </div>
-        <div style="margin-top: 4rem; text-align: center" class="rv">
-          <a href="#cta" class="btn-p">
-            Demander un devis gratuit
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </a>
+        <div class="info-box">
+          <div class="val">FR</div>
+          <div class="lbl">Marché</div>
+        </div>
+        <div class="info-box" style="border-left: 2px solid var(--primary);">
+          <div class="val" style="color:var(--primary)">pix.city</div>
+          <div class="lbl">Plateforme</div>
         </div>
       </div>
-    </section>
 
-    <!-- ═══════════════════ REVIEWS ═══════════════════ -->
-    <section id="reviews">
-      <div class="reviews-in">
-        <div class="reviews-hd rv">
-          <div>
-            <p class="tag rev-tag" style="margin-bottom: 1.25rem">
-              Avis clients
-            </p>
-            <h2 class="reviews-title">Ce que disent<br />nos clients</h2>
-          </div>
-          <div class="reviews-meta">
-            <div class="reviews-overall">5.0</div>
-            <div class="reviews-overall-stars">
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-            </div>
-            <div class="reviews-overall-sub">Note Google · 3 avis</div>
-          </div>
-        </div>
+    </main>
 
-        <div class="reviews-g">
-          <!-- Review 1 — Maeva Eyraud -->
-          <div class="review-card rv d1">
-            <span class="review-q">"</span>
-            <div class="review-stars">
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-            </div>
-            <p class="review-text">
-              Satisfaction totale concernant la réalisation de ma piscine
-              traditionnelle : Excellents conseils, respect des délais, qualité
-              des matériaux, exécution parfaite, résultat final entièrement
-              satisfaisant.
-            </p>
-            <div class="review-footer">
-              <div>
-                <p class="review-name">Maeva Eyraud</p>
-                <p class="review-verified">Avis vérifié</p>
-              </div>
-              <div class="review-google">
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                    fill="#4285F4" />
-                  <path
-                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                    fill="#34A853" />
-                  <path
-                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                    fill="#FBBC05" />
-                  <path
-                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                    fill="#EA4335" />
-                </svg>
-                <span class="review-google-txt">Google</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Review 2 — Tony Cozar -->
-          <div class="review-card rv d2">
-            <span class="review-q">"</span>
-            <div class="review-stars">
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-            </div>
-            <p class="review-text">
-              J'ai fait appel à leur service pour la construction de ma piscine
-              et je suis très satisfait. Un professionnalisme assez rare de nos
-              jours. Une formation post construction limpide et une
-              disponibilité qui rime avec réactivité. Les matériaux sont de
-              bonne facture. Les différents corps de métier s'accordent
-              parfaitement dans le timing.
-            </p>
-            <div class="review-footer">
-              <div>
-                <p class="review-name">Tony Cozar</p>
-                <p class="review-verified">Avis vérifié</p>
-              </div>
-              <div class="review-google">
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                    fill="#4285F4" />
-                  <path
-                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                    fill="#34A853" />
-                  <path
-                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                    fill="#FBBC05" />
-                  <path
-                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                    fill="#EA4335" />
-                </svg>
-                <span class="review-google-txt">Google</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Review 3 — Remi Rousset -->
-          <div class="review-card rv d3">
-            <span class="review-q">"</span>
-            <div class="review-stars">
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-            </div>
-            <p class="review-text">
-              Je recommande vivement Beaulieu Piscine pour la construction et
-              l'entretien de ma piscine. Depuis le début du projet, l'équipe a
-              toujours été à l'écoute, professionnelle et réactive. La
-              construction s'est déroulée sans accroc et à hauteur de mes
-              attentes. Aujourd'hui les interventions d'entretien sont
-              régulières et réalisées avec soin.
-            </p>
-            <div class="review-footer">
-              <div>
-                <p class="review-name">Remi Rousset</p>
-                <p class="review-verified">Avis vérifié</p>
-              </div>
-              <div class="review-google">
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                    fill="#4285F4" />
-                  <path
-                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                    fill="#34A853" />
-                  <path
-                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                    fill="#FBBC05" />
-                  <path
-                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                    fill="#EA4335" />
-                </svg>
-                <span class="review-google-txt">Google</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════ CTA / CONTACT ═══════════════════ -->
-    <section id="cta">
-      <div class="cta-bg-img"></div>
-      <div class="cta-in">
-        <div>
-          <p
-            class="tag"
-            style="color: rgba(255, 255, 255, 0.5); margin-bottom: 1.5rem">
-            Demande de devis
-          </p>
-          <h2 class="cta-h rv">
-            Parlons de<br />
-            votre projet <em>piscine</em>
-          </h2>
-          <p class="cta-b rv d1">
-            Décrivez-nous votre projet et notre équipe vous recontacte sous 48h
-            pour établir un devis sur-mesure, sans engagement.
-          </p>
-          <ul
-            class="rv d2"
-            style="
-              list-style: none;
-              margin-top: 1.5rem;
-              display: flex;
-              flex-direction: column;
-              gap: 0.75rem;
-            ">
-            <li
-              style="
-                display: flex;
-                align-items: center;
-                gap: 0.75rem;
-                font-family: &quot;Manrope&quot;, sans-serif;
-                font-size: 0.9rem;
-                color: rgba(255, 255, 255, 0.6);
-              ">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="var(--pl)"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-              Réponse sous 48h garantie
-            </li>
-            <li
-              style="
-                display: flex;
-                align-items: center;
-                gap: 0.75rem;
-                font-family: &quot;Manrope&quot;, sans-serif;
-                font-size: 0.9rem;
-                color: rgba(255, 255, 255, 0.6);
-              ">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="var(--pl)"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-              Devis gratuit et sans engagement
-            </li>
-            <li
-              style="
-                display: flex;
-                align-items: center;
-                gap: 0.75rem;
-                font-family: &quot;Manrope&quot;, sans-serif;
-                font-size: 0.9rem;
-                color: rgba(255, 255, 255, 0.6);
-              ">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="var(--pl)"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-              Experts disponibles depuis 2005
-            </li>
-          </ul>
-        </div>
-        <div class="showroom rv d2">
-          <p class="sr-title">Votre demande</p>
-          <form class="cf" onsubmit="return false;">
-            <div class="cf-field">
-              <label class="cf-label" for="cf-nom">Nom</label>
-              <input
-                class="cf-input"
-                id="cf-nom"
-                type="text"
-                placeholder="Votre nom complet"
-                autocomplete="name" />
-            </div>
-            <div class="cf-row">
-              <div class="cf-field">
-                <label class="cf-label" for="cf-email">Email</label>
-                <input
-                  class="cf-input"
-                  id="cf-email"
-                  type="email"
-                  placeholder="votre@email.fr"
-                  autocomplete="email" />
-              </div>
-              <div class="cf-field">
-                <label class="cf-label" for="cf-tel">Téléphone</label>
-                <input
-                  class="cf-input"
-                  id="cf-tel"
-                  type="tel"
-                  placeholder="06 00 00 00 00"
-                  autocomplete="tel" />
-              </div>
-            </div>
-            <div class="cf-field">
-              <label class="cf-label" for="cf-adr"
-                >Adresse du bien concerné</label
-              >
-              <input
-                class="cf-input"
-                id="cf-adr"
-                type="text"
-                placeholder="Adresse, ville, code postal"
-                autocomplete="street-address" />
-            </div>
-            <div class="cf-field">
-              <label class="cf-label" for="cf-msg">Votre message</label>
-              <textarea
-                class="cf-textarea"
-                id="cf-msg"
-                placeholder="Détaillez votre demande…"></textarea>
-            </div>
-            <button type="submit" class="cf-submit">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round">
-                <line x1="22" y1="2" x2="11" y2="13" />
-                <polygon points="22 2 15 22 11 13 2 9 22 2" />
-              </svg>
-              Envoyer ma demande
-            </button>
-          </form>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════ FOOTER ═══════════════════ -->
     <footer>
-      <p class="ft-copy">© 2025 Beaulieu Piscines. Tous droits réservés.</p>
-      <p class="ft-brand">Beaulieu Piscines · Saint-Priest, Lyon</p>
+      © 2026 Pix.city — Tous droits réservés.
     </footer>
 
-    <script>
-      // Hero bg zoom-in
-      window.addEventListener("load", () => {
-        document.getElementById("heroBg").classList.add("loaded");
-      });
-
-      // Scroll reveal
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) {
-              e.target.classList.add("vis");
-              observer.unobserve(e.target);
-            }
-          });
-        },
-        { threshold: 0.12 },
-      );
-      document.querySelectorAll(".rv").forEach((el) => observer.observe(el));
-
-      // Counter animation
-      function animateCount(el) {
-        const target = +el.dataset.target;
-        const suffix = "";
-        const duration = 1800;
-        const start = performance.now();
-        const update = (now) => {
-          const p = Math.min((now - start) / duration, 1);
-          const ease = 1 - Math.pow(1 - p, 3);
-          const val = Math.round(ease * target);
-          el.textContent = val.toLocaleString("fr-FR") + suffix;
-          if (p < 1) requestAnimationFrame(update);
-        };
-        requestAnimationFrame(update);
-      }
-
-      const statsObs = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) {
-              e.target.querySelectorAll("[data-target]").forEach(animateCount);
-              statsObs.unobserve(e.target);
-            }
-          });
-        },
-        { threshold: 0.3 },
-      );
-      const statsEl = document.getElementById("stats");
-      if (statsEl) statsObs.observe(statsEl);
-    </script>
   </body>
 </html>
