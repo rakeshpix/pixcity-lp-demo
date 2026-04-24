@@ -2263,7 +2263,7 @@
     <script>
       // ===== Configuration =====
       const CONFIG = {
-        FORM_ENDPOINT: "https://main.pix.city/api/marketing-lead/en",
+        FORM_ENDPOINT: "https://qwert.pix.city/api/marketing-lead/en",
         GTM_ID: "GTM-XXXXXXX",
         GA4_ID: "G-XXXXXXXXXX",
         ADS_CONV_ID: "AW-XXXXXXXXX",
@@ -2454,7 +2454,13 @@
           }
 
           // UTM helper — reads from sessionStorage written by form-handler.js
-          const getUtm = (k) => { try { return sessionStorage.getItem("pix_" + k) || ""; } catch(_) { return ""; } };
+          const getUtm = (k) => {
+            try {
+              return sessionStorage.getItem("pix_" + k) || "";
+            } catch (_) {
+              return "";
+            }
+          };
 
           const payload = {
             name: form.querySelector("#name" + suffix).value.trim(),
@@ -2489,7 +2495,9 @@
           try {
             if (CONFIG.FORM_ENDPOINT) {
               if (siteKey && window.grecaptcha) {
-                const token = await window.grecaptcha.execute(siteKey, { action: "submit" });
+                const token = await window.grecaptcha.execute(siteKey, {
+                  action: "submit",
+                });
                 await doFetch(token);
               } else {
                 await doFetch(null);
