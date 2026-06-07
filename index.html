@@ -1,131 +1,291 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Pix.city — LP Demos</title>
+    <title>Pix.city — Library</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,400;0,600;0,700;0,800;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
     <style>
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
       :root {
-        --primary: #129FB5;
-        --primary-dark: #006877;
-        --bg: #F8F9FA;
-        --surface: #ffffff;
-        --border: #E9EAEB;
-        --text: #1A1A1B;
-        --muted: #6B7280;
-        --tag-bg: rgba(18,159,181,0.10);
+        --teal: #129FB5;
+        --teal-dim: rgba(18,159,181,0.12);
+        --teal-glow: rgba(18,159,181,0.18);
+        --bg: #0B0C10;
+        --surface: #13151C;
+        --surface-2: #1A1D27;
+        --border: rgba(255,255,255,0.07);
+        --border-hover: rgba(18,159,181,0.5);
+        --text: #F0F1F3;
+        --muted: #6B7385;
+        --muted-2: #8A8FA0;
       }
 
+      html { scroll-behavior: smooth; }
+
       body {
-        font-family: 'Manrope', sans-serif;
+        font-family: 'DM Sans', sans-serif;
         background: var(--bg);
         color: var(--text);
         min-height: 100vh;
         -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
       }
 
-      /* ── TOP BAR ── */
+      /* ── NOISE TEXTURE OVERLAY ── */
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.4;
+      }
+
+      /* ── AMBIENT GLOW ── */
+      .ambient {
+        position: fixed;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(18,159,181,0.08) 0%, transparent 70%);
+        top: -200px;
+        right: -100px;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* ── HEADER ── */
       header {
-        background: var(--surface);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(11,12,16,0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         border-bottom: 1px solid var(--border);
-        padding: 0 32px;
-        height: 56px;
+        padding: 0 40px;
+        height: 52px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        position: sticky;
-        top: 0;
-        z-index: 10;
       }
 
       .logo {
         font-family: 'Epilogue', sans-serif;
-        font-weight: 700;
-        font-size: 1.1rem;
-        letter-spacing: -0.04em;
+        font-weight: 800;
+        font-size: 1rem;
+        letter-spacing: -0.05em;
         color: var(--text);
         text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 1px;
       }
-      .logo span { color: var(--primary); }
+      .logo-dot { color: var(--teal); }
 
-      .header-badge {
-        font-size: 0.7rem;
-        font-weight: 600;
-        letter-spacing: 0.06em;
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .badge {
+        font-size: 0.65rem;
+        font-weight: 500;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
-        background: var(--tag-bg);
-        color: var(--primary);
+        color: var(--teal);
+        background: var(--teal-dim);
+        border: 1px solid rgba(18,159,181,0.2);
         padding: 3px 10px;
         border-radius: 999px;
       }
 
-      /* ── MAIN LAYOUT ── */
-      main {
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 40px 24px 64px;
+      .count-pill {
+        font-size: 0.7rem;
+        font-weight: 500;
+        color: var(--muted);
+        letter-spacing: 0.02em;
       }
 
-      /* ── PAGE HEADER ── */
-      .page-header {
-        margin-bottom: 32px;
+      /* ── MAIN ── */
+      main {
+        position: relative;
+        z-index: 1;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 56px 32px 80px;
       }
-      .page-header h1 {
+
+      /* ── HERO ── */
+      .hero {
+        margin-bottom: 64px;
+      }
+
+      .hero-eyebrow {
+        font-size: 0.7rem;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--teal);
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .hero-eyebrow::before {
+        content: '';
+        display: block;
+        width: 20px;
+        height: 1px;
+        background: var(--teal);
+        opacity: 0.6;
+      }
+
+      .hero h1 {
         font-family: 'Epilogue', sans-serif;
-        font-size: 1.5rem;
-        font-weight: 700;
-        letter-spacing: -0.03em;
+        font-size: clamp(2rem, 5vw, 3.2rem);
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        line-height: 1.05;
         color: var(--text);
+        margin-bottom: 16px;
+      }
+      .hero h1 em {
+        font-style: italic;
+        color: var(--teal);
+      }
+
+      .hero-sub {
+        font-size: 0.9rem;
+        color: var(--muted-2);
+        line-height: 1.7;
+        max-width: 480px;
+        font-weight: 300;
+      }
+
+      /* ── STATS ROW ── */
+      .stats {
+        display: flex;
+        gap: 0;
+        margin-top: 40px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        background: var(--surface);
+      }
+
+      .stat {
+        flex: 1;
+        padding: 18px 24px;
+        border-right: 1px solid var(--border);
+      }
+      .stat:last-child { border-right: none; }
+
+      .stat-val {
+        font-family: 'Epilogue', sans-serif;
+        font-size: 1.6rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        color: var(--text);
+        line-height: 1;
         margin-bottom: 4px;
       }
-      .page-header p {
-        font-size: 0.875rem;
+      .stat-val.accent { color: var(--teal); }
+
+      .stat-lbl {
+        font-size: 0.72rem;
         color: var(--muted);
+        font-weight: 400;
+        letter-spacing: 0.02em;
       }
 
-      /* ── SECTION LABEL ── */
+      /* ── SECTION ── */
+      .section {
+        margin-bottom: 48px;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+      }
+
       .section-label {
-        font-size: 0.7rem;
-        font-weight: 600;
+        font-family: 'Epilogue', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 700;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         color: var(--muted);
-        margin-bottom: 12px;
       }
 
-      /* ── LP CARDS ── */
-      .cards-grid {
+      .section-count {
+        font-size: 0.7rem;
+        color: var(--muted);
+        opacity: 0.5;
+      }
+
+      /* ── CARDS GRID ── */
+      .grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
-        margin-bottom: 40px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
       }
-      @media (max-width: 600px) {
-        .cards-grid { grid-template-columns: 1fr; }
+      @media (max-width: 780px) {
+        .grid { grid-template-columns: 1fr 1fr; }
+      }
+      @media (max-width: 500px) {
+        .grid { grid-template-columns: 1fr; }
+        header { padding: 0 20px; }
+        main { padding: 40px 20px 60px; }
       }
 
-      .lp-card {
+      /* ── CARD ── */
+      .card {
         background: var(--surface);
         border: 1px solid var(--border);
-        border-radius: 12px;
+        border-radius: 14px;
         padding: 20px;
         text-decoration: none;
         color: inherit;
         display: flex;
         flex-direction: column;
-        gap: 12px;
-        transition: border-color 0.15s, box-shadow 0.15s;
-      }
-      .lp-card:hover {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(18,159,181,0.08);
+        gap: 14px;
+        position: relative;
+        overflow: hidden;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
       }
 
+      .card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at 80% 0%, var(--teal-glow) 0%, transparent 60%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+      }
+
+      .card:hover {
+        border-color: var(--border-hover);
+        box-shadow: 0 0 0 1px rgba(18,159,181,0.15), 0 8px 32px rgba(0,0,0,0.4);
+        transform: translateY(-2px);
+      }
+
+      .card:hover::before { opacity: 1; }
+
+      .card:active { transform: translateY(0); }
+
+      /* ── CARD TOP ── */
       .card-top {
         display: flex;
         align-items: flex-start;
@@ -133,15 +293,30 @@
         gap: 8px;
       }
 
+      .card-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 1rem;
+        line-height: 1;
+      }
+
       .card-tag {
-        font-size: 0.68rem;
+        font-size: 0.62rem;
         font-weight: 600;
-        letter-spacing: 0.06em;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        background: var(--tag-bg);
-        color: var(--primary);
+        background: var(--teal-dim);
+        color: var(--teal);
         padding: 3px 8px;
         border-radius: 999px;
+        border: 1px solid rgba(18,159,181,0.15);
         white-space: nowrap;
       }
 
@@ -149,32 +324,41 @@
         display: flex;
         align-items: center;
         gap: 5px;
-        font-size: 0.7rem;
+        font-size: 0.65rem;
         color: var(--muted);
-      }
-      .status-dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: #22c55e;
-        flex-shrink: 0;
+        letter-spacing: 0.03em;
       }
 
-      .card-title {
+      .dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        background: #22c55e;
+        box-shadow: 0 0 6px rgba(34,197,94,0.5);
+      }
+      .dot.app { background: var(--teal); box-shadow: 0 0 6px rgba(18,159,181,0.5); }
+
+      /* ── CARD BODY ── */
+      .card-name {
         font-family: 'Epilogue', sans-serif;
-        font-size: 1rem;
+        font-size: 0.95rem;
         font-weight: 700;
         color: var(--text);
-        letter-spacing: -0.02em;
+        letter-spacing: -0.025em;
+        line-height: 1.25;
       }
 
       .card-desc {
-        font-size: 0.8rem;
-        line-height: 1.55;
-        color: var(--muted);
+        font-size: 0.775rem;
+        line-height: 1.6;
+        color: var(--muted-2);
+        font-weight: 300;
+        flex: 1;
       }
 
-      .card-footer {
+      /* ── CARD FOOTER ── */
+      .card-foot {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -183,129 +367,206 @@
       }
 
       .card-meta {
-        font-size: 0.72rem;
+        font-size: 0.68rem;
         color: var(--muted);
+        letter-spacing: 0.02em;
       }
 
-      .card-link {
+      .card-arrow {
         display: inline-flex;
         align-items: center;
         gap: 4px;
-        font-size: 0.78rem;
+        font-size: 0.72rem;
         font-weight: 600;
-        color: var(--primary);
+        color: var(--teal);
+        opacity: 0.7;
+        transition: opacity 0.15s, gap 0.15s;
+        letter-spacing: 0.01em;
       }
-      .card-link svg { transition: transform 0.15s; }
-      .lp-card:hover .card-link svg { transform: translateX(3px); }
-
-      /* ── INFO ROW ── */
-      .info-row {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-      }
-
-      .info-box {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 16px 20px;
-        flex: 1;
-        min-width: 160px;
-      }
-      .info-box .val {
-        font-family: 'Epilogue', sans-serif;
-        font-size: 1.4rem;
-        font-weight: 700;
-        color: var(--text);
-        letter-spacing: -0.03em;
-      }
-      .info-box .lbl {
-        font-size: 0.75rem;
-        color: var(--muted);
-        margin-top: 2px;
+      .card:hover .card-arrow {
+        opacity: 1;
+        gap: 7px;
       }
 
       /* ── FOOTER ── */
       footer {
+        position: relative;
+        z-index: 1;
         text-align: center;
-        font-size: 0.72rem;
+        font-size: 0.68rem;
         color: var(--muted);
-        padding-bottom: 32px;
+        padding-bottom: 40px;
+        letter-spacing: 0.03em;
       }
     </style>
   </head>
   <body>
 
+    <div class="ambient"></div>
+
     <header>
-      <a href="/" class="logo">pix<span>.</span>city</a>
-      <span class="header-badge">LP Demos</span>
+      <a href="/" class="logo">pix<span class="logo-dot">.</span>city</a>
+      <div class="header-right">
+        <span class="count-pill">6 projects</span>
+        <span class="badge">Library</span>
+      </div>
     </header>
 
     <main>
 
-      <div class="page-header">
-        <h1>Landing Pages</h1>
-        <p>Démos clients — cliquez sur une carte pour ouvrir la page.</p>
+      <div class="hero">
+        <p class="hero-eyebrow">Pix.city — Demo Library</p>
+        <h1>All <em>projects</em>,<br>one place.</h1>
+        <p class="hero-sub">Client applications and landing pages. Click any card to open the project.</p>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-val">6</div>
+            <div class="stat-lbl">Total projects</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val">3</div>
+            <div class="stat-lbl">Applications</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val">3</div>
+            <div class="stat-lbl">Landing pages</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val accent">FR</div>
+            <div class="stat-lbl">Market</div>
+          </div>
+        </div>
       </div>
 
-      <p class="section-label">Réalisations</p>
-      <div class="cards-grid">
+      <!-- APPLICATIONS -->
+      <div class="section">
+        <div class="section-header">
+          <span class="section-label">Applications</span>
+          <span class="section-count">3</span>
+        </div>
+        <div class="grid">
 
-        <!-- M. Lobry -->
-        <a href="/m-lobry/" class="lp-card">
-          <div class="card-top">
-            <span class="card-tag">Toiture</span>
-            <span class="card-status"><span class="status-dot"></span>En ligne</span>
-          </div>
-          <div class="card-title">M. Lobry Couvreur</div>
-          <div class="card-desc">Expert toiture à Argenteuil. Devis rapide, garantie décennale, formulaire de contact intégré.</div>
-          <div class="card-footer">
-            <span class="card-meta">Argenteuil · 95100</span>
-            <span class="card-link">Ouvrir <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-          </div>
-        </a>
+          <!-- Client App -->
+          <a href="/client-app-lp/login.html" class="card">
+            <div class="card-top">
+              <div class="card-icon">⚡</div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+                <span class="card-tag">Client Portal</span>
+                <span class="card-status"><span class="dot app"></span>Live</span>
+              </div>
+            </div>
+            <div class="card-name">Client App</div>
+            <div class="card-desc">Pix.city client portal. Dashboard, campaign tracking, reports and project management.</div>
+            <div class="card-foot">
+              <span class="card-meta">client-app-lp</span>
+              <span class="card-arrow">Open →</span>
+            </div>
+          </a>
 
-        <!-- Beaulieu Piscines -->
-        <a href="/beaulieu-piscines/" class="lp-card">
-          <div class="card-top">
-            <span class="card-tag">Piscines</span>
-            <span class="card-status"><span class="status-dot"></span>En ligne</span>
-          </div>
-          <div class="card-title">Beaulieu Piscines</div>
-          <div class="card-desc">Constructeur de piscines sur-mesure. Page premium orientée conversion pour projets haut de gamme.</div>
-          <div class="card-footer">
-            <span class="card-meta">Région SUD</span>
-            <span class="card-link">Ouvrir <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-          </div>
-        </a>
+          <!-- CityMaker -->
+          <a href="/citymaker-app-lp/" class="card">
+            <div class="card-top">
+              <div class="card-icon">🏙️</div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+                <span class="card-tag">App</span>
+                <span class="card-status"><span class="dot app"></span>Live</span>
+              </div>
+            </div>
+            <div class="card-name">CityMaker</div>
+            <div class="card-desc">Mobile-first app for creating and managing urban projects. PWA with offline support.</div>
+            <div class="card-foot">
+              <span class="card-meta">citymaker-app-lp</span>
+              <span class="card-arrow">Open →</span>
+            </div>
+          </a>
 
+          <!-- PAC Plan -->
+          <a href="/pac-plan/" class="card">
+            <div class="card-top">
+              <div class="card-icon">📊</div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+                <span class="card-tag">Back Office</span>
+                <span class="card-status"><span class="dot app"></span>Live</span>
+              </div>
+            </div>
+            <div class="card-name">PAC Plan</div>
+            <div class="card-desc">Pix.city back office. Track commercial action plans, KPIs and client deliverables.</div>
+            <div class="card-foot">
+              <span class="card-meta">pac-plan</span>
+              <span class="card-arrow">Open →</span>
+            </div>
+          </a>
+
+        </div>
       </div>
 
-      <p class="section-label">Vue d'ensemble</p>
-      <div class="info-row">
-        <div class="info-box">
-          <div class="val">2</div>
-          <div class="lbl">Landing pages</div>
+      <!-- LANDING PAGES -->
+      <div class="section">
+        <div class="section-header">
+          <span class="section-label">Landing Pages</span>
+          <span class="section-count">3</span>
         </div>
-        <div class="info-box">
-          <div class="val">2</div>
-          <div class="lbl">En ligne</div>
-        </div>
-        <div class="info-box">
-          <div class="val">FR</div>
-          <div class="lbl">Marché</div>
-        </div>
-        <div class="info-box" style="border-left: 2px solid var(--primary);">
-          <div class="val" style="color:var(--primary)">pix.city</div>
-          <div class="lbl">Plateforme</div>
+        <div class="grid">
+
+          <!-- M. Lobry -->
+          <a href="/m-lobry/" class="card">
+            <div class="card-top">
+              <div class="card-icon">🏠</div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+                <span class="card-tag">Toiture</span>
+                <span class="card-status"><span class="dot"></span>Live</span>
+              </div>
+            </div>
+            <div class="card-name">M. Lobry Couvreur</div>
+            <div class="card-desc">Roofing expert in Argenteuil. Fast quotes, ten-year guarantee, integrated contact form.</div>
+            <div class="card-foot">
+              <span class="card-meta">Argenteuil · 95100</span>
+              <span class="card-arrow">Open →</span>
+            </div>
+          </a>
+
+          <!-- Beaulieu Piscines -->
+          <a href="/beaulieu-piscines/" class="card">
+            <div class="card-top">
+              <div class="card-icon">🏊</div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+                <span class="card-tag">Piscines</span>
+                <span class="card-status"><span class="dot"></span>Live</span>
+              </div>
+            </div>
+            <div class="card-name">Beaulieu Piscines</div>
+            <div class="card-desc">Custom pool builder. Premium conversion-focused page for high-end residential projects.</div>
+            <div class="card-foot">
+              <span class="card-meta">Région SUD</span>
+              <span class="card-arrow">Open →</span>
+            </div>
+          </a>
+
+          <!-- Beaulieu Piscines Ratz -->
+          <a href="/beaulieu-piscines-ratz/" class="card">
+            <div class="card-top">
+              <div class="card-icon">🏊</div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+                <span class="card-tag">Piscines</span>
+                <span class="card-status"><span class="dot"></span>Live</span>
+              </div>
+            </div>
+            <div class="card-name">Beaulieu Piscines v2</div>
+            <div class="card-desc">Redesign variant of the Beaulieu Piscines page. New visual direction and brand identity.</div>
+            <div class="card-foot">
+              <span class="card-meta">Région SUD · v2</span>
+              <span class="card-arrow">Open →</span>
+            </div>
+          </a>
+
         </div>
       </div>
 
     </main>
 
     <footer>
-      © 2026 Pix.city — Tous droits réservés.
+      © 2026 Pix.city — All rights reserved.
     </footer>
 
   </body>
