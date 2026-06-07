@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#FAF4EC"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <title>Pix.city — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>
+    /* ── Dashboard page ─────────────────────────────────────── */
+    .page { background: var(--cream); }
+
+    /* Greeting ribbon */
+    .greeting-ribbon {
+      margin: 0 1.25rem 1rem;
+      background: linear-gradient(130deg, #081068 0%, #1230f5 55%, #2069F7 100%);
+      border-radius: 1rem; padding: 0.7rem 1rem;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 0.75rem; overflow: hidden; position: relative;
+    }
+    .greeting-ribbon::after {
+      content: ''; position: absolute; top: -24px; right: -10px;
+      width: 80px; height: 80px; border-radius: 50%;
+      background: rgba(255,255,255,0.07); pointer-events: none;
+    }
+    .ribbon-left { min-width: 0; flex: 1; }
+    .ribbon-greet {
+      font-size: 0.62rem; font-weight: 700;
+      color: rgba(255,255,255,0.6); display: block; margin-bottom: 0.1rem;
+    }
+    .ribbon-name {
+      font-size: 0.95rem; font-weight: 800; color: #fff;
+      letter-spacing: -0.02em; white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis;
+    }
+    .ribbon-stats { display: flex; align-items: center; gap: 0.4rem; flex-shrink: 0; }
+    .ribbon-stat {
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 0.625rem; padding: 0.35rem 0.6rem; text-align: center;
+    }
+    .ribbon-stat-val {
+      font-size: 0.78rem; font-weight: 800; color: #fff;
+      display: block; letter-spacing: -0.02em; white-space: nowrap;
+    }
+    .ribbon-stat-label {
+      font-size: 0.5rem; font-weight: 700; color: rgba(255,255,255,0.6);
+      text-transform: uppercase; letter-spacing: 0.05em; display: block;
+    }
+
+    /* Mission cards */
+    .missions-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0.75rem; padding: 0 1.25rem; margin-bottom: 1.25rem;
+    }
+    .mission-card {
+      background: #fff; border-radius: 1.25rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.05);
+      padding: 0.75rem 0.875rem; cursor: pointer;
+      position: relative; overflow: hidden;
+      transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1),
+                  box-shadow 0.2s ease;
+      text-decoration: none; display: block; color: inherit;
+    }
+    .mission-card:hover  { box-shadow: 0 4px 24px rgba(18,48,245,0.12); }
+    .mission-card:active { transform: scale(0.97); }
+    .mission-card-accent {
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      border-radius: 1.25rem 1.25rem 0 0;
+    }
+    .mission-header-row {
+      display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;
+    }
+    .mission-icon {
+      width: 30px; height: 30px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95rem; flex-shrink: 0;
+    }
+    .mission-name {
+      font-size: 0.83rem; font-weight: 800; color: var(--dark);
+      letter-spacing: -0.015em;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      flex: 1; min-width: 0;
+    }
+    .mission-badges { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 0.375rem; }
+    .mission-footer {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding-top: 0.5rem; border-top: 1px solid var(--border);
+    }
+    .mission-events-count { font-size: 0.68rem; font-weight: 700; }
+
+    /* To-Do cards */
+    .todo-card {
+      background: #fff; border-radius: 1rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 2px 8px rgba(0,0,0,0.04);
+      padding: 0.75rem 1rem;
+      display: flex; align-items: center; gap: 0.75rem;
+      cursor: pointer; margin-bottom: 0.5rem;
+      transition: box-shadow 0.15s ease, transform 0.15s ease;
+      text-decoration: none; color: inherit;
+    }
+    .todo-card:last-child { margin-bottom: 0; }
+    .todo-card:hover  { box-shadow: 0 4px 16px rgba(0,0,0,0.09); }
+    .todo-card:active { transform: scale(0.98); }
+    .todo-type-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem; font-weight: 800; flex-shrink: 0;
+    }
+    .todo-body  { flex: 1; min-width: 0; }
+    .todo-title {
+      font-size: 0.82rem; font-weight: 700; color: var(--dark);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      margin-bottom: 0.2rem;
+    }
+    .todo-meta  {
+      font-size: 0.68rem; font-weight: 600; color: var(--gray);
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .todo-due-badge {
+      display: inline-flex; align-items: center; gap: 0.2rem;
+      padding: 0.2rem 0.5rem; border-radius: 100px;
+      font-size: 0.6rem; font-weight: 800; flex-shrink: 0;
+      letter-spacing: 0.02em;
+    }
+    .due-urgent   { background: #fef2f2; color: #ef4444; }
+    .due-soon     { background: var(--orange-pale); color: var(--orange); }
+    .due-ok       { background: var(--gray-light);  color: var(--gray); }
+    .todo-progress {
+      display: flex; gap: 3px; margin-top: 0.3rem;
+    }
+    .todo-progress-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+    }
+    .todo-progress-dot.done { background: var(--green); }
+    .todo-progress-dot.empty { background: #e5e7eb; }
+
+    /* Date items */
+    .date-item {
+      display: flex; align-items: center; gap: 0.875rem;
+      padding: 0.75rem 1.25rem;
+      border-bottom: 1px solid var(--border); cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .date-item:last-child { border-bottom: none; }
+    .date-item:hover { background: var(--gray-light); }
+    .date-dot-wrap {
+      width: 42px; height: 42px; border-radius: 12px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      flex-shrink: 0; line-height: 1.2;
+    }
+    .date-num { font-size: 0.9rem; font-weight: 800; }
+    .date-mon { font-size: 0.55rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+    .date-info { flex: 1; min-width: 0; }
+    .date-title {
+      font-size: 0.875rem; font-weight: 700; color: var(--dark);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .date-sub  { font-size: 0.73rem; font-weight: 600; color: var(--gray); }
+
+    /* Invoice rows */
+    .invoice-row {
+      display: flex; align-items: center; gap: 0.875rem;
+      padding: 0.875rem 1.25rem; border-bottom: 1px solid var(--border);
+      cursor: pointer; transition: background 0.15s ease;
+    }
+    .invoice-row:last-child { border-bottom: none; }
+    .invoice-row:hover { background: var(--gray-light); }
+    .invoice-icon-wrap {
+      width: 40px; height: 40px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .invoice-amount { font-size: 0.95rem; font-weight: 800; color: var(--dark); }
+    .invoice-sub    { font-size: 0.73rem; font-weight: 600; color: var(--gray); }
+
+    /* Account manager card */
+    .owner-card {
+      margin: 0 1.25rem 1.5rem;
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1rem 1.125rem; background: #fff;
+      border-radius: 1.25rem; border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04); cursor: pointer;
+      transition: box-shadow 0.2s ease;
+    }
+    .owner-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+    .owner-avatar-wrap { position: relative; flex-shrink: 0; }
+    .owner-avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      object-fit: cover; display: block;
+      border: 2.5px solid rgba(18,48,245,0.15);
+    }
+    .online-dot {
+      position: absolute; bottom: 1px; right: 1px;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: #22c55e; border: 2px solid #fff;
+    }
+    .owner-info  { flex: 1; min-width: 0; }
+    .owner-name  { font-size: 0.9rem; font-weight: 800; color: var(--dark); }
+    .owner-role  { font-size: 0.73rem; font-weight: 600; color: var(--gray); margin-bottom: 0.5rem; }
+    .owner-actions { display: flex; gap: 0.5rem; }
+    .owner-action-btn {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      padding: 0.3rem 0.6rem; border-radius: 8px;
+      border: none; cursor: pointer; font-family: inherit;
+      font-size: 0.7rem; font-weight: 700;
+      transition: filter 0.15s ease;
+    }
+    .owner-action-btn:hover { filter: brightness(0.92); }
+    .action-call { background: var(--green-pale); color: var(--green); }
+    .action-msg  { background: var(--blue-pale);  color: var(--blue); }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- Drawer injected by shared.js -->
+
+  <div class="page">
+
+    <!-- Status bar -->
+    <div class="status-bar" style="background: var(--cream);">
+      <span class="status-time">9:41</span>
+      <div class="status-icons"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="app-header">
+      <button class="header-btn" onclick="openDrawer()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <line x1="3" y1="6"  x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="15" y2="12"/>
+          <line x1="3" y1="18" x2="18" y2="18"/>
+        </svg>
+      </button>
+      <span class="header-title">Dashboard</span>
+      <button class="header-btn" style="position: relative;">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+        <div class="notif-dot"></div>
+      </button>
+      <div class="avatar" onclick="openDrawer()">TR</div>
+    </div>
+
+    <!-- Scrollable content -->
+    <div class="scroll-area" style="padding-bottom: 1rem;">
+
+      <!-- Greeting ribbon -->
+      <div class="greeting-ribbon">
+        <div class="ribbon-left">
+          <span class="ribbon-greet">Good morning ☀️</span>
+          <span class="ribbon-name">Thomas Renard</span>
+        </div>
+        <div class="ribbon-stats">
+          <div class="ribbon-stat">
+            <span class="ribbon-stat-val">3</span>
+            <span class="ribbon-stat-label">Events Today</span>
+          </div>
+          <div class="ribbon-stat">
+            <span class="ribbon-stat-val">May 1</span>
+            <span class="ribbon-stat-label">Next Payment</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Missions -->
+      <div class="section-header" style="margin-top: 1.25rem;">
+        <span class="section-title">Your Missions</span>
+        <span class="section-link">View all</span>
+      </div>
+      <div class="missions-grid" id="missions-grid"></div>
+
+      <!-- To-Do -->
+      <div class="section-header">
+        <span class="section-title">To-Do</span>
+        <span class="section-link" onclick="location.href='todo.html'">View all</span>
+      </div>
+      <div style="padding: 0 1.25rem; margin-bottom: 1.25rem;" id="todo-list"></div>
+
+      <!-- Important dates -->
+      <div class="section-header">
+        <span class="section-title">Important Dates</span>
+        <span class="section-link" onclick="location.href='calendar.html?mission=0&contract=0'">
+          Calendar
+        </span>
+      </div>
+      <div class="card" style="margin: 0 1.25rem 1.25rem;">
+        <div class="date-item" onclick="location.href='calendar.html?mission=0&contract=0&day=21'">
+          <div class="date-dot-wrap" style="background: var(--yellow-pale); color: #92400e;">
+            <div class="date-num">21</div>
+            <div class="date-mon">Apr</div>
+          </div>
+          <div class="date-info">
+            <div class="date-title">Chef's Special Story</div>
+            <div class="date-sub">Le Fontaine · CM · Writing</div>
+          </div>
+          <span class="badge badge-yellow">Today</span>
+        </div>
+        <div class="date-item" onclick="location.href='calendar.html?mission=0&contract=0&day=22'">
+          <div class="date-dot-wrap" style="background: var(--orange-pale); color: var(--orange);">
+            <div class="date-num">22</div>
+            <div class="date-mon">Apr</div>
+          </div>
+          <div class="date-info">
+            <div class="date-title">Meta Challenge Launch</div>
+            <div class="date-sub">Le Fontaine · PAC · Integration</div>
+          </div>
+          <span class="badge badge-pac">Tomorrow</span>
+        </div>
+        <div class="date-item" onclick="location.href='calendar.html?mission=1&contract=0&day=23'">
+          <div class="date-dot-wrap" style="background: var(--pink-pale); color: var(--pink);">
+            <div class="date-num">23</div>
+            <div class="date-mon">Apr</div>
+          </div>
+          <div class="date-info">
+            <div class="date-title">Client Testimonial Story</div>
+            <div class="date-sub">Salon Luxe · CM · Writing</div>
+          </div>
+          <span class="badge badge-pink">2 days</span>
+        </div>
+        <div class="date-item">
+          <div class="date-dot-wrap" style="background: var(--blue-pale); color: var(--blue);">
+            <div class="date-num">1</div>
+            <div class="date-mon">May</div>
+          </div>
+          <div class="date-info">
+            <div class="date-title">Next Invoice Due</div>
+            <div class="date-sub">All missions · €1,540 total</div>
+          </div>
+          <span class="badge badge-blue">10 days</span>
+        </div>
+      </div>
+
+      <!-- Last invoices -->
+      <div class="section-header">
+        <span class="section-title">Last Invoices</span>
+        <span class="section-link">View all</span>
+      </div>
+      <div class="card" style="margin: 0 1.25rem 1.25rem;">
+        <div class="invoice-row">
+          <div class="invoice-icon-wrap" style="background: var(--green-pale);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                 stroke="var(--green)" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <div style="flex: 1;">
+            <div class="invoice-amount">€890 — Le Fontaine</div>
+            <div class="invoice-sub">Apr 1, 2026 · Paid</div>
+          </div>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+               stroke="#d1d5db" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </div>
+        <div class="invoice-row">
+          <div class="invoice-icon-wrap" style="background: var(--green-pale);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                 stroke="var(--green)" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <div style="flex: 1;">
+            <div class="invoice-amount">€650 — Salon Luxe</div>
+            <div class="invoice-sub">Apr 1, 2026 · Paid</div>
+          </div>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+               stroke="#d1d5db" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Account manager -->
+      <div class="section-header">
+        <span class="section-title">Account Manager</span>
+      </div>
+      <div class="owner-card">
+        <div class="owner-avatar-wrap">
+          <img src="https://placehold.co/52x52/1230f5/ffffff?text=MG"
+               alt="Maxime Gaudet" class="owner-avatar"/>
+          <div class="online-dot"></div>
+        </div>
+        <div class="owner-info">
+          <div class="owner-name">Maxime Gaudet</div>
+          <div class="owner-role">Senior Account Manager · Paris</div>
+          <div class="owner-actions">
+            <button class="owner-action-btn action-call"
+                    onclick="event.stopPropagation()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2.5">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.63 19a19.5 19.5 0 0 1-5-5 19.79 19.79 0 0 1-2.93-8.25A2 2 0 0 1 5.68 3.58h3a2 2 0 0 1 2 1.72c.127.96.361 1.9.7 2.81a2 2 0 0 1-.45 2.11L9.91 11.09a16 16 0 0 0 5.98 5.98l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.573 2.81.7A2 2 0 0 1 24 18v-.08z"/>
+              </svg>
+              Call
+            </button>
+            <button class="owner-action-btn action-msg"
+                    onclick="event.stopPropagation()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2.5">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              Message
+            </button>
+          </div>
+        </div>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+             stroke="#d1d5db" stroke-width="2.5">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </div>
+
+    </div>
+
+    <!-- Bottom nav -->
+    <div class="bottom-nav">
+      <button class="bnav-item active">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        Home
+      </button>
+      <button class="bnav-item" onclick="location.href='mission.html?id=0'">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        </svg>
+        Missions
+      </button>
+      <button class="bnav-item" onclick="location.href='calendar.html?mission=0&contract=0'">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        Calendar
+      </button>
+      <button class="bnav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+        Account
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+  // Inject drawer
+  injectDrawer('Dashboard');
+  document.querySelectorAll('.drawer-item').forEach(el => {
+    if (el.querySelector('.drawer-item-text')?.textContent.trim() === 'Dashboard') {
+      el.classList.add('active');
+    }
+  });
+
+  // Status bar
+  document.querySelector('.status-icons').innerHTML = STATUS_ICONS_HTML;
+  startClock();
+
+  // Render todo cards (pending + active only, max 4)
+  const todoList = document.getElementById('todo-list');
+  KICKOFFS.filter(k => k.status !== 'completed').slice(0, 4).forEach(ko => {
+    const answered = koAnsweredCount(ko);
+    const total    = ko.queries.length;
+    const days     = koDaysLeft(ko);
+    const dueClass = days <= 1 ? 'due-urgent' : days <= 3 ? 'due-soon' : 'due-ok';
+    const dueLabel = days < 0 ? 'Overdue' : days === 0 ? 'Due today' : days === 1 ? 'Due tomorrow' : `${days} days left`;
+
+    const dotsHtml = ko.queries.map((q, i) =>
+      `<div class="todo-progress-dot ${q.answer ? 'done' : 'empty'}"></div>`
+    ).join('');
+
+    const statusDot = ko.status === 'active'
+      ? `<span style="width:6px;height:6px;border-radius:50%;background:var(--orange);display:inline-block;margin-right:2px;"></span>`
+      : `<span style="width:6px;height:6px;border-radius:50%;background:#e5e7eb;display:inline-block;margin-right:2px;"></span>`;
+
+    const card = document.createElement('a');
+    card.href = `todo.html?id=${ko.id}`;
+    card.className = 'todo-card';
+    card.innerHTML = `
+      <div class="todo-type-icon" style="background:${ko.color.pale};color:${ko.color.from};">${ko.type}</div>
+      <div class="todo-body">
+        <div class="todo-title">${ko.title}</div>
+        <div class="todo-meta">
+          <span>${ko.missionEmoji} ${ko.missionName}</span>
+          <span>·</span>
+          <span>${answered}/${total} answered</span>
+        </div>
+        <div class="todo-progress">${dotsHtml}</div>
+      </div>
+      <span class="todo-due-badge ${dueClass}">${dueLabel}</span>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="2.5">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>`;
+    todoList.appendChild(card);
+  });
+
+  // Render mission cards
+  const grid = document.getElementById('missions-grid');
+  MISSIONS.forEach(m => {
+    const card = document.createElement('a');
+    card.href = `mission.html?id=${m.id}`;
+    card.className = 'mission-card';
+
+    const eventsThisMonth = m.events.filter(e => {
+      const d = new Date(e.date);
+      return d.getFullYear() === 2026 && d.getMonth() === 3;
+    }).length;
+
+    const badgesHtml = ['CM','PA','PAC','PS'].filter(type =>
+      m.events.some(e => e.type === type)
+    ).slice(0, 3).map(t => `<span class="badge badge-${t.toLowerCase()}">${t}</span>`).join('');
+
+    card.innerHTML = `
+      <div class="mission-card-accent"
+           style="background: linear-gradient(90deg, ${m.color.from}, ${m.color.to});"></div>
+      <div class="mission-header-row">
+        <div class="mission-icon" style="background: ${m.color.pale};">${m.emoji}</div>
+        <div class="mission-name">${m.name}</div>
+      </div>
+      <div class="mission-badges">${badgesHtml}</div>
+      <div class="mission-footer">
+        <span class="mission-events-count" style="color: ${m.color.from};">
+          ${eventsThisMonth} events
+        </span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+             stroke="#d1d5db" stroke-width="2.5">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </div>`;
+    grid.appendChild(card);
+  });
+</script>
+</body>
+</html>

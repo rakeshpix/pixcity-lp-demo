@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#ffffff"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <title>Pix.city — Request Detail</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>
+    .page { background: #fff; }
+
+    /* ── Selectors bar ──────────────────────────────────────── */
+    .selectors-bar {
+      display: flex; gap: 0.625rem;
+      padding: 0 1.25rem 0.875rem; flex-shrink: 0;
+    }
+    .selector-wrap { position: relative; flex: 1; }
+    .selector-wrap svg {
+      position: absolute; right: 0.75rem; top: 50%;
+      transform: translateY(-50%); pointer-events: none; color: var(--gray2);
+    }
+    .selector {
+      width: 100%; appearance: none; -webkit-appearance: none;
+      padding: 0.6rem 2rem 0.6rem 0.875rem;
+      border: 1.5px solid var(--border); border-radius: 0.875rem;
+      font-family: inherit; font-size: 0.78rem; font-weight: 700;
+      color: var(--dark); background: #fff; cursor: pointer; outline: none;
+      transition: border-color 0.15s ease;
+    }
+    .selector:focus { border-color: var(--blue); }
+
+    /* ── Request summary card ───────────────────────────────── */
+    .request-hero {
+      margin: 0 1.25rem 0.875rem;
+      border-radius: 1.25rem; padding: 1.125rem 1.25rem;
+      position: relative; overflow: hidden;
+    }
+    .request-hero::before {
+      content: ''; position: absolute;
+      top: -24px; right: -16px; width: 90px; height: 90px;
+      border-radius: 50%; background: rgba(255,255,255,0.08);
+    }
+    .rh-type {
+      font-size: 0.65rem; font-weight: 800; color: rgba(255,255,255,0.65);
+      text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.25rem;
+    }
+    .rh-title {
+      font-size: 1.1rem; font-weight: 800; color: #fff;
+      letter-spacing: -0.025em; margin-bottom: 0.5rem; line-height: 1.3;
+    }
+    .rh-meta {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;
+    }
+    .rh-chip {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 100px; padding: 0.2rem 0.6rem;
+      font-size: 0.68rem; font-weight: 700; color: rgba(255,255,255,0.9);
+    }
+
+    /* ── Brief section ──────────────────────────────────────── */
+    .brief-section {
+      margin: 0 1.25rem 0.875rem;
+      background: var(--gray-light); border-radius: 1rem;
+      padding: 0.875rem 1rem;
+    }
+    .brief-label {
+      font-size: 0.65rem; font-weight: 800; color: var(--gray2);
+      text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.375rem;
+    }
+    .brief-text {
+      font-size: 0.825rem; font-weight: 600; color: var(--dark); line-height: 1.55;
+    }
+
+    /* ── Divider + filter row ───────────────────────────────── */
+    .list-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.25rem 0.375rem; flex-shrink: 0;
+    }
+    .list-header-title {
+      font-size: 0.72rem; font-weight: 800; color: var(--gray);
+      text-transform: uppercase; letter-spacing: 0.07em;
+    }
+    .list-header-count {
+      font-size: 0.65rem; font-weight: 700; color: var(--gray2);
+    }
+
+    /* ── Task timeline ──────────────────────────────────────── */
+    .task-list { flex: 1; overflow-y: auto; }
+    .task-list::-webkit-scrollbar { display: none; }
+
+    .task-item {
+      display: flex; align-items: center; gap: 0.875rem;
+      padding: 0.875rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .task-item:last-child { border-bottom: none; }
+
+    /* Timeline connector */
+    .task-item::before {
+      content: ''; position: absolute;
+      left: calc(1.25rem + 17px); top: 0; bottom: 0; width: 2px;
+      background: var(--border);
+    }
+    .task-item:first-child::before { top: 50%; }
+    .task-item:last-child::before  { bottom: 50%; }
+
+    .task-node {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; position: relative; z-index: 1;
+      font-size: 0.65rem; font-weight: 800; letter-spacing: 0.02em;
+    }
+    .task-node.done        { background: var(--green-pale); color: var(--green); border: 2px solid var(--green); }
+    .task-node.in-progress { background: var(--blue-pale);  color: var(--blue);  border: 2px solid var(--blue); }
+    .task-node.pending     { background: #fff; color: var(--gray2); border: 2px solid #e5e7eb; }
+
+    .task-body { flex: 1; min-width: 0; }
+    .task-title {
+      font-size: 0.875rem; font-weight: 700; color: var(--dark);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .task-date  { font-size: 0.72rem; font-weight: 600; color: var(--gray); margin-top: 2px; }
+
+    .task-status-pill {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      padding: 0.22rem 0.6rem; border-radius: 100px;
+      font-size: 0.62rem; font-weight: 800; flex-shrink: 0;
+    }
+    .task-status-dot { width: 5px; height: 5px; border-radius: 50%; }
+
+    /* ── Overall progress bar ───────────────────────────────── */
+    .overall-progress {
+      padding: 0 1.25rem 0.75rem; flex-shrink: 0;
+    }
+    .overall-progress-track {
+      height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden;
+    }
+    .overall-progress-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+    .overall-progress-labels {
+      display: flex; justify-content: space-between;
+      font-size: 0.68rem; font-weight: 700; margin-top: 0.3rem;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="page">
+
+    <!-- Status bar -->
+    <div class="status-bar" style="background: #fff;">
+      <span class="status-time">9:41</span>
+      <div class="status-icons"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="app-header">
+      <button class="header-btn" onclick="location.href='new-request.html?tab=mine'">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span class="header-title" id="page-title">Request</span>
+      <button class="header-btn" onclick="openDrawer()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Selectors (mission + franchise dropdowns) -->
+    <div class="selectors-bar">
+      <div class="selector-wrap">
+        <select class="selector" id="mission-select">
+          <option value="">All Missions</option>
+        </select>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="selector-wrap">
+        <select class="selector" id="franchise-select">
+          <option value="">All Locations</option>
+        </select>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+
+    <!-- Request hero -->
+    <div class="request-hero" id="request-hero"></div>
+
+    <!-- Brief -->
+    <div class="brief-section" id="brief-section"></div>
+
+    <!-- Overall progress -->
+    <div class="overall-progress" id="overall-progress"></div>
+
+    <!-- Task list header -->
+    <div class="list-header">
+      <span class="list-header-title">Task Timeline</span>
+      <span class="list-header-count" id="task-count"></span>
+    </div>
+    <div class="divider" style="margin: 0 1.25rem 0.375rem;"></div>
+
+    <!-- Tasks -->
+    <div class="task-list" id="task-list"></div>
+
+    <!-- Bottom nav -->
+    <div class="bottom-nav">
+      <button class="bnav-item" onclick="location.href='dashboard.html'">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Home
+      </button>
+      <button class="bnav-item" onclick="location.href='new-request.html?tab=mine'">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Requests
+      </button>
+      <button class="bnav-item active">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Timeline
+      </button>
+      <button class="bnav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        Account
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+  injectDrawer('');
+  document.querySelector('.status-icons').innerHTML = STATUS_ICONS_HTML;
+  startClock();
+
+  const reqId = getParam('id');
+  let request  = REQUESTS.find(r => r.id === reqId) || REQUESTS[0];
+
+  // ── Populate selectors ───────────────────────────────────────── //
+  const missionSel  = document.getElementById('mission-select');
+  const franchiseSel = document.getElementById('franchise-select');
+
+  MISSIONS.forEach(m => {
+    const opt = document.createElement('option');
+    opt.value = m.id; opt.textContent = `${m.emoji} ${m.name}`;
+    if (request && m.id === request.missionId) opt.selected = true;
+    missionSel.appendChild(opt);
+  });
+
+  function updateFranchiseOptions() {
+    const mid = parseInt(missionSel.value);
+    const m   = isNaN(mid) ? null : MISSIONS.find(x => x.id === mid);
+    franchiseSel.innerHTML = '<option value="">All Locations</option>';
+    if (m) {
+      m.franchises.forEach(f => {
+        const opt = document.createElement('option');
+        opt.value = f.id; opt.textContent = f.label;
+        if (request && f.id === request.franchise) opt.selected = true;
+        franchiseSel.appendChild(opt);
+      });
+    }
+    renderDetail();
+  }
+
+  missionSel.addEventListener('change', () => {
+    // Find a matching request for the new mission selection
+    const mid = parseInt(missionSel.value);
+    if (!isNaN(mid)) {
+      const match = REQUESTS.find(r => r.missionId === mid);
+      if (match) request = match;
+    }
+    updateFranchiseOptions();
+  });
+
+  franchiseSel.addEventListener('change', () => {
+    const mid = parseInt(missionSel.value);
+    const fid = franchiseSel.value;
+    if (!isNaN(mid) && fid) {
+      const match = REQUESTS.find(r => r.missionId === mid && r.franchise === fid);
+      if (match) request = match;
+    }
+    renderDetail();
+  });
+
+  updateFranchiseOptions();
+
+  // ── Render detail ────────────────────────────────────────────── //
+  function renderDetail() {
+    if (!request) return;
+    const r   = request;
+    const sm  = REQUEST_STATUS_META[r.status];
+
+    document.title = `Pix.city — ${r.type} · ${r.franchiseLabel}`;
+    document.getElementById('page-title').textContent = `${r.icon} ${r.type}`;
+
+    // Hero card
+    document.getElementById('request-hero').style.background =
+      `linear-gradient(135deg, ${r.color.from}, ${r.color.to})`;
+    document.getElementById('request-hero').innerHTML = `
+      <div class="rh-type">${r.type} · Exceptional Project</div>
+      <div class="rh-title">${r.type} for ${r.franchiseLabel}</div>
+      <div class="rh-meta">
+        <span class="rh-chip">${r.missionEmoji} ${r.missionName}</span>
+        <span class="rh-chip">📍 ${r.franchiseLabel}</span>
+        <span class="rh-chip" style="background:rgba(255,255,255,0.25);">
+          ${sm.label}
+        </span>
+        ${r.targetDate ? `<span class="rh-chip">🗓 ${new Date(r.targetDate).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</span>` : ''}
+      </div>`;
+
+    // Brief
+    document.getElementById('brief-section').innerHTML = `
+      <div class="brief-label">Client Brief</div>
+      <div class="brief-text">${r.requirement}</div>
+      ${r.files.length ? `<div style="margin-top:0.5rem;display:flex;gap:0.375rem;flex-wrap:wrap;">
+        ${r.files.map(f => `
+          <span style="display:inline-flex;align-items:center;gap:0.3rem;background:#fff;border:1px solid var(--border);border-radius:7px;padding:0.2rem 0.5rem;font-size:0.7rem;font-weight:700;color:var(--dark);">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            ${f}
+          </span>`).join('')}
+      </div>` : ''}`;
+
+    // Progress bar
+    const doneTasks = r.tasks.filter(t => t.status === 'done').length;
+    const pct = Math.round((doneTasks / r.tasks.length) * 100);
+    const barColor = r.status === 'completed' ? 'var(--green)' : r.status === 'in-progress' ? 'var(--blue)' : 'var(--orange)';
+    document.getElementById('overall-progress').innerHTML = `
+      <div class="overall-progress-track">
+        <div class="overall-progress-fill" style="width:${pct}%;background:${barColor};"></div>
+      </div>
+      <div class="overall-progress-labels">
+        <span style="color:var(--gray);">${doneTasks} of ${r.tasks.length} tasks done</span>
+        <span style="color:${barColor};">${pct}% complete</span>
+      </div>`;
+
+    // Task count
+    document.getElementById('task-count').textContent = `${r.tasks.length} tasks`;
+
+    // Task list
+    const list = document.getElementById('task-list');
+    list.innerHTML = '';
+    r.tasks.forEach(t => {
+      const tsm = TASK_STATUS_META[t.status];
+      const item = document.createElement('div');
+      item.className = 'task-item';
+      const dateStr = new Date(t.date).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+      item.innerHTML = `
+        <div class="task-node ${t.status}">${t.label}</div>
+        <div class="task-body">
+          <div class="task-title">${t.title}</div>
+          <div class="task-date">${dateStr}</div>
+        </div>
+        <span class="task-status-pill" style="background:${tsm.color}18;color:${tsm.color};">
+          <span class="task-status-dot" style="background:${tsm.color};"></span>
+          ${tsm.label}
+        </span>`;
+      list.appendChild(item);
+    });
+  }
+
+  renderDetail();
+</script>
+</body>
+</html>

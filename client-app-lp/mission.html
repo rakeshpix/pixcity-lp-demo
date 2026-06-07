@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#FAF4EC"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <title>Pix.city — Mission</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>
+    /* ── Mission-specific ───────────────────────────────────── */
+    .page { background: var(--cream); }
+
+    /* Hero card */
+    .mission-hero {
+      margin: 0 1.25rem 1.25rem;
+      border-radius: 1.5rem; padding: 1.5rem;
+      position: relative; overflow: hidden;
+    }
+    .mission-hero::before {
+      content: ''; position: absolute;
+      top: -30px; right: -20px;
+      width: 130px; height: 130px; border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+    }
+    .mission-hero::after {
+      content: ''; position: absolute;
+      bottom: -20px; left: 20px;
+      width: 80px; height: 80px; border-radius: 50%;
+      background: rgba(255,255,255,0.07);
+    }
+    .hero-emoji {
+      font-size: 2.25rem; display: block; margin-bottom: 0.625rem;
+      position: relative; z-index: 1;
+    }
+    .hero-type {
+      font-size: 0.68rem; font-weight: 700;
+      color: rgba(255,255,255,0.65);
+      text-transform: uppercase; letter-spacing: 0.07em;
+      margin-bottom: 0.2rem; position: relative; z-index: 1;
+    }
+    .hero-name {
+      font-size: 1.7rem; font-weight: 800; color: #fff;
+      letter-spacing: -0.035em; margin-bottom: 1rem;
+      position: relative; z-index: 1;
+    }
+    .hero-stats {
+      display: flex; gap: 0.625rem; position: relative; z-index: 1;
+    }
+    .hstat {
+      flex: 1;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 0.75rem; padding: 0.5rem 0.75rem;
+    }
+    .hstat-label {
+      font-size: 0.58rem; font-weight: 700;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .hstat-value { font-size: 0.925rem; font-weight: 800; color: #fff; }
+
+    /* Quotation card */
+    .quotation-card {
+      margin: 0 1.25rem 1.25rem;
+      background: #fff; border-radius: 1.25rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+    .quotation-header {
+      padding: 1rem 1.25rem 0.875rem;
+      display: flex; align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .qt-ref {
+      font-size: 0.68rem; font-weight: 700; color: var(--gray2);
+      letter-spacing: 0.05em; text-transform: uppercase;
+      margin-bottom: 0.2rem;
+    }
+    .qt-issued {
+      font-size: 0.73rem; font-weight: 600; color: var(--gray);
+    }
+    .qt-rate {
+      text-align: right;
+    }
+    .qt-rate-amount {
+      font-size: 1.6rem; font-weight: 800; color: var(--dark);
+      letter-spacing: -0.035em;
+    }
+    .qt-rate-label {
+      font-size: 0.72rem; font-weight: 600; color: var(--gray);
+    }
+    .quotation-body { padding: 0.875rem 1.25rem; }
+    .qt-inclusions {
+      display: flex; flex-wrap: wrap; gap: 0.375rem;
+    }
+    .inclusion-chip {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: var(--gray-light); color: var(--dark2);
+      font-size: 0.72rem; font-weight: 700;
+      padding: 0.3rem 0.6rem; border-radius: 8px;
+    }
+    .inclusion-chip svg { flex-shrink: 0; color: var(--blue); }
+    .qt-footer {
+      padding: 0.75rem 1.25rem;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .qt-total {
+      font-size: 0.8rem; font-weight: 700; color: var(--gray);
+    }
+    .qt-total strong { color: var(--dark); }
+    .qt-dl-btn {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.75rem; font-weight: 700; color: var(--blue);
+      background: var(--blue-pale); padding: 0.35rem 0.75rem;
+      border-radius: 100px; border: none; cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s ease;
+    }
+    .qt-dl-btn:hover { background: #d9e0fd; }
+
+    /* Contract card */
+    .contract-card {
+      margin: 0 1.25rem 0.875rem;
+      background: #fff; border-radius: 1.25rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.05);
+      overflow: hidden; cursor: pointer;
+      transition: box-shadow 0.2s ease, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .contract-card:hover  { box-shadow: 0 4px 24px rgba(18,48,245,0.1); }
+    .contract-card:active { transform: scale(0.98); }
+
+    .contract-header {
+      padding: 1rem 1.25rem 0.75rem;
+      display: flex; align-items: flex-start;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .contract-label  { font-size: 0.9rem; font-weight: 800; color: var(--dark); }
+    .contract-period { font-size: 0.73rem; font-weight: 600; color: var(--gray); margin-top: 0.1rem; }
+    .contract-right  { text-align: right; }
+    .contract-amount { font-size: 1.05rem; font-weight: 800; }
+
+    /* Month strip */
+    .month-strip {
+      padding: 0.875rem 1.25rem;
+      display: flex; gap: 0.375rem; overflow-x: auto;
+    }
+    .month-strip::-webkit-scrollbar { display: none; }
+    .month-pill {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 3px;
+      flex-shrink: 0; width: 38px;
+      padding: 0.425rem 0.25rem; border-radius: 10px;
+      font-size: 0.62rem; font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+    .month-pill-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .month-pill.paid     { background: var(--green-pale); color: var(--green); }
+    .month-pill.current  { background: var(--blue);        color: #fff; }
+    .month-pill.upcoming { background: var(--gray-light);  color: var(--gray2); }
+    .month-pill.paid .month-pill-dot     { background: var(--green); }
+    .month-pill.current .month-pill-dot  { background: rgba(255,255,255,0.7); }
+    .month-pill.upcoming .month-pill-dot { background: #c0c4cc; }
+
+    .contract-footer {
+      padding: 0.75rem 1.25rem;
+      display: flex; align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+    }
+    .contract-paid-label {
+      font-size: 0.75rem; font-weight: 700; color: var(--gray);
+    }
+    .contract-open-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.78rem; font-weight: 700; color: var(--blue);
+      background: var(--blue-pale); padding: 0.4rem 0.875rem;
+      border-radius: 100px; border: none; cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s ease;
+    }
+    .contract-open-btn:hover { background: #d9e0fd; }
+
+    /* Renewal hint */
+    .renewal-hint {
+      margin: 0 1.25rem 1.25rem;
+      padding: 0.875rem 1.125rem;
+      background: var(--yellow-pale);
+      border: 1px solid rgba(255,191,13,0.3);
+      border-radius: 1rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .renewal-hint-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: rgba(255,191,13,0.2);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .renewal-hint p {
+      font-size: 0.78rem; font-weight: 700; color: #78350f;
+      line-height: 1.4;
+    }
+    .renewal-hint a {
+      color: #92400e; text-decoration: underline; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <div class="page">
+
+    <!-- Status bar -->
+    <div class="status-bar" style="background: var(--cream);">
+      <span class="status-time">9:41</span>
+      <div class="status-icons"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="app-header">
+      <button class="header-btn" onclick="history.back()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </button>
+      <span class="header-title" id="page-title">Mission</span>
+      <button class="header-btn" onclick="openDrawer()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="5" r="1"/>
+          <circle cx="12" cy="12" r="1"/>
+          <circle cx="12" cy="19" r="1"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Scrollable content -->
+    <div class="scroll-area" id="page-scroll" style="padding-bottom: 1.5rem;">
+
+      <!-- Hero -->
+      <div class="mission-hero" id="mission-hero">
+        <span class="hero-emoji" id="hero-emoji"></span>
+        <div class="hero-type"  id="hero-type"></div>
+        <div class="hero-name"  id="hero-name"></div>
+        <div class="hero-stats" id="hero-stats"></div>
+      </div>
+
+      <!-- Quotation -->
+      <div class="section-header">
+        <span class="section-title">Quotation</span>
+      </div>
+      <div class="quotation-card" id="quotation-card"></div>
+
+      <!-- Contracts -->
+      <div class="section-header" style="margin-top: 0.25rem;">
+        <span class="section-title">Contracts</span>
+        <span class="section-link" id="contracts-count"></span>
+      </div>
+      <div id="contracts-list"></div>
+
+      <!-- Renewal hint -->
+      <div class="renewal-hint">
+        <div class="renewal-hint-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+               stroke="#92400e" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+        <p>Contract renewal available in <strong>Aug 2026</strong>.
+           <a>Contact your manager</a> to discuss options.</p>
+      </div>
+
+    </div>
+
+    <!-- Bottom nav -->
+    <div class="bottom-nav">
+      <button class="bnav-item" onclick="location.href='dashboard.html'">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        Home
+      </button>
+      <button class="bnav-item active">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        </svg>
+        Missions
+      </button>
+      <button class="bnav-item" id="bnav-cal">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        Calendar
+      </button>
+      <button class="bnav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+        Account
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+  // Inject drawer
+  injectDrawer('Missions');
+
+  // Status bar
+  document.querySelector('.status-icons').innerHTML = STATUS_ICONS_HTML;
+  startClock();
+
+  // Read mission id from URL
+  const missionId = parseInt(getParam('id', '0'));
+  const m = MISSIONS[missionId] || MISSIONS[0];
+
+  // Page title
+  document.title = `Pix.city — ${m.name}`;
+  document.getElementById('page-title').textContent = m.name;
+
+  // Bottom nav calendar link
+  document.getElementById('bnav-cal').onclick = () => {
+    location.href = `calendar.html?mission=${m.id}&contract=0`;
+  };
+
+  // ── Hero ────────────────────────────────────────────────── //
+  document.getElementById('mission-hero').style.background =
+    `linear-gradient(135deg, ${m.color.from}, ${m.color.to})`;
+  document.getElementById('hero-emoji').textContent = m.emoji;
+  document.getElementById('hero-type').textContent  = m.type;
+  document.getElementById('hero-name').textContent  = m.name;
+
+  const eventsThisMonth = m.events.filter(e => {
+    const d = new Date(e.date);
+    return d.getFullYear() === 2026 && d.getMonth() === 3;
+  }).length;
+
+  document.getElementById('hero-stats').innerHTML = `
+    <div class="hstat">
+      <div class="hstat-label">Monthly</div>
+      <div class="hstat-value">${m.quotation.monthly}</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-label">Contracts</div>
+      <div class="hstat-value">${m.contracts.length}</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-label">Apr Events</div>
+      <div class="hstat-value">${eventsThisMonth}</div>
+    </div>`;
+
+  // ── Quotation ────────────────────────────────────────────── //
+  const qt = m.quotation;
+  const inclusionsHtml = qt.inclusions.map(i => `
+    <span class="inclusion-chip">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2.5">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      ${i}
+    </span>`).join('');
+
+  document.getElementById('quotation-card').innerHTML = `
+    <div class="quotation-header">
+      <div>
+        <div class="qt-ref">${qt.ref}</div>
+        <div class="qt-issued">Issued ${qt.date}</div>
+      </div>
+      <div class="qt-rate">
+        <div class="qt-rate-amount">${qt.monthly}</div>
+        <div class="qt-rate-label">per month</div>
+      </div>
+    </div>
+    <div class="quotation-body">
+      <div class="qt-inclusions">${inclusionsHtml}</div>
+    </div>
+    <div class="qt-footer">
+      <span class="qt-total">Annual total: <strong>${qt.yearly}</strong></span>
+      <button class="qt-dl-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download PDF
+      </button>
+    </div>`;
+
+  // ── Contracts ────────────────────────────────────────────── //
+  document.getElementById('contracts-count').textContent =
+    `${m.contracts.length} contract${m.contracts.length > 1 ? 's' : ''}`;
+
+  const contractsList = document.getElementById('contracts-list');
+  m.contracts.forEach((c, ci) => {
+    const paidCount   = c.months.filter(mo => mo.status === 'paid').length;
+    const totalMonths = c.months.length;
+    const isActive    = c.status === 'active';
+    const statusColor = isActive ? 'var(--green)' : 'var(--gray)';
+    const statusPale  = isActive ? 'var(--green-pale)' : 'var(--gray-light)';
+
+    const monthsHtml = c.months.map(mo => `
+      <div class="month-pill ${mo.status}">
+        ${mo.label}
+        <div class="month-pill-dot"></div>
+      </div>`).join('');
+
+    const card = document.createElement('div');
+    card.className = 'contract-card';
+    card.innerHTML = `
+      <div class="contract-header">
+        <div>
+          <div class="contract-label">${c.label}</div>
+          <div class="contract-period">${c.start} → ${c.end}</div>
+        </div>
+        <div class="contract-right">
+          <div class="contract-amount" style="color: ${statusColor};">${c.monthly}/mo</div>
+          <span class="badge" style="background: ${statusPale}; color: ${statusColor}; margin-top: 4px;">
+            ${isActive ? 'Active' : 'Completed'}
+          </span>
+        </div>
+      </div>
+      <div class="month-strip">${monthsHtml}</div>
+      <div class="contract-footer">
+        <span class="contract-paid-label">
+          ${paidCount} / ${totalMonths} months paid
+        </span>
+        <button class="contract-open-btn">
+          Open Calendar
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+        </button>
+      </div>`;
+
+    const calUrl = `calendar.html?mission=${m.id}&contract=${ci}`;
+    card.addEventListener('click', () => { location.href = calUrl; });
+    card.querySelector('.contract-open-btn').addEventListener('click', e => {
+      e.stopPropagation();
+      location.href = calUrl;
+    });
+
+    contractsList.appendChild(card);
+  });
+</script>
+</body>
+</html>

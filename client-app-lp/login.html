@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#1230f5"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <title>Pix.city — Sign In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>
+    /* ── Login-specific ─────────────────────────────────────── */
+    .page {
+      background: linear-gradient(160deg, #06082B 0%, #1230f5 45%, #3157F6 70%, #4060E8 100%);
+      justify-content: flex-end;
+    }
+
+    .login-top {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 2rem 2rem 0;
+    }
+
+    .login-logo-wrap {
+      width: 80px; height: 80px; border-radius: 26px;
+      background: rgba(255,255,255,0.12);
+      border: 1.5px solid rgba(255,255,255,0.25);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.3),
+                  inset 0 1px 0 rgba(255,255,255,0.2);
+      position: relative; overflow: hidden;
+    }
+    .login-logo-wrap::before {
+      content: '';
+      position: absolute; inset: 0; border-radius: 26px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.12), transparent 60%);
+    }
+
+    .login-tagline {
+      text-align: center; margin-bottom: 2.5rem;
+    }
+    .login-tagline h1 {
+      font-size: 1.65rem; font-weight: 800; color: #fff;
+      letter-spacing: -0.035em; margin-bottom: 0.375rem;
+    }
+    .login-tagline p {
+      font-size: 0.875rem; color: rgba(255,255,255,0.6);
+      font-weight: 600;
+    }
+
+    /* Floating feature pills */
+    .login-features {
+      display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;
+      margin-bottom: 1rem;
+    }
+    .feature-pill {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 0.3rem 0.75rem; border-radius: 100px;
+      font-size: 0.72rem; font-weight: 700; color: rgba(255,255,255,0.85);
+    }
+    .feature-pill-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.6);
+    }
+
+    /* Bottom sheet */
+    .login-sheet {
+      background: #fff;
+      border-radius: 2rem 2rem 0 0;
+      padding: 2rem 1.75rem calc(2.5rem + var(--safe-bot));
+      box-shadow: 0 -12px 48px rgba(0,0,0,0.14);
+    }
+    .login-sheet h2 {
+      font-size: 1.55rem; font-weight: 800;
+      letter-spacing: -0.03em; color: var(--dark);
+      margin-bottom: 0.35rem;
+    }
+    .login-sheet > p {
+      font-size: 0.875rem; color: var(--gray);
+      margin-bottom: 1.75rem;
+    }
+    .input-group {
+      display: flex; flex-direction: column;
+      gap: 0.875rem; margin-bottom: 1.25rem;
+    }
+    .forgot-link {
+      text-align: right; font-size: 0.8rem; font-weight: 700;
+      color: var(--blue); cursor: pointer; margin-bottom: 1.25rem;
+      display: block; text-decoration: none;
+    }
+    .login-divider {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin: 1.25rem 0; color: #d1d5db;
+      font-size: 0.8rem; font-weight: 600;
+    }
+    .login-divider::before,
+    .login-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+    .login-footer-text {
+      text-align: center; font-size: 0.8rem;
+      color: var(--gray); font-weight: 600;
+    }
+    .login-footer-text span {
+      color: var(--blue); font-weight: 700; cursor: pointer;
+    }
+
+    /* Error message */
+    .login-error {
+      background: #fef2f2; border: 1px solid #fecaca;
+      border-radius: 0.75rem; padding: 0.75rem 1rem;
+      font-size: 0.8rem; font-weight: 700; color: #ef4444;
+      margin-bottom: 1rem; display: none;
+    }
+    .login-error.show { display: block; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="page">
+
+    <!-- Top area with logo -->
+    <div class="login-top">
+      <div class="login-logo-wrap">
+        <img src="brand_assets/pixcity-logo.webp" alt="Pix.city"
+             style="height: 40px; width: auto; position: relative; z-index: 1;"/>
+      </div>
+
+      <div class="login-tagline">
+        <h1>Client Portal</h1>
+        <p>Your missions &amp; content calendar</p>
+      </div>
+
+      <div class="login-features">
+        <span class="feature-pill"><span class="feature-pill-dot"></span>Missions</span>
+        <span class="feature-pill"><span class="feature-pill-dot"></span>Calendar</span>
+        <span class="feature-pill"><span class="feature-pill-dot"></span>Invoices</span>
+        <span class="feature-pill"><span class="feature-pill-dot"></span>Contracts</span>
+      </div>
+    </div>
+
+    <!-- Login sheet -->
+    <div class="login-sheet">
+      <h2>Welcome back 👋</h2>
+      <p>Sign in to access your dashboard</p>
+
+      <div class="login-error" id="login-error">
+        Invalid email or password. Please try again.
+      </div>
+
+      <div class="input-group">
+        <div class="input-wrap">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          <input class="input-field" type="email" id="email"
+                 placeholder="Email address" value="thomas@lefontaine.fr"
+                 autocomplete="email"/>
+        </div>
+        <div class="input-wrap">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <input class="input-field" type="password" id="password"
+                 placeholder="Password" value="••••••••"
+                 autocomplete="current-password"/>
+        </div>
+      </div>
+
+      <a class="forgot-link" href="#">Forgot password?</a>
+
+      <button class="btn-primary" onclick="handleLogin()">
+        Sign in
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </button>
+
+      <div class="login-divider">or</div>
+
+      <div class="login-footer-text">
+        Don't have an account?
+        <span>Contact your manager</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+  function handleLogin() {
+    const email = document.getElementById('email').value.trim();
+    const pass  = document.getElementById('password').value;
+
+    if (!email || !pass) {
+      document.getElementById('login-error').classList.add('show');
+      return;
+    }
+
+    // Simulate login — any non-empty credentials pass in this prototype
+    document.getElementById('login-error').classList.remove('show');
+
+    const btn = document.querySelector('.btn-primary');
+    btn.textContent = 'Signing in…';
+    btn.disabled = true;
+
+    setTimeout(() => {
+      window.location.href = 'dashboard.html';
+    }, 600);
+  }
+
+  // Allow Enter key
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleLogin();
+  });
+</script>
+</body>
+</html>

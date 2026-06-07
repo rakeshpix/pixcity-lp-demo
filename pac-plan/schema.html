@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PAC Plan — Database Schema</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@600;700;800&family=Manrope:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --c-config:    #3B82F6;
+      --c-core:      #129FB5;
+      --c-target:    #0D7490;
+      --c-challenge: #D97706;
+      --c-data:      #334155;
+      --c-ext:       #94A3B8;
+      --c-pk:        #F59E0B;
+      --c-fk:        #8B5CF6;
+      --c-uq:        #10B981;
+      --bg:          #F0F4F8;
+      --surface:     #ffffff;
+      --border:      #E2E8F0;
+      --text:        #1E293B;
+      --muted:       #64748B;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.875rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      height: 52px;
+      display: flex; align-items: center;
+      padding: 0 24px; gap: 16px;
+      position: sticky; top: 0; z-index: 50;
+    }
+    .topbar-logo { font-family:'Epilogue',sans-serif; font-weight:800; font-size:1rem; letter-spacing:-0.04em; color:var(--text); text-decoration:none; }
+    .topbar-logo span { color:var(--c-core); }
+    .topbar-divider { width:1px; height:18px; background:var(--border); }
+    .topbar-title { font-size:0.82rem; font-weight:600; color:var(--muted); }
+    .topbar-right { margin-left:auto; display:flex; align-items:center; gap:10px; }
+    .topbar-btn {
+      font-size:0.73rem; font-weight:600; padding:5px 13px;
+      border-radius:6px; border:1px solid var(--border);
+      background:none; cursor:pointer; color:var(--muted);
+      display:flex; align-items:center; gap:5px;
+      text-decoration:none; transition:all 0.12s;
+    }
+    .topbar-btn:hover { background:var(--bg); color:var(--text); }
+
+    /* ── CANVAS WRAPPER ── */
+    #canvas-wrap {
+      overflow: auto;
+      padding: 32px 40px 60px;
+      min-height: calc(100vh - 52px);
+    }
+
+    /* ── DIAGRAM ── */
+    #diagram {
+      position: relative;
+      width: 1040px;
+      height: 1180px;
+      margin: 0 auto;
+    }
+
+    /* SVG overlay */
+    #svg-lines {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      overflow: visible;
+      z-index: 1;
+    }
+
+    /* Section backgrounds */
+    .section-bg {
+      position: absolute;
+      border-radius: 14px;
+      pointer-events: none;
+    }
+    .section-bg.config {
+      background: rgba(59,130,246,0.04);
+      border: 1.5px dashed rgba(59,130,246,0.25);
+      left: 10px; top: 10px; right: 10px; height: 280px;
+    }
+    .section-bg.core {
+      background: rgba(18,159,181,0.03);
+      border: 1.5px dashed rgba(18,159,181,0.2);
+      left: 10px; top: 306px; right: 10px; bottom: 10px;
+    }
+    .section-label {
+      position: absolute;
+      font-size: 0.62rem; font-weight: 800;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 3px 10px 3px 14px;
+      border-radius: 0 6px 6px 0;
+      z-index: 2;
+    }
+    .section-label.config { background:rgba(59,130,246,0.12); color:#2563EB; top:22px; left:10px; }
+    .section-label.core   { background:rgba(18,159,181,0.12); color:var(--c-core); top:318px; left:10px; }
+
+    /* ── TABLE CARDS ── */
+    .tbl-card {
+      position: absolute;
+      z-index: 2;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.05);
+      width: 268px;
+      transition: box-shadow 0.15s;
+    }
+    .tbl-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.12); z-index:10; }
+
+    .tbl-card.ext {
+      border-style: dashed;
+      border-color: var(--c-ext);
+      opacity: 0.85;
+    }
+
+    /* Card header */
+    .tbl-head {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 14px;
+    }
+    .tbl-head-icon { font-size: 0.82rem; color: rgba(255,255,255,0.8); }
+    .tbl-head-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500; font-size: 0.78rem;
+      color: #fff; letter-spacing: -0.01em; flex: 1;
+    }
+    .tbl-head-badge {
+      font-size: 0.55rem; font-weight: 800;
+      letter-spacing: 0.07em; text-transform: uppercase;
+      padding: 2px 7px; border-radius: 999px;
+      background: rgba(255,255,255,0.2); color: #fff;
+    }
+
+    /* Column rows */
+    .tbl-cols { }
+    .col-row {
+      display: flex; align-items: center; gap: 7px;
+      padding: 5px 14px; border-bottom: 1px solid #F1F5F9;
+      font-size: 0.72rem; line-height: 1.4;
+      transition: background 0.08s;
+    }
+    .col-row:last-child { border-bottom: none; }
+    .col-row:hover { background: #F8FAFC; }
+    .col-icon { width: 13px; text-align: center; flex-shrink: 0; }
+    .col-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500; font-size: 0.72rem;
+      color: var(--text); min-width: 108px;
+      white-space: nowrap;
+    }
+    .col-type {
+      font-size: 0.63rem; color: #94A3B8; font-weight: 500;
+      white-space: nowrap;
+    }
+    .badges { display:flex; gap:3px; margin-left:auto; flex-shrink:0; }
+
+    /* Inline badges */
+    .b { font-size:0.52rem; font-weight:800; letter-spacing:0.04em; padding:1px 5px; border-radius:3px; text-transform:uppercase; white-space:nowrap; }
+    .b-pk { background:#FEF3C7; color:#92400E; }
+    .b-fk { background:#EDE9FE; color:#5B21B6; }
+    .b-uq { background:#DCFCE7; color:#15803D; }
+    .b-nn { background:#FEE2E2; color:#991B1B; }
+    .b-nu { background:#F1F5F9; color:#64748B; }
+    .b-chk{ background:#FFF7ED; color:#C2410C; }
+
+    /* Constraint note row */
+    .col-note {
+      padding: 4px 14px;
+      font-size: 0.63rem; color: #94A3B8;
+      background: #FAFBFC;
+      border-top: 1px dashed #E2E8F0;
+      font-style: italic;
+    }
+
+    /* ── LEGEND ── */
+    .legend {
+      position: fixed;
+      bottom: 20px; right: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      z-index: 20;
+      min-width: 200px;
+    }
+    .legend-title { font-size:0.65rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+    .legend-item { display:flex; align-items:center; gap:8px; margin-bottom:7px; font-size:0.72rem; color:var(--text); }
+    .legend-item:last-child { margin-bottom:0; }
+    .leg-line { width:28px; height:2px; border-radius:2px; flex-shrink:0; }
+    .leg-line.solid  { background:#94A3B8; }
+    .leg-line.dashed { background:transparent; border-top:2px dashed #94A3B8; }
+    .leg-dot { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
+
+    /* ── TOOLTIP ── */
+    .tbl-card[title] { cursor:default; }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<nav class="topbar">
+  <a class="topbar-logo" href="index.html">Pix<span>.</span>City</a>
+  <div class="topbar-divider"></div>
+  <span class="topbar-title">PAC Plan — Database Schema</span>
+  <div class="topbar-right">
+    <a class="topbar-btn" href="index.html"><i class="bi bi-arrow-left"></i> Back to App</a>
+  </div>
+</nav>
+
+<!-- CANVAS -->
+<div id="canvas-wrap">
+<div id="diagram">
+
+  <!-- SVG connector lines (drawn by JS) -->
+  <svg id="svg-lines"></svg>
+
+  <!-- Section labels -->
+  <div class="section-bg config"></div>
+  <div class="section-bg core"></div>
+  <div class="section-label config">Config / Lookup Tables</div>
+  <div class="section-label core">Core Entities</div>
+
+  <!-- ════════ CONFIG TABLES ════════ -->
+
+  <!-- plan_metric -->
+  <div class="tbl-card" id="card_plan_metric" style="left:30px;top:44px">
+    <div class="tbl-head" style="background:#3B82F6">
+      <i class="bi bi-sliders tbl-head-icon"></i>
+      <span class="tbl-head-name">plan_metric</span>
+      <span class="tbl-head-badge">Config</span>
+    </div>
+    <div class="tbl-cols">
+      <div class="col-row"><span class="col-icon"><i class="bi bi-key-fill" style="color:var(--c-pk)"></i></span><span class="col-name">id</span><span class="col-type">INT</span><span class="badges"><span class="b b-pk">PK</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">key</span><span class="col-type">VARCHAR(50)</span><span class="badges"><span class="b b-uq">UNIQUE</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">label</span><span class="col-type">VARCHAR(100)</span><span class="badges"><span class="b b-nn">NOT NULL</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">format_type</span><span class="col-type">ENUM</span><span class="badges"><span class="b b-nn">NOT NULL</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">is_inverse</span><span class="col-type">BOOLEAN</span><span class="badges"><span class="b b-nu">DEFAULT false</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">is_computed</span><span class="col-type">BOOLEAN</span><span class="badges"><span class="b b-nu">DEFAULT false</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">created_at</span><span class="col-type">TIMESTAMP</span></div>
+    </div>
+    <div class="col-note">key: 'budget','cpl','roas','leads'…</div>
+  </div>
+
+  <!-- plan_type_metric (junction) -->
+  <div class="tbl-card" id="card_plan_type_metric" style="left:350px;top:44px">
+    <div class="tbl-head" style="background:#6366F1">
+      <i class="bi bi-diagram-3 tbl-head-icon"></i>
+      <span class="tbl-head-name">plan_type_metric</span>
+      <span class="tbl-head-badge">Junction</span>
+    </div>
+    <div class="tbl-cols">
+      <div class="col-row"><span class="col-icon"><i class="bi bi-link-45deg" style="color:var(--c-fk)"></i></span><span class="col-name">plan_type_id</span><span class="col-type">INT</span><span class="badges"><span class="b b-fk">FK</span><span class="b b-pk">PK</span></span></div>
+      <div class="col-row"><span class="col-icon"><i class="bi bi-link-45deg" style="color:var(--c-fk)"></i></span><span class="col-name">metric_id</span><span class="col-type">INT</span><span class="badges"><span class="b b-fk">FK</span><span class="b b-pk">PK</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">sort_order</span><span class="col-type">INT</span><span class="badges"><span class="b b-nu">DEFAULT 0</span></span></div>
+    </div>
+    <div class="col-note">PK: (plan_type_id, metric_id)</div>
+  </div>
+
+  <!-- plan_type -->
+  <div class="tbl-card" id="card_plan_type" style="left:680px;top:44px">
+    <div class="tbl-head" style="background:#3B82F6">
+      <i class="bi bi-tag tbl-head-icon"></i>
+      <span class="tbl-head-name">plan_type</span>
+      <span class="tbl-head-badge">Config</span>
+    </div>
+    <div class="tbl-cols">
+      <div class="col-row"><span class="col-icon"><i class="bi bi-key-fill" style="color:var(--c-pk)"></i></span><span class="col-name">id</span><span class="col-type">INT</span><span class="badges"><span class="b b-pk">PK</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">key</span><span class="col-type">VARCHAR(50)</span><span class="badges"><span class="b b-uq">UNIQUE</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">label</span><span class="col-type">VARCHAR(100)</span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">color_hex</span><span class="col-type">VARCHAR(7)</span></div>
+    </div>
+    <div class="col-note">key: 'leads','ecom','traffic','followers'</div>
+  </div>
+
+  <!-- ════════ CORE TABLES ════════ -->
+
+  <!-- plan -->
+  <div class="tbl-card" id="card_plan" style="left:340px;top:360px">
+    <div class="tbl-head" style="background:var(--c-core)">
+      <i class="bi bi-calendar3 tbl-head-icon"></i>
+      <span class="tbl-head-name">plan</span>
+      <span class="tbl-head-badge">Core</span>
+    </div>
+    <div class="tbl-cols">
+      <div class="col-row"><span class="col-icon"><i class="bi bi-key-fill" style="color:var(--c-pk)"></i></span><span class="col-name">id</span><span class="col-type">INT</span><span class="badges"><span class="b b-pk">PK</span></span></div>
+      <div class="col-row"><span class="col-icon"><i class="bi bi-link-45deg" style="color:var(--c-fk)"></i></span><span class="col-name">project_id</span><span class="col-type">INT</span><span class="badges"><span class="b b-fk">FK</span><span class="b b-nn">NOT NULL</span></span></div>
+      <div class="col-row"><span class="col-icon"><i class="bi bi-link-45deg" style="color:var(--c-fk)"></i></span><span class="col-name">plan_type_id</span><span class="col-type">INT</span><span class="badges"><span class="b b-fk">FK</span><span class="b b-nn">NOT NULL</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">period_label</span><span class="col-type">VARCHAR(20)</span><span class="badges"><span class="b b-nn">NOT NULL</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">period_start</span><span class="col-type">DATE</span><span class="badges"><span class="b b-nn">NOT NULL</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">period_end</span><span class="col-type">DATE</span><span class="badges"><span class="b b-nn">NOT NULL</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">notes</span><span class="col-type">TEXT</span><span class="badges"><span class="b b-nu">NULL</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">created_at</span><span class="col-type">TIMESTAMP</span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">updated_at</span><span class="col-type">TIMESTAMP</span></div>
+    </div>
+    <div class="col-note">UNIQUE (project_id, plan_type_id, period_start)</div>
+  </div>
+
+  <!-- project (external ref) -->
+  <div class="tbl-card ext" id="card_project" style="left:720px;top:374px;width:220px">
+    <div class="tbl-head" style="background:var(--c-ext)">
+      <i class="bi bi-building tbl-head-icon"></i>
+      <span class="tbl-head-name">project</span>
+      <span class="tbl-head-badge">External</span>
+    </div>
+    <div class="tbl-cols">
+      <div class="col-row"><span class="col-icon"><i class="bi bi-key-fill" style="color:var(--c-pk)"></i></span><span class="col-name">id</span><span class="col-type">INT</span><span class="badges"><span class="b b-pk">PK</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">name, client…</span><span class="col-type">—</span></div>
+    </div>
+    <div class="col-note">Managed by core back-office module</div>
+  </div>
+
+  <!-- plan_target -->
+  <div class="tbl-card" id="card_plan_target" style="left:30px;top:680px">
+    <div class="tbl-head" style="background:var(--c-target)">
+      <i class="bi bi-bullseye tbl-head-icon"></i>
+      <span class="tbl-head-name">plan_target</span>
+      <span class="tbl-head-badge">1:1 with plan</span>
+    </div>
+    <div class="tbl-cols">
+      <div class="col-row"><span class="col-icon"><i class="bi bi-key-fill" style="color:var(--c-pk)"></i></span><span class="col-name">id</span><span class="col-type">INT</span><span class="badges"><span class="b b-pk">PK</span></span></div>
+      <div class="col-row"><span class="col-icon"><i class="bi bi-link-45deg" style="color:var(--c-fk)"></i></span><span class="col-name">plan_id</span><span class="col-type">INT</span><span class="badges"><span class="b b-fk">FK</span><span class="b b-uq">UNIQUE</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">frozen_at</span><span class="col-type">TIMESTAMP</span><span class="badges"><span class="b b-nu">NULL</span></span></div>
+      <div class="col-row"><span class="col-icon"><i class="bi bi-link-45deg" style="color:var(--c-fk)"></i></span><span class="col-name">frozen_by</span><span class="col-type">INT</span><span class="badges"><span class="b b-fk">FK</span><span class="b b-nu">NULL</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">created_at</span><span class="col-type">TIMESTAMP</span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">updated_at</span><span class="col-type">TIMESTAMP</span></div>
+    </div>
+    <div class="col-note">NULL frozen_at = still editable by manager</div>
+  </div>
+
+  <!-- plan_challenge -->
+  <div class="tbl-card" id="card_plan_challenge" style="left:680px;top:680px">
+    <div class="tbl-head" style="background:var(--c-challenge)">
+      <i class="bi bi-lightning-charge tbl-head-icon"></i>
+      <span class="tbl-head-name">plan_challenge</span>
+      <span class="tbl-head-badge">1:N with plan</span>
+    </div>
+    <div class="tbl-cols">
+      <div class="col-row"><span class="col-icon"><i class="bi bi-key-fill" style="color:var(--c-pk)"></i></span><span class="col-name">id</span><span class="col-type">INT</span><span class="badges"><span class="b b-pk">PK</span></span></div>
+      <div class="col-row"><span class="col-icon"><i class="bi bi-link-45deg" style="color:var(--c-fk)"></i></span><span class="col-name">plan_id</span><span class="col-type">INT</span><span class="badges"><span class="b b-fk">FK</span><span class="b b-nn">NOT NULL</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">heading</span><span class="col-type">VARCHAR(100)</span><span class="badges"><span class="b b-nn">NOT NULL</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">description</span><span class="col-type">TEXT</span><span class="badges"><span class="b b-nu">NULL</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">challenge_date</span><span class="col-type">DATE</span><span class="badges"><span class="b b-nn">NOT NULL</span></span></div>
+      <div class="col-row"><span class="col-icon"><i class="bi bi-link-45deg" style="color:var(--c-fk)"></i></span><span class="col-name">created_by</span><span class="col-type">INT</span><span class="badges"><span class="b b-fk">FK</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">created_at</span><span class="col-type">TIMESTAMP</span></div>
+    </div>
+    <div class="col-note">Immutable after insert (no updated_at)</div>
+  </div>
+
+  <!-- plan_data -->
+  <div class="tbl-card" id="card_plan_data" style="left:330px;top:980px">
+    <div class="tbl-head" style="background:var(--c-data)">
+      <i class="bi bi-table tbl-head-icon"></i>
+      <span class="tbl-head-name">plan_data</span>
+      <span class="tbl-head-badge">Fact Table</span>
+    </div>
+    <div class="tbl-cols">
+      <div class="col-row"><span class="col-icon"><i class="bi bi-key-fill" style="color:var(--c-pk)"></i></span><span class="col-name">id</span><span class="col-type">INT</span><span class="badges"><span class="b b-pk">PK</span></span></div>
+      <div class="col-row"><span class="col-icon"><i class="bi bi-link-45deg" style="color:var(--c-fk)"></i></span><span class="col-name">plan_target_id</span><span class="col-type">INT</span><span class="badges"><span class="b b-fk">FK</span><span class="b b-nu">NULL</span></span></div>
+      <div class="col-row"><span class="col-icon"><i class="bi bi-link-45deg" style="color:var(--c-fk)"></i></span><span class="col-name">plan_challenge_id</span><span class="col-type">INT</span><span class="badges"><span class="b b-fk">FK</span><span class="b b-nu">NULL</span></span></div>
+      <div class="col-row"><span class="col-icon"><i class="bi bi-link-45deg" style="color:var(--c-fk)"></i></span><span class="col-name">metric_id</span><span class="col-type">INT</span><span class="badges"><span class="b b-fk">FK</span><span class="b b-nn">NOT NULL</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">value</span><span class="col-type">DECIMAL(15,4)</span><span class="badges"><span class="b b-nu">NULL</span></span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">created_at</span><span class="col-type">TIMESTAMP</span></div>
+      <div class="col-row"><span class="col-icon"></span><span class="col-name">updated_at</span><span class="col-type">TIMESTAMP</span></div>
+    </div>
+    <div class="col-note">CHECK: XOR(plan_target_id, plan_challenge_id) · UNIQUE(plan_target_id, metric_id) · UNIQUE(plan_challenge_id, metric_id)</div>
+  </div>
+
+</div><!-- /diagram -->
+</div><!-- /canvas-wrap -->
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-title">Legend</div>
+  <div class="legend-item"><div class="leg-dot" style="background:#3B82F6"></div> Config table</div>
+  <div class="legend-item"><div class="leg-dot" style="background:var(--c-core)"></div> Core entity</div>
+  <div class="legend-item"><div class="leg-dot" style="background:var(--c-challenge)"></div> Challenge / event</div>
+  <div class="legend-item"><div class="leg-dot" style="background:var(--c-data)"></div> Fact / data table</div>
+  <div class="legend-item"><div class="leg-line solid"></div> Relationship</div>
+  <div class="legend-item"><div class="leg-line dashed"></div> External ref</div>
+  <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+    <div class="legend-item"><span class="b b-pk" style="font-size:0.6rem">PK</span> Primary Key</div>
+    <div class="legend-item"><span class="b b-fk" style="font-size:0.6rem">FK</span> Foreign Key</div>
+    <div class="legend-item"><span class="b b-uq" style="font-size:0.6rem">UQ</span> Unique</div>
+    <div class="legend-item"><span class="b b-chk" style="font-size:0.6rem">CHK</span> Constraint</div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════
+   DRAW CONNECTOR LINES
+   ══════════════════════════════════════ */
+
+const diagram = document.getElementById('diagram');
+const svg     = document.getElementById('svg-lines');
+
+/* Arrow markers */
+svg.innerHTML = `
+  <defs>
+    <marker id="arr-solid" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#94A3B8"/>
+    </marker>
+    <marker id="arr-dashed" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#CBD5E1"/>
+    </marker>
+    <marker id="arr-1" markerWidth="10" markerHeight="8" refX="2" refY="4" orient="auto">
+      <line x1="2" y1="0" x2="2" y2="8" stroke="#94A3B8" stroke-width="1.5"/>
+    </marker>
+    <marker id="arr-n" markerWidth="12" markerHeight="10" refX="2" refY="5" orient="auto">
+      <path d="M0,0 L6,5 L0,10" fill="none" stroke="#94A3B8" stroke-width="1.5"/>
+    </marker>
+  </defs>`;
+
+function getPort(cardId, side) {
+  const card = document.getElementById(cardId);
+  const dr   = diagram.getBoundingClientRect();
+  const cr   = card.getBoundingClientRect();
+  const l = cr.left - dr.left;
+  const t = cr.top  - dr.top;
+  const r = l + cr.width;
+  const b = t + cr.height;
+  const cx = (l + r) / 2;
+  const cy = (t + b) / 2;
+  switch(side) {
+    case 'left':   return [l,  cy];
+    case 'right':  return [r,  cy];
+    case 'top':    return [cx, t ];
+    case 'bottom': return [cx, b ];
+  }
+}
+
+function bezierPath(fx, fy, fside, tx, ty, tside) {
+  const GAP = 60;
+  let c1x = fx, c1y = fy, c2x = tx, c2y = ty;
+  if (fside === 'right')  c1x = fx + GAP;
+  if (fside === 'left')   c1x = fx - GAP;
+  if (fside === 'bottom') c1y = fy + GAP;
+  if (fside === 'top')    c1y = fy - GAP;
+  if (tside === 'right')  c2x = tx + GAP;
+  if (tside === 'left')   c2x = tx - GAP;
+  if (tside === 'bottom') c2y = ty + GAP;
+  if (tside === 'top')    c2y = ty - GAP;
+  return `M ${fx} ${fy} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${tx} ${ty}`;
+}
+
+function drawConnection({ from, fside, to, tside, card1='1', cardN='N', label='', dashed=false, color='#94A3B8' }) {
+  const [fx, fy] = getPort(from, fside);
+  const [tx, ty] = getPort(to,   tside);
+  const d = bezierPath(fx, fy, fside, tx, ty, tside);
+  const stroke = dashed ? `stroke-dasharray="5,4"` : '';
+  const arr = dashed ? 'arr-dashed' : 'arr-solid';
+
+  // midpoint for label
+  const t = 0.5;
+  const mx = fx*0.125 + (fx + (fside==='right'?60:fside==='left'?-60:0))*0.375
+           + (tx + (tside==='right'?60:tside==='left'?-60:0))*0.375 + tx*0.125;
+  const my = fy*0.125 + (fy + (fside==='bottom'?60:fside==='top'?-60:0))*0.375
+           + (ty + (tside==='bottom'?60:tside==='top'?-60:0))*0.375 + ty*0.125;
+
+  svg.insertAdjacentHTML('beforeend', `
+    <g>
+      <path d="${d}" fill="none" stroke="${color}" stroke-width="1.5"
+        ${stroke} marker-end="url(#${arr})" opacity="0.7"/>
+      ${label ? `<rect x="${mx-18}" y="${my-9}" width="36" height="16" rx="4" fill="white" stroke="#E2E8F0"/>
+        <text x="${mx}" y="${my+4}" text-anchor="middle" font-family="JetBrains Mono,monospace"
+          font-size="9" fill="${color}" font-weight="500">${label}</text>` : ''}
+      <text x="${fx+(fside==='right'?8:fside==='left'?-8:0)}" y="${fy+(fside==='bottom'?14:fside==='top'?-6:4)}"
+        text-anchor="${fside==='right'?'start':'end'}" font-family="JetBrains Mono,monospace"
+        font-size="9" fill="${color}" font-weight="700">${card1}</text>
+      <text x="${tx+(tside==='right'?8:tside==='left'?-8:0)}" y="${ty+(tside==='bottom'?14:tside==='top'?-6:4)}"
+        text-anchor="${tside==='right'?'start':'end'}" font-family="JetBrains Mono,monospace"
+        font-size="9" fill="${color}" font-weight="700">${cardN}</text>
+    </g>`);
+}
+
+/* Draw all connections */
+window.addEventListener('load', () => {
+  /* ── Config connections ── */
+  // plan_metric → plan_type_metric
+  drawConnection({ from:'card_plan_metric', fside:'right', to:'card_plan_type_metric', tside:'left',
+    card1:'1', cardN:'N', label:'metric_id', color:'#6366F1' });
+
+  // plan_type → plan_type_metric
+  drawConnection({ from:'card_plan_type', fside:'left', to:'card_plan_type_metric', tside:'right',
+    card1:'1', cardN:'N', label:'plan_type_id', color:'#6366F1' });
+
+  /* ── plan_type → plan ── */
+  drawConnection({ from:'card_plan_type', fside:'bottom', to:'card_plan', tside:'right',
+    card1:'1', cardN:'N', label:'plan_type_id', color:'#129FB5' });
+
+  /* ── project → plan (external, dashed) ── */
+  drawConnection({ from:'card_project', fside:'left', to:'card_plan', tside:'right',
+    card1:'1', cardN:'N', label:'project_id', dashed:true, color:'#94A3B8' });
+
+  /* ── plan_type_metric → plan (config flows down) ── */
+  drawConnection({ from:'card_plan_type_metric', fside:'bottom', to:'card_plan', tside:'top',
+    card1:'1', cardN:'N', label:'', color:'#A5B4FC' });
+
+  /* ── plan → plan_target (1:1) ── */
+  drawConnection({ from:'card_plan', fside:'left', to:'card_plan_target', tside:'top',
+    card1:'1', cardN:'1', label:'plan_id', color:'#0D7490' });
+
+  /* ── plan → plan_challenge (1:N) ── */
+  drawConnection({ from:'card_plan', fside:'right', to:'card_plan_challenge', tside:'top',
+    card1:'1', cardN:'N', label:'plan_id', color:'#D97706' });
+
+  /* ── plan_target → plan_data ── */
+  drawConnection({ from:'card_plan_target', fside:'bottom', to:'card_plan_data', tside:'left',
+    card1:'1', cardN:'N', label:'target_id', color:'#0D7490' });
+
+  /* ── plan_challenge → plan_data ── */
+  drawConnection({ from:'card_plan_challenge', fside:'bottom', to:'card_plan_data', tside:'right',
+    card1:'1', cardN:'N', label:'challenge_id', color:'#D97706' });
+
+  /* ── plan_metric → plan_data ── */
+  drawConnection({ from:'card_plan_metric', fside:'bottom', to:'card_plan_data', tside:'top',
+    card1:'1', cardN:'N', label:'metric_id', color:'#3B82F6' });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#FAF4EC"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <title>Pix.city — New Request</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>
+    .page { background: var(--cream); }
+
+    /* ── Tabs ────────────────────────────────────────────────── */
+    .tab-bar {
+      display: flex; flex-shrink: 0;
+      background: #fff; border-bottom: 1px solid var(--border);
+      padding: 0 1.25rem;
+    }
+    .tab-btn {
+      flex: 1; padding: 0.75rem 0.5rem;
+      font-family: inherit; font-size: 0.82rem; font-weight: 700;
+      color: var(--gray2); background: none; border: none; cursor: pointer;
+      position: relative; transition: color 0.15s;
+    }
+    .tab-btn.active { color: var(--blue); }
+    .tab-btn.active::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 2px; background: var(--blue); border-radius: 2px 2px 0 0;
+    }
+    .tab-count {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 18px; height: 18px; border-radius: 100px; padding: 0 4px;
+      font-size: 0.58rem; font-weight: 800; margin-left: 5px; vertical-align: middle;
+    }
+    .tab-btn.active .tab-count { background: var(--blue); color: #fff; }
+    .tab-btn:not(.active) .tab-count { background: var(--gray-light); color: var(--gray); }
+
+    /* ── Step pane ───────────────────────────────────────────── */
+    .tab-pane { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+    .tab-pane.active { display: flex; }
+
+    /* ── Progress bar ────────────────────────────────────────── */
+    .step-progress {
+      display: flex; align-items: center; gap: 0; flex-shrink: 0;
+      padding: 1rem 1.5rem 0;
+    }
+    .step-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #e5e7eb; transition: background 0.3s ease, transform 0.3s ease;
+      flex-shrink: 0;
+    }
+    .step-dot.done    { background: var(--green); }
+    .step-dot.current { background: var(--blue); transform: scale(1.4); }
+    .step-line {
+      flex: 1; height: 2px; background: #e5e7eb; transition: background 0.3s ease;
+    }
+    .step-line.done { background: var(--green); }
+
+    /* ── Step slides ─────────────────────────────────────────── */
+    .steps-wrap {
+      flex: 1; overflow: hidden; position: relative;
+    }
+    .step {
+      position: absolute; inset: 0; overflow-y: auto;
+      padding: 1.25rem 1.25rem 1rem;
+      opacity: 0; pointer-events: none;
+      transform: translateX(40px);
+      transition: opacity 0.25s ease, transform 0.28s cubic-bezier(0.4,0,0.2,1);
+    }
+    .step::-webkit-scrollbar { display: none; }
+    .step.active {
+      opacity: 1; pointer-events: all; transform: translateX(0);
+    }
+    .step.leave-left  { opacity: 0; transform: translateX(-40px); }
+
+    .step-headline {
+      font-size: 1.35rem; font-weight: 800; color: var(--dark);
+      letter-spacing: -0.03em; margin-bottom: 0.3rem;
+    }
+    .step-sub {
+      font-size: 0.82rem; font-weight: 600; color: var(--gray);
+      margin-bottom: 1.5rem; line-height: 1.5;
+    }
+
+    /* ── Mission select cards ────────────────────────────────── */
+    .mission-select-card {
+      background: #fff; border-radius: 1.125rem;
+      border: 2px solid var(--border);
+      padding: 1rem 1.125rem;
+      display: flex; align-items: center; gap: 0.875rem;
+      cursor: pointer; margin-bottom: 0.625rem;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+    }
+    .mission-select-card:hover  { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    .mission-select-card:active { transform: scale(0.98); }
+    .mission-select-card.selected {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(18,48,245,0.1);
+    }
+    .ms-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.35rem; flex-shrink: 0;
+    }
+    .ms-info { flex: 1; min-width: 0; }
+    .ms-name { font-size: 0.95rem; font-weight: 800; color: var(--dark); letter-spacing: -0.02em; }
+    .ms-type { font-size: 0.73rem; font-weight: 600; color: var(--gray); margin-top: 1px; }
+    .ms-check {
+      width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+      border: 2px solid #e5e7eb; background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s ease;
+    }
+    .mission-select-card.selected .ms-check {
+      background: var(--blue); border-color: var(--blue);
+    }
+
+    /* ── Franchise chips (step 2) ────────────────────────────── */
+    .fran-grid {
+      display: flex; flex-wrap: wrap; gap: 0.625rem;
+    }
+    .fran-chip {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.55rem 1rem; border-radius: 100px;
+      border: 2px solid var(--border); background: #fff;
+      cursor: pointer; font-size: 0.78rem; font-weight: 700; color: var(--gray);
+      letter-spacing: 0.02em;
+      transition: all 0.15s ease;
+    }
+    .fran-chip:hover { border-color: var(--gray2); color: var(--dark); }
+    .fran-chip.selected {
+      border-color: var(--blue); background: var(--blue-pale); color: var(--blue);
+    }
+    .fran-chip-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: #e5e7eb;
+      flex-shrink: 0; transition: background 0.15s;
+    }
+    .fran-chip.selected .fran-chip-dot { background: var(--blue); }
+
+    /* ── Type selection (step 3) ─────────────────────────────── */
+    .type-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;
+    }
+    .type-card {
+      background: #fff; border: 2px solid var(--border); border-radius: 1.125rem;
+      padding: 1.25rem 1rem 1rem; text-align: center; cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    }
+    .type-card:hover  { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    .type-card:active { transform: scale(0.96); }
+    .type-card.selected {
+      border-color: var(--blue);
+      background: var(--blue-pale);
+      box-shadow: 0 0 0 3px rgba(18,48,245,0.1);
+    }
+    .type-card-full { grid-column: span 2; flex-direction: row; justify-content: center; gap: 0.75rem; padding: 0.875rem 1rem; }
+    .type-emoji { font-size: 1.75rem; line-height: 1; }
+    .type-name  { font-size: 0.82rem; font-weight: 800; color: var(--dark); letter-spacing: -0.01em; }
+    .type-desc  { font-size: 0.68rem; font-weight: 600; color: var(--gray); }
+    .type-card.selected .type-name { color: var(--blue); }
+
+    /* ── Vision step (step 4) ────────────────────────────────── */
+    .vision-textarea {
+      width: 100%; min-height: 120px; resize: none;
+      border: 1.5px solid var(--border); border-radius: 1rem;
+      padding: 1rem; font-family: inherit; font-size: 0.875rem;
+      color: var(--dark); background: #fff; outline: none; line-height: 1.6;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      margin-bottom: 1rem;
+    }
+    .vision-textarea::placeholder { color: #c0c4cc; }
+    .vision-textarea:focus {
+      border-color: var(--blue); box-shadow: 0 0 0 3px rgba(18,48,245,0.1);
+    }
+    .date-input-wrap { position: relative; margin-bottom: 1rem; }
+    .date-input-wrap svg {
+      position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%);
+      opacity: 0.4; pointer-events: none;
+    }
+    .date-input {
+      width: 100%; padding: 0.875rem 0.875rem 0.875rem 2.75rem;
+      border: 1.5px solid var(--border); border-radius: 0.875rem;
+      font-family: inherit; font-size: 0.875rem; color: var(--dark);
+      background: #fff; outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .date-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(18,48,245,0.1); }
+    .upload-zone {
+      border: 1.5px dashed var(--border); border-radius: 0.875rem;
+      padding: 1.25rem; text-align: center; cursor: pointer;
+      background: var(--gray-light); transition: all 0.15s ease;
+    }
+    .upload-zone:hover { border-color: var(--blue); background: var(--blue-pale); }
+    .upload-zone input[type="file"] { display: none; }
+    .upload-zone-inner {
+      display: flex; flex-direction: column; align-items: center; gap: 0.375rem;
+      cursor: pointer;
+    }
+    .upload-zone-inner svg { opacity: 0.35; }
+    .upload-label  { font-size: 0.82rem; font-weight: 700; color: var(--gray); }
+    .upload-hint   { font-size: 0.68rem; font-weight: 600; color: var(--gray2); }
+    .upload-zone:hover .upload-label { color: var(--blue); }
+    .file-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.625rem; }
+    .file-chip {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      background: #fff; border: 1px solid var(--border); border-radius: 8px;
+      padding: 0.3rem 0.5rem; font-size: 0.72rem; font-weight: 700; color: var(--dark);
+    }
+    .file-chip-remove {
+      width: 14px; height: 14px; border-radius: 50%; border: none;
+      background: var(--gray-light); cursor: pointer; display: flex;
+      align-items: center; justify-content: center; color: var(--gray);
+      transition: background 0.15s;
+    }
+    .file-chip-remove:hover { background: #fecaca; color: #ef4444; }
+
+    /* ── Review step (step 5) ────────────────────────────────── */
+    .review-card {
+      background: #fff; border-radius: 1.25rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.05);
+      overflow: hidden; margin-bottom: 1rem;
+    }
+    .review-header {
+      padding: 1rem 1.25rem; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .review-row {
+      display: flex; align-items: flex-start; gap: 0.875rem;
+      padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border);
+    }
+    .review-row:last-child { border-bottom: none; }
+    .review-icon {
+      width: 32px; height: 32px; border-radius: 9px; background: var(--gray-light);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      color: var(--gray); margin-top: 2px;
+    }
+    .review-label { font-size: 0.65rem; font-weight: 700; color: var(--gray2); text-transform: uppercase; letter-spacing: 0.05em; }
+    .review-value { font-size: 0.85rem; font-weight: 700; color: var(--dark); line-height: 1.4; }
+
+    /* ── Nav footer ──────────────────────────────────────────── */
+    .step-nav {
+      display: flex; gap: 0.75rem; flex-shrink: 0;
+      padding: 0.875rem 1.25rem calc(0.875rem + var(--safe-bot));
+      background: #fff; border-top: 1px solid var(--border);
+    }
+    .btn-back {
+      padding: 0.8rem 1.25rem; border-radius: 100px;
+      border: 1.5px solid var(--border); background: #fff;
+      font-family: inherit; font-size: 0.9rem; font-weight: 700; color: var(--gray);
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-back:hover { background: var(--gray-light); }
+    .btn-next {
+      flex: 1; padding: 0.875rem; border-radius: 100px; border: none;
+      background: var(--blue); color: #fff;
+      font-family: inherit; font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+      box-shadow: 0 4px 14px rgba(18,48,245,0.3);
+      transition: background 0.15s, transform 0.15s;
+    }
+    .btn-next:hover  { background: var(--blue-dark); }
+    .btn-next:active { transform: scale(0.98); }
+    .btn-next:disabled { background: #c0c4cc; box-shadow: none; cursor: not-allowed; }
+
+    /* ── My Requests tab ─────────────────────────────────────── */
+    .requests-list { padding: 1rem 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    .req-card {
+      background: #fff; border-radius: 1.125rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 3px 10px rgba(0,0,0,0.05);
+      overflow: hidden; cursor: pointer;
+      transition: box-shadow 0.15s ease, transform 0.15s ease;
+      position: relative;
+    }
+    .req-card:hover  { box-shadow: 0 4px 20px rgba(0,0,0,0.09); }
+    .req-card:active { transform: scale(0.98); }
+    .req-card-accent { position: absolute; top: 0; left: 0; bottom: 0; width: 3px; }
+    .req-card-body { padding: 0.875rem 1rem 0.875rem 1.375rem; }
+    .req-card-top {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 0.5rem; margin-bottom: 0.5rem;
+    }
+    .req-type-chip {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem;
+      border-radius: 100px; letter-spacing: 0.03em;
+    }
+    .req-title { font-size: 0.85rem; font-weight: 800; color: var(--dark); margin-bottom: 0.25rem; letter-spacing: -0.01em; }
+    .req-meta  { font-size: 0.72rem; font-weight: 600; color: var(--gray); }
+    .req-status {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      font-size: 0.62rem; font-weight: 800; padding: 0.22rem 0.55rem;
+      border-radius: 100px; letter-spacing: 0.02em; flex-shrink: 0;
+    }
+    .req-card-footer {
+      padding: 0.625rem 1rem 0.625rem 1.375rem;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .task-progress-bar {
+      flex: 1; height: 4px; border-radius: 2px; background: #e5e7eb; overflow: hidden;
+    }
+    .task-progress-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
+    .task-progress-label { font-size: 0.65rem; font-weight: 700; color: var(--gray); flex-shrink: 0; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="page">
+
+    <!-- Status bar -->
+    <div class="status-bar" style="background: var(--cream);">
+      <span class="status-time">9:41</span>
+      <div class="status-icons"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="app-header">
+      <button class="header-btn" onclick="history.back()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span class="header-title">New Request</span>
+      <button class="header-btn" onclick="openDrawer()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tab-new" onclick="switchTab('new')">
+        ✨ New Request
+      </button>
+      <button class="tab-btn" id="tab-mine" onclick="switchTab('mine')">
+        My Requests
+        <span class="tab-count" id="req-count">0</span>
+      </button>
+    </div>
+
+    <!-- ── TAB: NEW REQUEST ─────────────────────────────────── -->
+    <div class="tab-pane active" id="pane-new">
+
+      <!-- Step progress -->
+      <div class="step-progress" id="step-progress"></div>
+
+      <!-- Step slides -->
+      <div class="steps-wrap">
+
+        <!-- STEP 1: Mission -->
+        <div class="step active" id="step-1">
+          <div class="step-headline">Which mission? 🚀</div>
+          <div class="step-sub">Select the brand this request is for.</div>
+          <div id="mission-list"></div>
+        </div>
+
+        <!-- STEP 2: Franchise -->
+        <div class="step" id="step-2">
+          <div class="step-headline">Which location? 📍</div>
+          <div class="step-sub">Pick the shop or franchise this applies to.</div>
+          <div class="fran-grid" id="fran-list"></div>
+        </div>
+
+        <!-- STEP 3: Type -->
+        <div class="step" id="step-3">
+          <div class="step-headline">What do you need? ✨</div>
+          <div class="step-sub">Choose the type of content you're requesting.</div>
+          <div class="type-grid" id="type-grid">
+            <div class="type-card" data-type="Post" onclick="selectType(this)">
+              <span class="type-emoji">📸</span>
+              <span class="type-name">Post</span>
+              <span class="type-desc">Static feed post</span>
+            </div>
+            <div class="type-card" data-type="Story" onclick="selectType(this)">
+              <span class="type-emoji">📱</span>
+              <span class="type-name">Story</span>
+              <span class="type-desc">24h Instagram story</span>
+            </div>
+            <div class="type-card" data-type="Reels" onclick="selectType(this)">
+              <span class="type-emoji">🎬</span>
+              <span class="type-name">Reels</span>
+              <span class="type-desc">Short-form video</span>
+            </div>
+            <div class="type-card" data-type="Google Paid" onclick="selectType(this)">
+              <span class="type-emoji">🎯</span>
+              <span class="type-name">Google Paid</span>
+              <span class="type-desc">Search & display ads</span>
+            </div>
+            <div class="type-card type-card-full" data-type="Meta Paid" onclick="selectType(this)">
+              <span class="type-emoji">📣</span>
+              <span class="type-name">Meta Paid</span>
+              <span class="type-desc">Facebook & Instagram ads</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4: Vision -->
+        <div class="step" id="step-4">
+          <div class="step-headline">Describe your vision 💡</div>
+          <div class="step-sub">Give us the details — the more specific, the better the result.</div>
+
+          <textarea class="vision-textarea" id="req-text"
+            placeholder="e.g. I need a story for our shop anniversary on June 15th. The vibe should be warm and celebratory with a golden colour palette…"></textarea>
+
+          <div class="date-input-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            <input type="date" class="date-input" id="req-date" placeholder="Target date"/>
+          </div>
+
+          <label class="upload-zone" id="upload-zone">
+            <input type="file" id="file-input" multiple accept="image/*,.pdf,.doc,.docx"/>
+            <div class="upload-zone-inner">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              <span class="upload-label">Tap to attach reference files</span>
+              <span class="upload-hint">Images, PDFs, documents welcome</span>
+            </div>
+          </label>
+          <div class="file-chips" id="file-chips"></div>
+        </div>
+
+        <!-- STEP 5: Review -->
+        <div class="step" id="step-5">
+          <div class="step-headline">Looking good! 🎉</div>
+          <div class="step-sub">Review your request before sending it to your team.</div>
+          <div class="review-card" id="review-card"></div>
+        </div>
+
+      </div>
+
+      <!-- Navigation -->
+      <div class="step-nav">
+        <button class="btn-back" id="btn-back" style="display:none;" onclick="prevStep()">← Back</button>
+        <button class="btn-next" id="btn-next" onclick="nextStep()">
+          Continue
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ── TAB: MY REQUESTS ──────────────────────────────────── -->
+    <div class="tab-pane" id="pane-mine">
+      <div class="scroll-area">
+        <div class="requests-list" id="requests-list"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+  injectDrawer('');
+  document.querySelector('.status-icons').innerHTML = STATUS_ICONS_HTML;
+  startClock();
+
+  // ── State ──────────────────────────────────────────────────── //
+  let currentStep     = 1;
+  const TOTAL_STEPS   = 5;
+  let selectedMission = null;
+  let selectedFranchise = null;
+  let selectedType    = null;
+  let uploadedFiles   = [];
+  const deepTab = getParam('tab');
+
+  // ── Tab switch ──────────────────────────────────────────────── //
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    document.getElementById('pane-' + tab).classList.add('active');
+    if (tab === 'mine') renderRequests();
+  }
+
+  // ── Progress bar ────────────────────────────────────────────── //
+  function renderProgress() {
+    const wrap = document.getElementById('step-progress');
+    wrap.innerHTML = '';
+    for (let i = 1; i <= TOTAL_STEPS; i++) {
+      if (i > 1) {
+        const line = document.createElement('div');
+        line.className = 'step-line' + (i <= currentStep ? ' done' : '');
+        wrap.appendChild(line);
+      }
+      const dot = document.createElement('div');
+      dot.className = 'step-dot' + (i < currentStep ? ' done' : i === currentStep ? ' current' : '');
+      wrap.appendChild(dot);
+    }
+  }
+
+  // ── Navigation ──────────────────────────────────────────────── //
+  function showStep(n, direction = 1) {
+    const prev = document.getElementById(`step-${currentStep}`);
+    currentStep = n;
+    const next = document.getElementById(`step-${currentStep}`);
+
+    prev.classList.remove('active');
+    prev.classList.add(direction > 0 ? 'leave-left' : '');
+    setTimeout(() => prev.classList.remove('leave-left'), 300);
+
+    next.classList.add('active');
+
+    renderProgress();
+    updateNav();
+
+    if (n === 2) renderFranchises();
+    if (n === 5) renderReview();
+  }
+
+  function nextStep() {
+    if (currentStep === 5) { submitRequest(); return; }
+    if (!canProceed()) return;
+    showStep(currentStep + 1, 1);
+  }
+
+  function prevStep() {
+    if (currentStep > 1) showStep(currentStep - 1, -1);
+  }
+
+  function canProceed() {
+    if (currentStep === 1) return !!selectedMission;
+    if (currentStep === 2) return !!selectedFranchise;
+    if (currentStep === 3) return !!selectedType;
+    if (currentStep === 4) return document.getElementById('req-text').value.trim().length > 0;
+    return true;
+  }
+
+  function updateNav() {
+    const btnBack = document.getElementById('btn-back');
+    const btnNext = document.getElementById('btn-next');
+    btnBack.style.display = currentStep > 1 ? '' : 'none';
+    if (currentStep === 5) {
+      btnNext.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Send Request`;
+    } else {
+      btnNext.innerHTML = `Continue <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+    }
+    btnNext.disabled = !canProceed();
+  }
+
+  // Recheck btn state on textarea input
+  document.getElementById('req-text').addEventListener('input', updateNav);
+
+  // ── Step 1: Missions ─────────────────────────────────────────── //
+  const missionList = document.getElementById('mission-list');
+  MISSIONS.forEach(m => {
+    const card = document.createElement('div');
+    card.className = 'mission-select-card';
+    card.innerHTML = `
+      <div class="ms-icon" style="background:${m.color.pale};">${m.emoji}</div>
+      <div class="ms-info">
+        <div class="ms-name">${m.name}</div>
+        <div class="ms-type">${m.type} · ${m.contracts.length} contract${m.contracts.length > 1 ? 's' : ''}</div>
+      </div>
+      <div class="ms-check">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>`;
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.mission-select-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedMission = m;
+      selectedFranchise = null; // reset franchise when mission changes
+      updateNav();
+    });
+    missionList.appendChild(card);
+  });
+
+  // ── Step 2: Franchises ───────────────────────────────────────── //
+  function renderFranchises() {
+    const list = document.getElementById('fran-list');
+    list.innerHTML = '';
+    if (!selectedMission) return;
+    selectedMission.franchises.forEach(f => {
+      const chip = document.createElement('div');
+      chip.className = 'fran-chip' + (selectedFranchise?.id === f.id ? ' selected' : '');
+      chip.innerHTML = `<span class="fran-chip-dot"></span>${f.label}`;
+      chip.addEventListener('click', () => {
+        list.querySelectorAll('.fran-chip').forEach(c => c.classList.remove('selected'));
+        chip.classList.add('selected');
+        chip.querySelector('.fran-chip-dot').style.background = '';
+        selectedFranchise = f;
+        updateNav();
+      });
+      list.appendChild(chip);
+    });
+    updateNav();
+  }
+
+  // ── Step 3: Type ─────────────────────────────────────────────── //
+  function selectType(el) {
+    document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedType = el.dataset.type;
+    updateNav();
+  }
+
+  // ── Step 4: Files ────────────────────────────────────────────── //
+  document.getElementById('file-input').addEventListener('change', e => {
+    Array.from(e.target.files).forEach(f => uploadedFiles.push(f.name));
+    renderFileChips();
+    e.target.value = '';
+  });
+
+  function renderFileChips() {
+    const wrap = document.getElementById('file-chips');
+    wrap.innerHTML = uploadedFiles.map((name, i) => `
+      <span class="file-chip">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2.5">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        ${name}
+        <button class="file-chip-remove" onclick="removeFile(${i})">
+          <svg width="7" height="7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </span>`).join('');
+  }
+
+  function removeFile(i) { uploadedFiles.splice(i, 1); renderFileChips(); }
+
+  // ── Step 5: Review ───────────────────────────────────────────── //
+  function renderReview() {
+    const req    = document.getElementById('req-text').value.trim();
+    const date   = document.getElementById('req-date').value;
+    const dateStr = date ? new Date(date).toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}) : 'Not specified';
+
+    document.getElementById('review-card').innerHTML = `
+      <div class="review-header">
+        <span style="font-size:1.5rem;">${selectedMission?.emoji}</span>
+        <div>
+          <div style="font-size:0.95rem;font-weight:800;color:var(--dark);letter-spacing:-0.02em;">${selectedMission?.name}</div>
+          <div style="font-size:0.73rem;font-weight:600;color:var(--gray);">${selectedFranchise?.label}</div>
+        </div>
+        <span style="margin-left:auto;" class="badge" style="background:var(--blue-pale);color:var(--blue);">${selectedType}</span>
+      </div>
+      <div class="review-row">
+        <div class="review-icon">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div>
+          <div class="review-label">Your Brief</div>
+          <div class="review-value">${req}</div>
+        </div>
+      </div>
+      <div class="review-row">
+        <div class="review-icon">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div>
+          <div class="review-label">Target Date</div>
+          <div class="review-value">${dateStr}</div>
+        </div>
+      </div>
+      ${uploadedFiles.length ? `
+      <div class="review-row">
+        <div class="review-icon">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div>
+          <div class="review-label">Attachments</div>
+          <div class="review-value">${uploadedFiles.join(', ')}</div>
+        </div>
+      </div>` : ''}`;
+  }
+
+  // ── Submit ───────────────────────────────────────────────────── //
+  function submitRequest() {
+    const btn = document.getElementById('btn-next');
+    btn.disabled = true;
+    btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Sent!`;
+    btn.style.background = 'var(--green)';
+    setTimeout(() => {
+      switchTab('mine');
+      // Reset form
+      currentStep = 1;
+      selectedMission = selectedFranchise = selectedType = null;
+      uploadedFiles = [];
+      document.getElementById('req-text').value = '';
+      document.getElementById('req-date').value = '';
+      document.querySelectorAll('.mission-select-card,.type-card,.fran-chip').forEach(c => c.classList.remove('selected'));
+      document.getElementById('file-chips').innerHTML = '';
+      document.querySelectorAll('.step').forEach(s => { s.classList.remove('active','leave-left'); });
+      document.getElementById('step-1').classList.add('active');
+      renderProgress();
+      btn.innerHTML = `Continue <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+      btn.style.background = '';
+      btn.disabled = false;
+      updateNav();
+    }, 900);
+  }
+
+  // ── My Requests ──────────────────────────────────────────────── //
+  document.getElementById('req-count').textContent = REQUESTS.length;
+
+  function renderRequests() {
+    const list = document.getElementById('requests-list');
+    list.innerHTML = '';
+    REQUESTS.forEach(r => {
+      const sm = REQUEST_STATUS_META[r.status];
+      const doneTasks = r.tasks.filter(t => t.status === 'done').length;
+      const pct = Math.round((doneTasks / r.tasks.length) * 100);
+      const barColor = r.status === 'completed' ? 'var(--green)' : r.status === 'in-progress' ? 'var(--blue)' : 'var(--orange)';
+
+      const card = document.createElement('div');
+      card.className = 'req-card';
+      card.innerHTML = `
+        <div class="req-card-accent" style="background:linear-gradient(180deg,${r.color.from},${r.color.to});"></div>
+        <div class="req-card-body">
+          <div class="req-card-top">
+            <div>
+              <span class="req-type-chip" style="background:${r.color.pale};color:${r.color.from};">
+                ${r.icon} ${r.type}
+              </span>
+            </div>
+            <span class="req-status" style="background:${sm.pale};color:${sm.color};">
+              ${sm.label}
+            </span>
+          </div>
+          <div class="req-title">${r.type} — ${r.franchiseLabel}</div>
+          <div class="req-meta">${r.missionEmoji} ${r.missionName} · Submitted ${new Date(r.submittedDate).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>
+        </div>
+        <div class="req-card-footer">
+          <div class="task-progress-bar">
+            <div class="task-progress-fill" style="width:${pct}%;background:${barColor};"></div>
+          </div>
+          <span class="task-progress-label">${doneTasks}/${r.tasks.length} tasks</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </div>`;
+      card.addEventListener('click', () => {
+        location.href = `request-detail.html?id=${r.id}`;
+      });
+      list.appendChild(card);
+    });
+  }
+
+  // ── Init ──────────────────────────────────────────────────────── //
+  renderProgress();
+  updateNav();
+  if (deepTab === 'mine') switchTab('mine');
+</script>
+</body>
+</html>

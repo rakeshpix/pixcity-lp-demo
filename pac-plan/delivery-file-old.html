@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delivery File — Pix.City</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@600;700;800&family=Manrope:wght@400;500;600;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --px-primary:   #129FB5;
+      --px-dark:      #006877;
+      --px-light:     rgba(18,159,181,0.08);
+      --px-bg:        #F4F6F8;
+      --px-surface:   #ffffff;
+      --px-border:    #E4E7EA;
+      --px-text:      #1A1A1B;
+      --px-muted:     #6B7280;
+      --px-success:   #16A34A;
+      --px-danger:    #DC2626;
+      --px-warn:      #D97706;
+      --note-bg:      #FFFBE6;
+      --note-border:  #F5D76E;
+      --note-shadow:  rgba(245,215,110,0.5);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: var(--px-bg);
+      color: var(--px-text);
+      font-size: 0.875rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── TOPBAR ─── */
+    .topbar {
+      background: var(--px-surface);
+      border-bottom: 1px solid var(--px-border);
+      padding: 0 28px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .logo {
+      font-family: 'Epilogue', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: -0.04em;
+      color: var(--px-text);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .logo span { color: var(--px-primary); }
+    .topbar-divider { width: 1px; height: 20px; background: var(--px-border); }
+    .meta-chip {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--px-muted);
+      white-space: nowrap;
+    }
+    .meta-chip strong { color: var(--px-text); font-weight: 600; }
+    .meta-chip .bi { font-size: 0.65rem; color: var(--px-primary); }
+    .status-pill {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+    .pill-active { background: rgba(22,163,74,0.1); color: var(--px-success); }
+    .pill-ko     { background: rgba(220,38,38,0.1); color: var(--px-danger); }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+    .btn-print {
+      font-size: 0.72rem; font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--px-border);
+      background: none; cursor: pointer; color: var(--px-muted);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .btn-print:hover { background: var(--px-bg); color: var(--px-text); }
+
+    /* ─── PAGE WRAP ─── */
+    .page-wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 28px 20px 72px;
+    }
+
+    /* ─── MISSION HEADER BAR ─── */
+    .mission-bar {
+      background: var(--px-surface);
+      border: 1px solid var(--px-border);
+      border-radius: 10px;
+      padding: 14px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 24px;
+      margin-bottom: 16px;
+      align-items: center;
+    }
+    .mission-field {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 80px;
+    }
+    .mission-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--px-muted);
+    }
+    .mission-value {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--px-text);
+    }
+    .mission-value a { color: var(--px-primary); text-decoration: none; }
+    .pm-block {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: auto;
+      padding-left: 20px;
+      border-left: 1px solid var(--px-border);
+    }
+    .pm-avatar {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: var(--px-primary);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.85rem; color: #fff;
+      flex-shrink: 0;
+    }
+    .pm-name { font-size: 0.78rem; font-weight: 700; color: var(--px-text); }
+    .pm-role { font-size: 0.67rem; color: var(--px-muted); }
+
+    /* ─── STICKY NOTE ─── */
+    .sticky-note-wrap {
+      position: relative;
+      margin-bottom: 16px;
+    }
+    .sticky-note {
+      background: var(--note-bg);
+      border: 1.5px solid var(--note-border);
+      border-radius: 10px;
+      box-shadow: 0 4px 20px var(--note-shadow), 0 1px 4px rgba(0,0,0,0.06);
+      padding: 18px 22px 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    .sticky-note::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #F5D76E 0%, #FBBF24 50%, #F5D76E 100%);
+      border-radius: 10px 10px 0 0;
+    }
+    .sticky-note-header {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 10px;
+    }
+    .sticky-note-label {
+      font-size: 0.67rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: #92400E;
+    }
+    .sticky-note-badge {
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(146,64,14,0.1);
+      color: #92400E;
+    }
+    .sticky-note-editable {
+      font-family: 'Caveat', cursive;
+      font-size: 1.22rem;
+      line-height: 1.55;
+      color: #422006;
+      background: none;
+      border: none;
+      outline: none;
+      width: 100%;
+      resize: none;
+      min-height: 56px;
+      padding: 0;
+      letter-spacing: 0.01em;
+    }
+    .sticky-note-editable::placeholder { color: rgba(66,32,6,0.35); }
+    .sticky-note-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+    .sticky-note-author {
+      font-size: 0.67rem;
+      color: #78350F;
+      font-style: italic;
+    }
+    .sticky-note-counter {
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: #B45309;
+    }
+    .sticky-note-counter.over { color: var(--px-danger); }
+
+    /* ─── CLIENT TODO ─── */
+    .todo-section {
+      background: var(--px-surface);
+      border: 1px solid var(--px-border);
+      border-radius: 10px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .todo-header {
+      display: flex;
+      align-items: center;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--px-border);
+      gap: 8px;
+    }
+    .todo-header-title {
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex: 1;
+    }
+    .todo-count-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(220,38,38,0.1);
+      color: var(--px-danger);
+    }
+    .btn-add-todo {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 4px 11px;
+      border-radius: 6px;
+      border: 1px solid var(--px-primary);
+      background: var(--px-light);
+      color: var(--px-primary);
+      cursor: pointer;
+      display: flex; align-items: center; gap: 4px;
+      transition: all 0.12s;
+    }
+    .btn-add-todo:hover { background: var(--px-primary); color: #fff; }
+
+    /* Add todo form */
+    .todo-add-form {
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--px-border);
+      background: #FAFBFC;
+      display: none;
+    }
+    .todo-add-form.open { display: flex; gap: 8px; align-items: flex-end; flex-wrap: wrap; }
+    .todo-input-wrap { flex: 1; min-width: 180px; }
+    .todo-input-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--px-muted);
+      margin-bottom: 4px;
+    }
+    .todo-input {
+      width: 100%;
+      border: 1px solid var(--px-border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font: inherit;
+      font-size: 0.8rem;
+      outline: none;
+    }
+    .todo-input:focus { border-color: var(--px-primary); box-shadow: 0 0 0 3px var(--px-light); }
+    .todo-date-wrap { min-width: 120px; }
+    .btn-todo-save {
+      font-size: 0.77rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: none;
+      background: var(--px-primary);
+      color: #fff;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-todo-save:hover { background: var(--px-dark); }
+    .btn-todo-cancel {
+      font-size: 0.77rem;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--px-border);
+      background: none; cursor: pointer; color: var(--px-muted);
+    }
+
+    /* Todo items */
+    .todo-list { }
+    .todo-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 18px;
+      border-bottom: 1px solid var(--px-border);
+      transition: background 0.1s;
+    }
+    .todo-item:last-child { border-bottom: none; }
+    .todo-item:hover { background: #FAFAFA; }
+    .todo-item.done { opacity: 0.6; }
+    .todo-checkbox {
+      width: 18px; height: 18px;
+      border: 2px solid var(--px-border);
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.12s;
+      background: none;
+      padding: 0;
+    }
+    .todo-checkbox:hover { border-color: var(--px-success); }
+    .todo-checkbox.checked {
+      background: var(--px-success);
+      border-color: var(--px-success);
+    }
+    .todo-checkbox.checked::after {
+      content: '✓';
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .todo-text {
+      flex: 1;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--px-text);
+    }
+    .todo-item.done .todo-text { text-decoration: line-through; color: var(--px-muted); }
+    .todo-dates {
+      display: flex;
+      gap: 10px;
+      font-size: 0.67rem;
+      color: var(--px-muted);
+      white-space: nowrap;
+    }
+    .todo-dates .created { }
+    .todo-dates .due { }
+    .todo-dates .due.late { color: var(--px-danger); font-weight: 600; }
+    .todo-dates .due.soon { color: var(--px-warn); font-weight: 600; }
+    .todo-status-icon {
+      font-size: 0.9rem;
+      width: 22px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .status-pending { color: var(--px-warn); }
+    .status-done    { color: var(--px-success); }
+    .status-late    { color: var(--px-danger); }
+
+    /* History section */
+    .todo-history-toggle {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 18px;
+      cursor: pointer;
+      background: #FAFAFA;
+      border-top: 1px solid var(--px-border);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--px-muted);
+      user-select: none;
+    }
+    .todo-history-toggle:hover { color: var(--px-text); }
+    .todo-history-toggle .bi { font-size: 0.65rem; transition: transform 0.2s; }
+    .todo-history-toggle.open .bi { transform: rotate(180deg); }
+    .todo-history-list { display: none; background: #FAFAFA; }
+    .todo-history-list.open { display: block; }
+    .todo-history-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 18px;
+      border-bottom: 1px solid var(--px-border);
+      opacity: 0.65;
+    }
+    .todo-history-item:last-child { border-bottom: none; }
+
+    /* ─── PLAN SECTION ─── */
+    .plan-block {
+      background: var(--px-surface);
+      border: 1px solid var(--px-border);
+      border-radius: 10px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .plan-block-header {
+      display: flex;
+      align-items: center;
+      padding: 13px 18px;
+      cursor: pointer;
+      user-select: none;
+      gap: 10px;
+      border-bottom: 1px solid var(--px-border);
+      transition: background 0.1s;
+    }
+    .plan-block-header:hover { background: #FAFAFA; }
+    .plan-block-title {
+      font-weight: 700;
+      font-size: 0.88rem;
+      flex: 1;
+    }
+    .plan-block-chevron { font-size: 0.72rem; color: var(--px-muted); transition: transform 0.2s; }
+    .plan-block-header.open .plan-block-chevron { transform: rotate(180deg); }
+    .plan-block-body { display: none; }
+    .plan-block-body.open { display: block; }
+
+    /* Plan type badge */
+    .plan-type-pill {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 999px;
+      color: #fff;
+    }
+
+    /* Challenge timeline */
+    .challenge-timeline {
+      padding: 14px 18px 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      border-bottom: 1px solid var(--px-border);
+    }
+    .challenge-timeline::-webkit-scrollbar { display: none; }
+    .challenge-btn {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--px-border);
+      background: none;
+      cursor: pointer;
+      color: var(--px-muted);
+      white-space: nowrap;
+      transition: all 0.12s;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .challenge-btn:hover { border-color: var(--px-primary); color: var(--px-primary); }
+    .challenge-btn.active {
+      background: var(--px-primary);
+      border-color: var(--px-primary);
+      color: #fff;
+    }
+    .challenge-btn .latest-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #fff;
+      opacity: 0.85;
+    }
+
+    /* Metrics table */
+    .metrics-wrap { overflow-x: auto; }
+    .metrics-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+    .metrics-table th {
+      font-size: 0.63rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--px-muted);
+      padding: 8px 16px;
+      text-align: right;
+      border-bottom: 1px solid var(--px-border);
+      background: #FAFBFC;
+      white-space: nowrap;
+    }
+    .metrics-table th:first-child { text-align: left; }
+    .metrics-table td {
+      padding: 9px 16px;
+      border-bottom: 1px solid var(--px-border);
+      text-align: right;
+      font-weight: 500;
+      color: var(--px-text);
+    }
+    .metrics-table td:first-child { text-align: left; font-weight: 600; }
+    .metrics-table tr:last-child td { border-bottom: none; }
+    .metrics-table tr:hover td { background: #FAFAFA; }
+
+    /* Variance cells */
+    .var-cell { display: flex; align-items: center; justify-content: flex-end; gap: 4px; font-weight: 600; }
+    .var-pos  { color: var(--px-success); }
+    .var-neg  { color: var(--px-danger); }
+    .var-neu  { color: var(--px-muted); font-weight: 400; }
+    .var-arrow { font-size: 0.65rem; }
+    .progress-mini {
+      height: 4px;
+      border-radius: 99px;
+      background: var(--px-border);
+      overflow: hidden;
+      margin-top: 3px;
+      width: 60px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .progress-mini-fill {
+      height: 100%;
+      border-radius: 99px;
+      transition: width 0.4s;
+    }
+
+    /* ─── REPORT SECTION ─── */
+    .report-block {
+      background: var(--px-surface);
+      border: 1px solid var(--px-border);
+      border-radius: 10px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .report-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--px-border);
+      cursor: pointer;
+    }
+    .report-header:hover { background: #FAFAFA; }
+    .report-platform-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .badge-meta { background: rgba(24,119,242,0.1); color: #1877F2; }
+    .badge-google { background: rgba(234,67,53,0.1); color: #EA4335; }
+    .report-title { font-weight: 700; font-size: 0.88rem; flex: 1; }
+    .report-chevron { font-size: 0.72rem; color: var(--px-muted); transition: transform 0.2s; }
+    .report-header.open .report-chevron { transform: rotate(180deg); }
+    .report-body { display: none; padding: 18px; }
+    .report-body.open { display: block; }
+    .report-section-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--px-muted);
+      margin: 14px 0 6px;
+    }
+    .report-section-label:first-child { margin-top: 0; }
+    .report-text {
+      font-size: 0.82rem;
+      line-height: 1.7;
+      color: var(--px-text);
+    }
+    .report-kp-list {
+      list-style: none;
+      padding: 0; margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .report-kp-list li {
+      display: flex;
+      gap: 8px;
+      font-size: 0.8rem;
+      line-height: 1.55;
+      color: var(--px-text);
+    }
+    .report-kp-list li::before {
+      content: '→';
+      color: var(--px-primary);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* ─── COMMENT / VALIDATE ─── */
+    .validate-bar {
+      background: var(--px-surface);
+      border: 1px solid var(--px-border);
+      border-radius: 10px;
+      margin-bottom: 16px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .validate-icon {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: var(--px-light);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--px-primary);
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .validate-info { flex: 1; }
+    .validate-title { font-weight: 700; font-size: 0.85rem; margin-bottom: 6px; }
+    .validate-comment {
+      width: 100%;
+      border: 1px solid var(--px-border);
+      border-radius: 7px;
+      padding: 8px 12px;
+      font: inherit;
+      font-size: 0.82rem;
+      resize: vertical;
+      outline: none;
+      min-height: 60px;
+      color: var(--px-text);
+    }
+    .validate-comment:focus { border-color: var(--px-primary); box-shadow: 0 0 0 3px var(--px-light); }
+    .validate-actions { display: flex; gap: 8px; margin-top: 10px; }
+    .btn-validate {
+      font-size: 0.77rem; font-weight: 700;
+      padding: 6px 16px;
+      border-radius: 6px; border: none; cursor: pointer;
+      display: flex; align-items: center; gap: 5px;
+      transition: all 0.12s;
+    }
+    .btn-approve { background: var(--px-success); color: #fff; }
+    .btn-approve:hover { background: #15803D; }
+    .btn-comment-only {
+      background: none;
+      border: 1px solid var(--px-border);
+      color: var(--px-text);
+    }
+    .btn-comment-only:hover { background: var(--px-bg); }
+
+    /* ─── FOOTER ─── */
+    .df-footer {
+      text-align: center;
+      padding: 20px 0 0;
+      font-size: 0.72rem;
+      color: var(--px-muted);
+    }
+    .df-footer a { color: var(--px-primary); text-decoration: none; }
+
+    /* print mode */
+    @media print {
+      .topbar, .btn-print, .todo-add-form, .btn-add-todo, .validate-bar { display: none !important; }
+      .plan-block-body, .report-body { display: block !important; }
+      body { background: white; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── TOPBAR ─── -->
+<header class="topbar">
+  <a class="logo" href="#">Pix<span>.</span>City</a>
+  <div class="topbar-divider"></div>
+  <div class="meta-chip"><i class="bi bi-hash"></i><strong>Mission 1239</strong></div>
+  <div class="meta-chip"><i class="bi bi-building"></i><strong id="hdr-company">Acme Corp</strong></div>
+  <div class="meta-chip"><i class="bi bi-person"></i><strong id="hdr-client">Marie Dupont</strong></div>
+  <div class="meta-chip"><i class="bi bi-calendar-check"></i>Due <strong>21 Apr 2026</strong></div>
+  <span class="status-pill pill-active">Active</span>
+  <div class="meta-chip" style="display:none;"><i class="bi bi-megaphone"></i><strong>Leads Plan</strong></div>
+  <div class="topbar-right">
+    <button class="btn-print" onclick="window.print()"><i class="bi bi-printer"></i> Print</button>
+  </div>
+</header>
+
+<!-- ─── PAGE ─── -->
+<div class="page-wrap">
+
+  <!-- MISSION BAR (compact) -->
+  <div class="mission-bar">
+    <div class="mission-field">
+      <span class="mission-label">Mission</span>
+      <span class="mission-value">#1239</span>
+    </div>
+    <div class="mission-field">
+      <span class="mission-label">Client</span>
+      <span class="mission-value">Marie Dupont</span>
+    </div>
+    <div class="mission-field">
+      <span class="mission-label">Company</span>
+      <span class="mission-value">Acme Corp</span>
+    </div>
+    <div class="mission-field">
+      <span class="mission-label">Franchise</span>
+      <span class="mission-value">Marie</span>
+    </div>
+    <div class="mission-field">
+      <span class="mission-label">Service</span>
+      <span class="mission-value">Paid Ad Challenges</span>
+    </div>
+    <div class="mission-field">
+      <span class="mission-label">Language</span>
+      <span class="mission-value">FR</span>
+    </div>
+    <div class="mission-field">
+      <span class="mission-label">Due Date</span>
+      <span class="mission-value" style="color:var(--px-danger)">21 Apr 2026</span>
+    </div>
+    <div class="pm-block">
+      <div class="pm-avatar">JD</div>
+      <div>
+        <div class="pm-name">Jean Dubois</div>
+        <div class="pm-role">Project Manager</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── STICKY NOTE ─── -->
+  <div class="sticky-note-wrap">
+    <div class="sticky-note">
+      <div class="sticky-note-header">
+        <i class="bi bi-pin-angle-fill" style="color:#B45309;font-size:0.9rem"></i>
+        <span class="sticky-note-label">Team Note</span>
+        <span class="sticky-note-badge">Visible to client</span>
+      </div>
+      <textarea
+        class="sticky-note-editable"
+        id="stickyNoteText"
+        maxlength="150"
+        placeholder="Write a short message for your client… (max 150 chars)"
+        oninput="updateStickyCounter(this)"
+      >We are a little under the target plan for now but confident to reach our goals by end of month thanks to the new creatives.</textarea>
+      <div class="sticky-note-footer">
+        <span class="sticky-note-author">— The Pix.City team · 21 Apr 2026</span>
+        <span class="sticky-note-counter" id="stickyCounter">120/150</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── CLIENT TO-DO ─── -->
+  <div class="todo-section">
+    <div class="todo-header">
+      <i class="bi bi-check2-square" style="color:var(--px-primary)"></i>
+      <span class="todo-header-title">Client To-Do</span>
+      <span class="todo-count-badge" id="todoPendingCount">2 pending</span>
+      <button class="btn-add-todo" onclick="toggleAddTodo()"><i class="bi bi-plus-lg"></i> Add action</button>
+    </div>
+
+    <!-- Add form -->
+    <div class="todo-add-form" id="todoAddForm">
+      <div class="todo-input-wrap">
+        <div class="todo-input-label">Action (45 char max)</div>
+        <input class="todo-input" id="todoActionInput" type="text" maxlength="45" placeholder="e.g. Update product feed…">
+      </div>
+      <div class="todo-date-wrap">
+        <div class="todo-input-label">Due date</div>
+        <input class="todo-input" id="todoDueInput" type="date">
+      </div>
+      <button class="btn-todo-save" onclick="addTodoItem()"><i class="bi bi-plus-lg"></i> Add</button>
+      <button class="btn-todo-cancel" onclick="toggleAddTodo()">Cancel</button>
+    </div>
+
+    <!-- Active todos -->
+    <div class="todo-list" id="todoList">
+      <!-- rendered by JS -->
+    </div>
+
+    <!-- History toggle -->
+    <div class="todo-history-toggle" id="historyToggle" onclick="toggleHistory()">
+      <i class="bi bi-chevron-down"></i>
+      History / Done
+      <span style="margin-left:auto;font-size:0.65rem;color:var(--px-muted)" id="historyCount">2 items</span>
+    </div>
+    <div class="todo-history-list" id="todoHistoryList">
+      <!-- rendered by JS -->
+    </div>
+  </div>
+
+  <!-- ─── PLAN BLOCKS ─── -->
+
+  <!-- Leads Plan - April 2026 -->
+  <div class="plan-block" id="planLeadsApr">
+    <div class="plan-block-header open" onclick="togglePlanBlock(this)">
+      <span class="plan-type-pill" style="background:#129FB5">Leads Plan</span>
+      <span class="plan-block-title">Plan &amp; Results — April 2026</span>
+      <span style="font-size:0.7rem;color:var(--px-muted)">Target Plan vs RD #14</span>
+      <i class="bi bi-chevron-down plan-block-chevron"></i>
+    </div>
+    <div class="plan-block-body open" id="planLeadsAprBody">
+
+      <!-- Challenge timeline selector -->
+      <div class="challenge-timeline">
+        <span style="font-size:0.67rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--px-muted);white-space:nowrap">Compare with:</span>
+        <button class="challenge-btn active" onclick="switchChallenge(this,'leads_apr','rd14')">
+          <span class="latest-dot"></span> RD #14 · 21 Apr
+        </button>
+        <button class="challenge-btn" onclick="switchChallenge(this,'leads_apr','rd13')">RD #13 · 14 Apr</button>
+        <button class="challenge-btn" onclick="switchChallenge(this,'leads_apr','rd12')">RD #12 · 7 Apr</button>
+      </div>
+
+      <!-- Metrics table -->
+      <div class="metrics-wrap" id="table_leads_apr">
+        <!-- rendered by renderPlanTable() -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Leads Plan - March 2026 -->
+  <div class="plan-block">
+    <div class="plan-block-header" onclick="togglePlanBlock(this)">
+      <span class="plan-type-pill" style="background:#129FB5">Leads Plan</span>
+      <span class="plan-block-title">Plan &amp; Results — March 2026</span>
+      <span style="font-size:0.7rem;color:var(--px-success)"><i class="bi bi-check-circle-fill"></i> Completed</span>
+      <i class="bi bi-chevron-down plan-block-chevron"></i>
+    </div>
+    <div class="plan-block-body" id="planLeadsMarBody">
+      <div class="challenge-timeline">
+        <span style="font-size:0.67rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--px-muted);white-space:nowrap">Compare with:</span>
+        <button class="challenge-btn active" onclick="switchChallenge(this,'leads_mar','rd11')">
+          <span class="latest-dot" style="background:#129FB5"></span> Final · 31 Mar
+        </button>
+        <button class="challenge-btn" onclick="switchChallenge(this,'leads_mar','rd10')">RD #10 · 24 Mar</button>
+      </div>
+      <div class="metrics-wrap" id="table_leads_mar"></div>
+    </div>
+  </div>
+
+  <!-- ─── PERFORMANCE REPORTS ─── -->
+  <div class="report-block">
+    <div class="report-header open" onclick="toggleReport(this)">
+      <span class="report-platform-badge badge-meta"><i class="bi bi-meta"></i> Meta</span>
+      <span class="report-title">Campaign Google — April 2026</span>
+      <span class="report-platform-badge badge-google" style="margin-left:auto"><i class="bi bi-google"></i> Google</span>
+      <i class="bi bi-chevron-down report-chevron"></i>
+    </div>
+    <div class="report-body open">
+      <div class="report-section-label">Performance Overview</div>
+      <p class="report-text">
+        From April 1 to April 21, we invested €4,316.45 across campaigns generating €8,369.10 in revenue,
+        resulting in a ROAS of 1.94, up from 1.82 the previous week, reflecting an approximate 6.6% improvement.
+        Prospecting campaigns hover near threshold performance at a 1.69 ROAS, while retargeting and catalogue
+        campaigns show stronger efficiency. Cost per purchase remains well controlled, with the majority of
+        campaigns below €50 per purchase.
+      </p>
+      <div class="report-section-label">Key Points</div>
+      <ul class="report-kp-list">
+        <li>ROAS of 1.94, up from 1.82 — +6.6% improvement week-over-week</li>
+        <li>Prospecting campaigns near threshold (1.69 ROAS); retargeting &amp; catalogue outperforming</li>
+        <li>Cost per purchase controlled: majority of campaigns below €50</li>
+        <li>New ad set additions significantly improved prospecting returns</li>
+        <li>Budget scaled from €70 to €100 daily; funnel maturity and signal quality remain good</li>
+      </ul>
+      <div class="report-section-label">Next Steps</div>
+      <ul class="report-kp-list">
+        <li>Continue scaling budget incrementally toward monthly target (€4,200)</li>
+        <li>Introduce new creative assets from the upcoming collection (live 29/03)</li>
+        <li>Monitor prospecting ROAS — increase budget when ROAS exceeds 2.5</li>
+        <li>Review audience exclusions to avoid overlap between prospecting and retargeting</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ─── CLIENT VALIDATION ─── -->
+  <div class="validate-bar">
+    <div class="validate-icon"><i class="bi bi-patch-check"></i></div>
+    <div class="validate-info">
+      <div class="validate-title">Your feedback &amp; validation</div>
+      <textarea class="validate-comment" placeholder="Leave a comment for your account manager…" rows="2"></textarea>
+      <div class="validate-actions">
+        <button class="btn-validate btn-approve"><i class="bi bi-check-lg"></i> Approve this delivery</button>
+        <button class="btn-validate btn-comment-only"><i class="bi bi-chat-left-text"></i> Send comment</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="df-footer">
+    Generated by <a href="#">Pix.City Back Office</a> · 2026-04-21 · Mission #1239
+  </div>
+
+</div><!-- /page-wrap -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* ─── PLAN DATA ─── */
+const PLAN_DATA = {
+  leads_apr: {
+    metrics: ['Budget','Leads','CPL','Leads qualifiés','% Leads qualifiés','Signatures','ROAS'],
+    fmts:    ['eur','int','eur','int','pct','int','x'],
+    target:  [4200, 84, 50, 25, 30, 5, null],
+    challenges: {
+      rd14: { label:'RD #14 · 21 Apr', data:[3104, 61, 50.9, 17, 27.9, 3, null] },
+      rd13: { label:'RD #13 · 14 Apr', data:[2010, 35, 57.4, 8,  22.9, 1, null] },
+      rd12: { label:'RD #12 · 7 Apr',  data:[1020, 18, 56.7, 4,  22.2, 0, null] },
+    }
+  },
+  leads_mar: {
+    metrics: ['Budget','Leads','CPL','Leads qualifiés','% Leads qualifiés','Signatures','ROAS'],
+    fmts:    ['eur','int','eur','int','pct','int','x'],
+    target:  [4000, 80, 50, 24, 30, 5, null],
+    challenges: {
+      rd11: { label:'Final · 31 Mar', data:[3980, 79, 50.4, 23, 29.1, 5, null] },
+      rd10: { label:'RD #10 · 24 Mar', data:[2990, 59, 50.7, 17, 28.8, 3, null] },
+    }
+  }
+};
+
+/* active challenge per plan */
+const activeChallenge = { leads_apr: 'rd14', leads_mar: 'rd11' };
+
+/* ─── FORMAT ─── */
+function fmtVal(v, type) {
+  if (v == null || v === '') return '—';
+  switch(type) {
+    case 'eur': return '€' + Number(v).toLocaleString('fr-FR',{minimumFractionDigits:0,maximumFractionDigits:2});
+    case 'int': return Number(v).toLocaleString('fr-FR');
+    case 'pct': return Number(v).toFixed(1) + '%';
+    case 'x':   return Number(v).toFixed(2) + 'x';
+    default:    return v;
+  }
+}
+
+/* ─── RENDER PLAN TABLE ─── */
+function renderPlanTable(planKey) {
+  const p = PLAN_DATA[planKey];
+  const cKey = activeChallenge[planKey];
+  const c = p.challenges[cKey];
+  const el = document.getElementById('table_' + planKey.replace('_',  '_'));
+  if (!el) return;
+
+  let rows = p.metrics.map((label, i) => {
+    const t  = p.target[i];
+    const a  = c.data[i];
+    const fmt = p.fmts[i];
+
+    let varCell = '<span class="var-neu">—</span>';
+    let progressBar = '';
+
+    if (t != null && a != null) {
+      const diff = a - t;
+      const pct  = ((a / t) * 100).toFixed(1);
+      const isInverse = label === 'CPL' || label === 'CPC' || label === 'Cost per follower' || label === 'CPA';
+      const positive = isInverse ? diff <= 0 : diff >= 0;
+      const cls = positive ? 'var-pos' : 'var-neg';
+      const arrow = positive ? '↑' : '↓';
+      const sign = diff >= 0 ? '+' : '';
+      const fillPct = Math.min(Math.round((a/t)*100), 120);
+      const fillColor = positive ? '#16A34A' : '#DC2626';
+      varCell = `<div class="var-cell ${cls}"><span class="var-arrow">${arrow}</span>${sign}${fmtVal(diff,fmt)} (${sign}${((diff/t)*100).toFixed(1)}%)</div>`;
+      progressBar = `<div class="progress-mini" title="${pct}% of target"><div class="progress-mini-fill" style="width:${Math.min(fillPct,100)}%;background:${fillColor}"></div></div>`;
+    }
+
+    return `<tr>
+      <td>${label}</td>
+      <td>${fmtVal(t, fmt)}</td>
+      <td><strong>${fmtVal(a, fmt)}</strong><br>${progressBar}</td>
+      <td>${varCell}</td>
+    </tr>`;
+  }).join('');
+
+  el.innerHTML = `<table class="metrics-table">
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Target Plan</th>
+        <th>${c.label}</th>
+        <th>Variance</th>
+      </tr>
+    </thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+/* ─── SWITCH CHALLENGE ─── */
+function switchChallenge(btn, planKey, cKey) {
+  btn.closest('.plan-block-body').querySelectorAll('.challenge-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeChallenge[planKey] = cKey;
+  renderPlanTable(planKey);
+}
+
+/* ─── TOGGLE PLAN BLOCK ─── */
+function togglePlanBlock(header) {
+  header.classList.toggle('open');
+  header.nextElementSibling.classList.toggle('open');
+}
+
+/* ─── TOGGLE REPORT ─── */
+function toggleReport(header) {
+  header.classList.toggle('open');
+  header.nextElementSibling.classList.toggle('open');
+}
+
+/* ─── STICKY NOTE COUNTER ─── */
+function updateStickyCounter(ta) {
+  const counter = document.getElementById('stickyCounter');
+  const len = ta.value.length;
+  counter.textContent = len + '/150';
+  counter.classList.toggle('over', len >= 145);
+}
+// init counter
+updateStickyCounter(document.getElementById('stickyNoteText'));
+
+/* ─── TODO DATA ─── */
+const TODO_ACTIVE = [
+  { id:1, text:'Set up Pixel on website', created:'2026-04-01', due:'2026-04-15', status:'late' },
+  { id:2, text:'Approve April creatives', created:'2026-04-10', due:'2026-04-25', status:'pending' },
+];
+const TODO_DONE = [
+  { id:3, text:'Send updated product catalogue', created:'2026-03-20', done:'2026-03-28' },
+  { id:4, text:'Confirm Q2 budget envelope',    created:'2026-03-05', done:'2026-03-12' },
+];
+let nextTodoId = 5;
+
+function statusIcon(status) {
+  if (status === 'done')    return '<i class="bi bi-check-circle-fill status-done todo-status-icon"></i>';
+  if (status === 'late')    return '<i class="bi bi-x-circle-fill status-late todo-status-icon"></i>';
+  return '<i class="bi bi-clock status-pending todo-status-icon"></i>';
+}
+function dueCls(due, status) {
+  if (status === 'done') return '';
+  const today = new Date('2026-04-27');
+  const d = new Date(due);
+  if (d < today) return 'late';
+  if ((d - today) < 3*86400000) return 'soon';
+  return '';
+}
+function fmtDate(d) {
+  return new Date(d).toLocaleDateString('fr-FR',{day:'numeric',month:'short'});
+}
+
+function renderTodos() {
+  const list = document.getElementById('todoList');
+  list.innerHTML = TODO_ACTIVE.map(t => `
+    <div class="todo-item${t.status==='done'?' done':''}" id="todo_${t.id}">
+      <button class="todo-checkbox${t.status==='done'?' checked':''}" onclick="markDone(${t.id})" title="Mark done">
+        ${t.status==='done'?'<span style="color:#fff;font-size:0.72rem;font-weight:700">✓</span>':''}
+      </button>
+      <span class="todo-text">${t.text}</span>
+      <div class="todo-dates">
+        <span class="created">Created ${fmtDate(t.created)}</span>
+        <span class="due ${dueCls(t.due, t.status)}">Due ${fmtDate(t.due)}</span>
+      </div>
+      ${statusIcon(t.status)}
+    </div>`).join('');
+
+  const histList = document.getElementById('todoHistoryList');
+  histList.innerHTML = TODO_DONE.map(t => `
+    <div class="todo-history-item">
+      <i class="bi bi-check-circle-fill status-done todo-status-icon"></i>
+      <span class="todo-text">${t.text}</span>
+      <div class="todo-dates" style="margin-left:auto">
+        <span class="created">Done ${fmtDate(t.done)}</span>
+      </div>
+    </div>`).join('');
+
+  // update pending count
+  const pending = TODO_ACTIVE.filter(t => t.status !== 'done').length;
+  document.getElementById('todoPendingCount').textContent = pending + ' pending';
+  document.getElementById('historyCount').textContent = TODO_DONE.length + ' items';
+}
+
+function markDone(id) {
+  const idx = TODO_ACTIVE.findIndex(t => t.id === id);
+  if (idx === -1) return;
+  const item = TODO_ACTIVE.splice(idx, 1)[0];
+  item.done = '2026-04-27';
+  TODO_DONE.unshift(item);
+  renderTodos();
+  if (document.getElementById('todoHistoryList').classList.contains('open') === false) {
+    document.getElementById('historyToggle').click();
+  }
+}
+
+function toggleAddTodo() {
+  const form = document.getElementById('todoAddForm');
+  form.classList.toggle('open');
+  if (form.classList.contains('open')) document.getElementById('todoActionInput').focus();
+}
+
+function addTodoItem() {
+  const text = document.getElementById('todoActionInput').value.trim();
+  const due  = document.getElementById('todoDueInput').value;
+  if (!text) return;
+  TODO_ACTIVE.push({ id:nextTodoId++, text, created:'2026-04-27', due: due||'2026-05-07', status:'pending' });
+  document.getElementById('todoActionInput').value = '';
+  document.getElementById('todoDueInput').value = '';
+  toggleAddTodo();
+  renderTodos();
+}
+
+function toggleHistory() {
+  const toggle = document.getElementById('historyToggle');
+  const list   = document.getElementById('todoHistoryList');
+  toggle.classList.toggle('open');
+  list.classList.toggle('open');
+}
+
+/* ─── INIT ─── */
+renderPlanTable('leads_apr');
+renderPlanTable('leads_mar');
+renderTodos();
+</script>
+</body>
+</html>

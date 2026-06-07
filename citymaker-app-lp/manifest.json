@@ -1,0 +1,24 @@
+{
+  "name": "CityMaker — Pix.City",
+  "short_name": "CityMaker",
+  "description": "Put your community management skills to work for your region with Pix.City Services.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0f1623",
+  "theme_color": "#0f1623",
+  "icons": [
+    {
+      "src": "https://placehold.co/192x192/0f1623/00cdb0?text=CM",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://placehold.co/512x512/0f1623/00cdb0?text=CM",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

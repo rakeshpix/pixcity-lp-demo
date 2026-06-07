@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delivery File #1239 — Pix.City</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary:        #2269F8;
+      --primary-light:  rgba(34,105,248,0.08);
+      --primary-mid:    rgba(34,105,248,0.15);
+      --secondary:      #10B981;
+      --secondary-light:rgba(16,185,129,0.1);
+      --tertiary:       #F5E9DA;
+      --neutral:        #232323;
+      --muted:          #6B7280;
+      --border:         #E5E7EB;
+      --bg:             #F7F6F3;
+      --white:          #FFFFFF;
+      --danger:         #EF4444;
+      --danger-light:   rgba(239,68,68,0.1);
+      --warn:           #F59E0B;
+      --note-bg:        #FFFBE6;
+      --note-border:    #F5D76E;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: var(--bg);
+      color: var(--neutral);
+      font-size: 0.9rem;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1,h2,h3,h4,h5 {
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    /* ─── MASTHEAD ─── */
+    .masthead {
+      background: var(--neutral);
+      color: white;
+      padding: 0 24px;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 3px solid var(--primary);
+    }
+    .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: -0.03em;
+      color: white;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .logo-dot { color: var(--primary); }
+    .masthead-sep { width: 1px; height: 18px; background: rgba(255,255,255,0.15); }
+    .masthead-tag {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+    }
+    .masthead-mission {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.83rem;
+      font-weight: 600;
+      color: white;
+    }
+    .masthead-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+    .status-pill {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 99px;
+      background: var(--secondary);
+      color: white;
+    }
+    .btn-print {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.6);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+    .btn-print:hover { background: rgba(255,255,255,0.14); color: white; }
+
+    /* ─── HERO ─── */
+    .hero {
+      background: var(--neutral);
+      color: white;
+      padding: 40px 24px 34px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -100px; right: -100px;
+      width: 360px; height: 360px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(34,105,248,0.22) 0%, transparent 68%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -50px; left: 18%;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(16,185,129,0.14) 0%, transparent 68%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-eyebrow {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 24px; height: 2px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+    .hero-title {
+      font-size: clamp(1.75rem, 4vw, 2.6rem);
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+    .hero-client { color: var(--primary); }
+    .hero-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px 28px;
+      padding-top: 22px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      align-items: flex-end;
+    }
+    .hero-meta-item { display: flex; flex-direction: column; gap: 3px; }
+    .hero-meta-label {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.38);
+    }
+    .hero-meta-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: white;
+    }
+    .hero-meta-value.danger { color: #FCA5A5; }
+    .hero-pm {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-left: 26px;
+      border-left: 1px solid rgba(255,255,255,0.1);
+    }
+    .pm-avatar {
+      width: 38px; height: 38px;
+      border-radius: 9px;
+      background: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: white;
+      flex-shrink: 0;
+    }
+    .pm-name { font-family: 'Space Grotesk', sans-serif; font-size: 0.83rem; font-weight: 600; color: white; }
+    .pm-role  { font-size: 0.65rem; color: rgba(255,255,255,0.38); }
+
+    /* ─── PAGE BODY ─── */
+    .page-body {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 24px 72px;
+    }
+
+    /* ─── 2-COLUMN GRID ─── */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 292px;
+      gap: 24px;
+      align-items: start;
+    }
+    .content-main { min-width: 0; }
+    .content-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: sticky;
+      top: 70px;
+    }
+
+    /* ─── SECTION HEADING ─── */
+    .section-heading {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-heading::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ─── PLAN CARD ─── */
+    .plan-card {
+      background: var(--white);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.03);
+    }
+    .plan-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 15px 20px;
+      cursor: pointer;
+      user-select: none;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+    }
+    .plan-card-header:hover { background: #FAFAFA; }
+    .plan-type-badge {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 99px;
+      color: white;
+      flex-shrink: 0;
+    }
+    .plan-card-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.93rem;
+      font-weight: 600;
+      color: var(--neutral);
+      flex: 1;
+    }
+    .plan-card-sub {
+      font-size: 0.7rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+    .plan-card-sub.ok { color: var(--secondary); }
+    .plan-chevron { font-size: 0.7rem; color: var(--muted); transition: transform 0.2s; }
+    .plan-card-header.open .plan-chevron { transform: rotate(180deg); }
+    .plan-card-body { display: none; }
+    .plan-card-body.open { display: block; }
+
+    /* Challenge selector bar */
+    .challenge-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 20px;
+      border-bottom: 1px solid var(--border);
+      background: #FAFAFA;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .challenge-bar::-webkit-scrollbar { display: none; }
+    .challenge-bar-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .challenge-chip {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 4px 13px;
+      border-radius: 99px;
+      border: 1.5px solid var(--border);
+      background: white;
+      cursor: pointer;
+      color: var(--muted);
+      white-space: nowrap;
+      transition: all 0.14s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .challenge-chip:hover { border-color: var(--primary); color: var(--primary); }
+    .challenge-chip.active { background: var(--primary); border-color: var(--primary); color: white; }
+    .latest-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.8);
+      flex-shrink: 0;
+    }
+
+    /* Metrics flex grid (no table) */
+    .metrics-wrap { }
+    .metrics-col-header {
+      display: grid;
+      grid-template-columns: 1fr 100px 110px 130px;
+      padding: 7px 20px;
+      background: #F5F5F3;
+      border-bottom: 1px solid var(--border);
+    }
+    .col-lbl {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .col-lbl:not(:first-child) { text-align: right; }
+    .metric-row {
+      display: grid;
+      grid-template-columns: 1fr 100px 110px 130px;
+      padding: 10px 20px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+      transition: background 0.1s;
+    }
+    .metric-row:last-child { border-bottom: none; }
+    .metric-row:hover { background: #FAFAF8; }
+    .metric-row:nth-child(even) { background: rgba(245,233,218,0.18); }
+    .metric-row:nth-child(even):hover { background: rgba(245,233,218,0.32); }
+    .m-name {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--neutral);
+    }
+    .m-target {
+      text-align: right;
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .m-actual { text-align: right; }
+    .m-actual-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--neutral);
+    }
+    .m-bar-wrap {
+      height: 3px;
+      border-radius: 99px;
+      background: var(--border);
+      margin-top: 4px;
+      overflow: hidden;
+    }
+    .m-bar-fill { height: 100%; border-radius: 99px; transition: width 0.4s; }
+    .m-var {
+      text-align: right;
+      font-size: 0.78rem;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+    .var-pos { color: var(--secondary); }
+    .var-neg { color: var(--danger); }
+    .var-neu { color: var(--muted); font-weight: 400; }
+
+    /* ─── CHART SLOT ─── */
+    .chart-slot {
+      background: var(--white);
+      border-radius: 12px;
+      border: 2px dashed var(--border);
+      padding: 36px 20px;
+      text-align: center;
+      margin-bottom: 20px;
+      transition: border-color 0.2s, background 0.2s;
+      cursor: default;
+    }
+    .chart-slot:hover { border-color: var(--primary); background: var(--primary-light); }
+    .chart-slot.has-image { border-style: solid; border-color: var(--border); padding: 0; cursor: default; }
+    .chart-slot.has-image:hover { background: var(--white); border-color: var(--border); }
+    .chart-slot img { width: 100%; display: block; border-radius: 10px; }
+    .chart-icon { font-size: 2.2rem; color: var(--border); margin-bottom: 10px; }
+    .chart-placeholder { font-size: 0.82rem; color: var(--muted); font-weight: 500; }
+    .chart-sub { font-size: 0.7rem; color: var(--border); margin-top: 3px; }
+
+    /* ─── REPORT CARD ─── */
+    .report-card {
+      background: var(--white);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .report-card-hdr {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .report-card-hdr:hover { background: #FAFAFA; }
+    .plat-badge {
+      font-size: 0.66rem;
+      font-weight: 700;
+      padding: 4px 11px;
+      border-radius: 99px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .badge-meta   { background: rgba(24,119,242,0.1); color: #1877F2; }
+    .badge-google { background: rgba(234,67,53,0.1);  color: #EA4335; }
+    .report-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 600;
+      flex: 1;
+    }
+    .report-chevron { font-size: 0.7rem; color: var(--muted); transition: transform 0.2s; }
+    .report-card-hdr.open .report-chevron { transform: rotate(180deg); }
+    .report-body { display: none; padding: 22px 20px; }
+    .report-body.open { display: block; }
+    .report-sec-label {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin: 18px 0 8px;
+    }
+    .report-sec-label:first-child { margin-top: 0; }
+    .report-text { font-size: 0.84rem; line-height: 1.78; color: #444; }
+    .report-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .report-list li {
+      display: flex;
+      gap: 10px;
+      font-size: 0.82rem;
+      line-height: 1.62;
+      color: #444;
+    }
+    .report-list li::before { content: '→'; color: var(--primary); font-weight: 700; flex-shrink: 0; }
+
+    /* ─── STICKY NOTE WIDGET ─── */
+    .sticky-widget {
+      background: var(--note-bg);
+      border: 1.5px solid var(--note-border);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 4px 18px rgba(245,215,110,0.3), 0 1px 4px rgba(0,0,0,0.05);
+      position: relative;
+    }
+    .sticky-widget::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 16px; right: 16px;
+      height: 3px;
+      background: linear-gradient(90deg, #F5D76E, #FBBF24, #F5D76E);
+      border-radius: 0 0 3px 3px;
+    }
+    .widget-label {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #92400E;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .widget-badge {
+      font-size: 0.56rem;
+      padding: 2px 7px;
+      border-radius: 99px;
+      background: rgba(146,64,14,0.1);
+      color: #92400E;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+    .sticky-ta {
+      font-family: 'Caveat', cursive;
+      font-size: 1.12rem;
+      line-height: 1.6;
+      color: #422006;
+      background: none;
+      border: none;
+      outline: none;
+      width: 100%;
+      resize: none;
+      min-height: 70px;
+      padding: 0;
+    }
+    .sticky-ta::placeholder { color: rgba(66,32,6,0.3); }
+    .sticky-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(245,215,110,0.5);
+    }
+    .sticky-author { font-size: 0.63rem; color: #78350F; font-style: italic; }
+    .sticky-counter { font-size: 0.6rem; font-weight: 600; color: #B45309; }
+    .sticky-counter.over { color: var(--danger); }
+
+    /* ─── TODO WIDGET ─── */
+    .todo-widget {
+      background: var(--white);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.03);
+    }
+    .todo-wgt-hdr {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 15px;
+      border-bottom: 1px solid var(--border);
+    }
+    .todo-wgt-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.83rem;
+      font-weight: 600;
+      flex: 1;
+    }
+    .todo-pending-badge {
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 99px;
+      background: var(--danger-light);
+      color: var(--danger);
+    }
+    .btn-add-todo {
+      font-size: 0.62rem;
+      font-weight: 600;
+      padding: 4px 9px;
+      border-radius: 6px;
+      border: 1px solid var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      transition: all 0.14s;
+    }
+    .btn-add-todo:hover { background: var(--primary); color: white; }
+    .todo-add-form {
+      padding: 12px 15px;
+      border-bottom: 1px solid var(--border);
+      background: #F9FAFB;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .todo-add-form.open { display: flex; }
+    .todo-f-label {
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+    .todo-input {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.8rem;
+      outline: none;
+      color: var(--neutral);
+      background: white;
+    }
+    .todo-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+    .todo-btn-row { display: flex; gap: 6px; }
+    .btn-todo-save {
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: none;
+      background: var(--primary);
+      color: white;
+      cursor: pointer;
+    }
+    .btn-todo-save:hover { opacity: 0.88; }
+    .btn-todo-cancel {
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: none;
+      cursor: pointer;
+      color: var(--muted);
+    }
+    .todo-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      padding: 10px 15px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+    }
+    .todo-item:last-child { border-bottom: none; }
+    .todo-item:hover { background: #FAFAFA; }
+    .todo-cb {
+      width: 15px; height: 15px;
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: all 0.12s;
+      background: none;
+      padding: 0;
+    }
+    .todo-cb:hover { border-color: var(--secondary); }
+    .todo-cb.checked { background: var(--secondary); border-color: var(--secondary); }
+    .todo-cb.checked::after { content: '✓'; color: white; font-size: 0.6rem; font-weight: 700; }
+    .todo-content { flex: 1; min-width: 0; }
+    .todo-text { font-size: 0.79rem; font-weight: 500; color: var(--neutral); line-height: 1.4; }
+    .todo-item.done .todo-text { text-decoration: line-through; color: var(--muted); }
+    .todo-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 0.6rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .due-late { color: var(--danger); font-weight: 600; }
+    .due-soon { color: var(--warn);   font-weight: 600; }
+    .todo-icon { font-size: 0.82rem; flex-shrink: 0; margin-top: 1px; }
+    .icon-pending { color: var(--warn); }
+    .icon-done    { color: var(--secondary); }
+    .icon-late    { color: var(--danger); }
+    .hist-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 15px;
+      background: #F9FAFB;
+      border-top: 1px solid var(--border);
+      cursor: pointer;
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--muted);
+      user-select: none;
+    }
+    .hist-toggle:hover { color: var(--neutral); }
+    .hist-chevron { font-size: 0.58rem; transition: transform 0.2s; }
+    .hist-toggle.open .hist-chevron { transform: rotate(180deg); }
+    .hist-count { margin-left: auto; font-size: 0.58rem; }
+    .hist-list { display: none; background: #F9FAFB; }
+    .hist-list.open { display: block; }
+    .hist-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 15px;
+      border-bottom: 1px solid var(--border);
+      opacity: 0.6;
+    }
+    .hist-item:last-child { border-bottom: none; }
+    .hist-text { font-size: 0.76rem; color: var(--muted); flex: 1; text-decoration: line-through; }
+    .hist-date { font-size: 0.6rem; color: var(--muted); white-space: nowrap; }
+
+    /* ─── CLIENT VALIDATION ─── */
+    .validate-section {
+      background: var(--primary);
+      border-radius: 14px;
+      padding: 30px 26px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .validate-section::before {
+      content: '';
+      position: absolute;
+      top: -50px; right: -50px;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      pointer-events: none;
+    }
+    .validate-eyebrow {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 6px;
+    }
+    .validate-heading {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 14px;
+    }
+    .validate-ta {
+      width: 100%;
+      border: 1.5px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.83rem;
+      resize: vertical;
+      outline: none;
+      background: rgba(255,255,255,0.1);
+      color: white;
+      min-height: 70px;
+    }
+    .validate-ta::placeholder { color: rgba(255,255,255,0.38); }
+    .validate-ta:focus { border-color: rgba(255,255,255,0.5); }
+    .validate-btns { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+    .btn-approve {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.84rem;
+      font-weight: 700;
+      padding: 9px 20px;
+      border-radius: 8px;
+      border: none;
+      background: var(--secondary);
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.14s;
+    }
+    .btn-approve:hover { opacity: 0.88; }
+    .btn-comment-only {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.84rem;
+      font-weight: 600;
+      padding: 9px 20px;
+      border-radius: 8px;
+      border: 1.5px solid rgba(255,255,255,0.28);
+      background: rgba(255,255,255,0.1);
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.14s;
+    }
+    .btn-comment-only:hover { background: rgba(255,255,255,0.18); }
+
+    /* ─── FOOTER ─── */
+    .page-footer {
+      text-align: center;
+      padding: 18px 0 0;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+    .page-footer a { color: var(--primary); text-decoration: none; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 800px) {
+      .content-grid { grid-template-columns: 1fr; }
+      .content-sidebar { position: static; order: -1; }
+      .hero-pm { display: none; }
+    }
+    @media (max-width: 560px) {
+      .metrics-col-header,
+      .metric-row {
+        grid-template-columns: 1fr 86px 100px;
+      }
+      .metrics-col-header > *:nth-child(2),
+      .metric-row > *:nth-child(2) { display: none; }
+      .masthead { padding: 0 14px; }
+      .page-body { padding: 16px 14px 48px; }
+      .hero { padding: 26px 14px 22px; }
+    }
+    @media print {
+      .masthead, .btn-print, .todo-add-form, .btn-add-todo, .validate-section { display: none !important; }
+      .plan-card-body, .report-body { display: block !important; }
+      .content-sidebar { position: static; }
+      body { background: white; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <a class="logo" href="#">Pix<span class="logo-dot">.</span>City</a>
+  <div class="masthead-sep"></div>
+  <span class="masthead-tag">Delivery File</span>
+  <span class="masthead-mission">#1239 — Acme Corp</span>
+  <div class="masthead-right">
+    <span class="status-pill">Active</span>
+    <button class="btn-print" onclick="window.print()"><i class="bi bi-printer"></i> Print</button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Paid Ad Challenges · April 2026</div>
+    <h1 class="hero-title">Performance Report for<br><span class="hero-client">Marie Dupont</span></h1>
+    <div class="hero-meta-row">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Mission</span>
+        <span class="hero-meta-value">#1239</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Company</span>
+        <span class="hero-meta-value">Acme Corp</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Franchise</span>
+        <span class="hero-meta-value">Marie</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Service</span>
+        <span class="hero-meta-value">Paid Ad Challenges</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Language</span>
+        <span class="hero-meta-value">FR</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Due Date</span>
+        <span class="hero-meta-value danger">21 Apr 2026</span>
+      </div>
+      <div class="hero-pm">
+        <div class="pm-avatar">JD</div>
+        <div>
+          <div class="pm-name">Jean Dubois</div>
+          <div class="pm-role">Project Manager</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE BODY -->
+<div class="page-body">
+  <div class="content-grid">
+
+    <!-- ── MAIN ── -->
+    <div class="content-main">
+
+      <div class="section-heading">Performance Plans</div>
+
+      <!-- Leads Plan — April -->
+      <div class="plan-card">
+        <div class="plan-card-header open" onclick="togglePlan(this)">
+          <span class="plan-type-badge" style="background:var(--primary)">Leads Plan</span>
+          <span class="plan-card-title">Plan &amp; Results — April 2026</span>
+          <span class="plan-card-sub">Target vs RD #14</span>
+          <i class="bi bi-chevron-down plan-chevron"></i>
+        </div>
+        <div class="plan-card-body open">
+          <div class="challenge-bar">
+            <span class="challenge-bar-label">Compare:</span>
+            <button class="challenge-chip active" onclick="switchChallenge(this,'leads_apr','rd14')">
+              <span class="latest-dot"></span>RD #14 · 21 Apr
+            </button>
+            <button class="challenge-chip" onclick="switchChallenge(this,'leads_apr','rd13')">RD #13 · 14 Apr</button>
+            <button class="challenge-chip" onclick="switchChallenge(this,'leads_apr','rd12')">RD #12 · 7 Apr</button>
+          </div>
+          <div class="metrics-wrap" id="table_leads_apr"></div>
+        </div>
+      </div>
+
+      <!-- Leads Plan — March -->
+      <div class="plan-card">
+        <div class="plan-card-header" onclick="togglePlan(this)">
+          <span class="plan-type-badge" style="background:var(--primary)">Leads Plan</span>
+          <span class="plan-card-title">Plan &amp; Results — March 2026</span>
+          <span class="plan-card-sub ok"><i class="bi bi-check-circle-fill"></i> Completed</span>
+          <i class="bi bi-chevron-down plan-chevron"></i>
+        </div>
+        <div class="plan-card-body">
+          <div class="challenge-bar">
+            <span class="challenge-bar-label">Compare:</span>
+            <button class="challenge-chip active" onclick="switchChallenge(this,'leads_mar','rd11')">
+              <span class="latest-dot" style="background:rgba(34,105,248,0.6)"></span>Final · 31 Mar
+            </button>
+            <button class="challenge-chip" onclick="switchChallenge(this,'leads_mar','rd10')">RD #10 · 24 Mar</button>
+          </div>
+          <div class="metrics-wrap" id="table_leads_mar"></div>
+        </div>
+      </div>
+
+      <!-- CHART SLOT -->
+      <div class="section-heading" style="margin-top:4px">Performance Visuals</div>
+      <div class="chart-slot" id="chartSlot">
+        <div class="chart-icon"><i class="bi bi-bar-chart-line"></i></div>
+        <div class="chart-placeholder">Chart or statistics image</div>
+        <div class="chart-sub">Leave empty if not needed — drop an image here to activate</div>
+      </div>
+
+      <!-- PERFORMANCE REPORT -->
+      <div class="section-heading">Performance Report</div>
+      <div class="report-card">
+        <div class="report-card-hdr open" onclick="toggleReport(this)">
+          <span class="plat-badge badge-meta"><i class="bi bi-meta"></i> Meta</span>
+          <span class="report-title">Campaign Google — April 2026</span>
+          <span class="plat-badge badge-google" style="margin-left:auto"><i class="bi bi-google"></i> Google</span>
+          <i class="bi bi-chevron-down report-chevron"></i>
+        </div>
+        <div class="report-body open">
+          <div class="report-sec-label">Performance Overview</div>
+          <p class="report-text">
+            From April 1 to April 21, we invested €4,316.45 across campaigns generating €8,369.10 in revenue,
+            resulting in a ROAS of 1.94, up from 1.82 the previous week — an approximate 6.6% improvement.
+            Prospecting campaigns hover near threshold performance at 1.69 ROAS, while retargeting and catalogue
+            campaigns show stronger efficiency. Cost per purchase remains well controlled, with the majority of
+            campaigns below €50.
+          </p>
+          <div class="report-sec-label">Key Points</div>
+          <ul class="report-list">
+            <li>ROAS of 1.94, up from 1.82 — +6.6% improvement week-over-week</li>
+            <li>Prospecting near threshold (1.69 ROAS); retargeting &amp; catalogue outperforming</li>
+            <li>Cost per purchase controlled: majority of campaigns below €50</li>
+            <li>New ad set additions significantly improved prospecting returns</li>
+            <li>Budget scaled from €70 to €100 daily; funnel maturity and signal quality remain good</li>
+          </ul>
+          <div class="report-sec-label">Next Steps</div>
+          <ul class="report-list">
+            <li>Continue scaling budget incrementally toward monthly target (€4,200)</li>
+            <li>Introduce new creative assets from the upcoming collection (live 29/03)</li>
+            <li>Monitor prospecting ROAS — increase budget when ROAS exceeds 2.5</li>
+            <li>Review audience exclusions to avoid overlap between prospecting and retargeting</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- VALIDATION CTA -->
+      <div class="validate-section">
+        <div class="validate-eyebrow">Your Turn</div>
+        <h2 class="validate-heading">Share your feedback &amp; approval</h2>
+        <textarea class="validate-ta" placeholder="Leave a comment for your account manager…" rows="3"></textarea>
+        <div class="validate-btns">
+          <button class="btn-approve"><i class="bi bi-check-lg"></i> Approve this delivery</button>
+          <button class="btn-comment-only"><i class="bi bi-chat-left-text"></i> Send comment only</button>
+        </div>
+      </div>
+
+      <div class="page-footer">
+        Generated by <a href="#">Pix.City Back Office</a> · 2026-04-21 · Mission #1239
+      </div>
+
+    </div><!-- /main -->
+
+    <!-- ── SIDEBAR ── -->
+    <div class="content-sidebar">
+
+      <!-- TEAM NOTE -->
+      <div class="sticky-widget">
+        <div class="widget-label">
+          <i class="bi bi-pin-angle-fill" style="color:#B45309"></i>
+          Team Note
+          <span class="widget-badge">Visible to client</span>
+        </div>
+        <textarea
+          class="sticky-ta"
+          id="stickyNoteText"
+          maxlength="150"
+          placeholder="Write a short message for your client… (max 150 chars)"
+          oninput="updateStickyCounter(this)"
+        >We are a little under the target plan for now but confident to reach our goals by end of month thanks to the new creatives.</textarea>
+        <div class="sticky-footer">
+          <span class="sticky-author">— Pix.City team · 21 Apr</span>
+          <span class="sticky-counter" id="stickyCounter">120/150</span>
+        </div>
+      </div>
+
+      <!-- CLIENT TODO -->
+      <div class="todo-widget">
+        <div class="todo-wgt-hdr">
+          <i class="bi bi-check2-square" style="color:var(--primary);font-size:0.95rem"></i>
+          <span class="todo-wgt-title">Client To-Do</span>
+          <span class="todo-pending-badge" id="todoPendingCount">2 pending</span>
+          <button class="btn-add-todo" onclick="toggleAddTodo()"><i class="bi bi-plus-lg"></i> Add</button>
+        </div>
+
+        <div class="todo-add-form" id="todoAddForm">
+          <div>
+            <div class="todo-f-label">Action (45 char max)</div>
+            <input class="todo-input" id="todoActionInput" type="text" maxlength="45" placeholder="e.g. Update product feed…">
+          </div>
+          <div>
+            <div class="todo-f-label">Due date</div>
+            <input class="todo-input" id="todoDueInput" type="date">
+          </div>
+          <div class="todo-btn-row">
+            <button class="btn-todo-save" onclick="addTodoItem()">Add</button>
+            <button class="btn-todo-cancel" onclick="toggleAddTodo()">Cancel</button>
+          </div>
+        </div>
+
+        <div id="todoList"></div>
+
+        <div class="hist-toggle" id="historyToggle" onclick="toggleHistory()">
+          <i class="bi bi-chevron-down hist-chevron"></i>
+          History / Done
+          <span class="hist-count" id="historyCount">2 items</span>
+        </div>
+        <div class="hist-list" id="todoHistoryList"></div>
+      </div>
+
+    </div><!-- /sidebar -->
+
+  </div><!-- /content-grid -->
+</div><!-- /page-body -->
+
+<script>
+/* ─── DATA ─── */
+const PLAN_DATA = {
+  leads_apr: {
+    metrics: ['Budget','Leads','CPL','Leads qualifiés','% Leads qualifiés','Signatures','ROAS'],
+    fmts:    ['eur','int','eur','int','pct','int','x'],
+    target:  [4200, 84, 50, 25, 30, 5, null],
+    challenges: {
+      rd14: { label:'RD #14 · 21 Apr', data:[3104, 61, 50.9, 17, 27.9, 3, null] },
+      rd13: { label:'RD #13 · 14 Apr', data:[2010, 35, 57.4, 8,  22.9, 1, null] },
+      rd12: { label:'RD #12 · 7 Apr',  data:[1020, 18, 56.7, 4,  22.2, 0, null] },
+    }
+  },
+  leads_mar: {
+    metrics: ['Budget','Leads','CPL','Leads qualifiés','% Leads qualifiés','Signatures','ROAS'],
+    fmts:    ['eur','int','eur','int','pct','int','x'],
+    target:  [4000, 80, 50, 24, 30, 5, null],
+    challenges: {
+      rd11: { label:'Final · 31 Mar', data:[3980, 79, 50.4, 23, 29.1, 5, null] },
+      rd10: { label:'RD #10 · 24 Mar', data:[2990, 59, 50.7, 17, 28.8, 3, null] },
+    }
+  }
+};
+const activeChallenge = { leads_apr:'rd14', leads_mar:'rd11' };
+const INVERSE = new Set(['CPL','CPC','Cost per follower','CPA']);
+
+/* ─── FORMAT ─── */
+function fmtVal(v, type) {
+  if (v == null || v === '') return '—';
+  switch(type) {
+    case 'eur': return '€' + Number(v).toLocaleString('fr-FR',{minimumFractionDigits:0,maximumFractionDigits:2});
+    case 'int': return Number(v).toLocaleString('fr-FR');
+    case 'pct': return Number(v).toFixed(1) + '%';
+    case 'x':   return Number(v).toFixed(2) + 'x';
+    default:    return v;
+  }
+}
+
+/* ─── RENDER METRICS (flex, no table) ─── */
+function renderPlanTable(planKey) {
+  const p = PLAN_DATA[planKey];
+  const cKey = activeChallenge[planKey];
+  const c = p.challenges[cKey];
+  const el = document.getElementById('table_' + planKey);
+  if (!el) return;
+
+  const rows = p.metrics.map((label, i) => {
+    const t = p.target[i], a = c.data[i], fmt = p.fmts[i];
+    let varHTML = '<span class="var-neu">—</span>';
+    let barHTML = '';
+
+    if (t != null && a != null) {
+      const diff = a - t;
+      const pct  = (a / t) * 100;
+      const pos  = INVERSE.has(label) ? diff <= 0 : diff >= 0;
+      const cls  = pos ? 'var-pos' : 'var-neg';
+      const sign = diff >= 0 ? '+' : '';
+      varHTML = `<span class="${cls}">${pos?'↑':'↓'} ${sign}${fmtVal(diff,fmt)}<br><small style="font-size:0.7em;opacity:0.8">${sign}${((diff/t)*100).toFixed(1)}%</small></span>`;
+      barHTML = `<div class="m-bar-wrap"><div class="m-bar-fill" style="width:${Math.min(pct,100).toFixed(0)}%;background:${pos?'#10B981':'#EF4444'}"></div></div>`;
+    }
+
+    return `<div class="metric-row">
+      <div class="m-name">${label}</div>
+      <div class="m-target">${fmtVal(t,fmt)}</div>
+      <div class="m-actual"><div class="m-actual-num">${fmtVal(a,fmt)}</div>${barHTML}</div>
+      <div class="m-var">${varHTML}</div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `<div class="metrics-col-header">
+    <div class="col-lbl">Metric</div>
+    <div class="col-lbl">Target</div>
+    <div class="col-lbl">${c.label}</div>
+    <div class="col-lbl">Variance</div>
+  </div>${rows}`;
+}
+
+/* ─── TOGGLE PLAN / REPORT ─── */
+function togglePlan(hdr) {
+  hdr.classList.toggle('open');
+  hdr.nextElementSibling.classList.toggle('open');
+}
+function toggleReport(hdr) {
+  hdr.classList.toggle('open');
+  hdr.nextElementSibling.classList.toggle('open');
+}
+
+/* ─── SWITCH CHALLENGE ─── */
+function switchChallenge(btn, planKey, cKey) {
+  btn.closest('.plan-card-body').querySelectorAll('.challenge-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeChallenge[planKey] = cKey;
+  renderPlanTable(planKey);
+}
+
+/* ─── STICKY NOTE ─── */
+function updateStickyCounter(ta) {
+  const el = document.getElementById('stickyCounter');
+  const n  = ta.value.length;
+  el.textContent = n + '/150';
+  el.classList.toggle('over', n >= 145);
+}
+updateStickyCounter(document.getElementById('stickyNoteText'));
+
+/* ─── TODO DATA ─── */
+const TODO_ACTIVE = [
+  { id:1, text:'Set up Pixel on website',  created:'2026-04-01', due:'2026-04-15', status:'late' },
+  { id:2, text:'Approve April creatives',  created:'2026-04-10', due:'2026-04-25', status:'pending' },
+];
+const TODO_DONE = [
+  { id:3, text:'Send updated product catalogue', created:'2026-03-20', done:'2026-03-28' },
+  { id:4, text:'Confirm Q2 budget envelope',     created:'2026-03-05', done:'2026-03-12' },
+];
+let nextId = 5;
+
+function fmtDate(d) { return new Date(d).toLocaleDateString('fr-FR',{day:'numeric',month:'short'}); }
+function dueCls(due, status) {
+  if (status === 'done') return '';
+  const today = new Date('2026-04-27'), d = new Date(due);
+  if (d < today) return 'due-late';
+  if ((d - today) < 3*86400000) return 'due-soon';
+  return '';
+}
+function statusIcon(s) {
+  if (s === 'done') return '<i class="bi bi-check-circle-fill todo-icon icon-done"></i>';
+  if (s === 'late') return '<i class="bi bi-x-circle-fill todo-icon icon-late"></i>';
+  return '<i class="bi bi-clock todo-icon icon-pending"></i>';
+}
+
+function renderTodos() {
+  document.getElementById('todoList').innerHTML = TODO_ACTIVE.map(t => `
+    <div class="todo-item${t.status==='done'?' done':''}" id="todo_${t.id}">
+      <button class="todo-cb${t.status==='done'?' checked':''}" onclick="markDone(${t.id})"></button>
+      <div class="todo-content">
+        <div class="todo-text">${t.text}</div>
+        <div class="todo-meta">
+          <span>Added ${fmtDate(t.created)}</span>
+          <span class="${dueCls(t.due,t.status)}">Due ${fmtDate(t.due)}</span>
+        </div>
+      </div>
+      ${statusIcon(t.status)}
+    </div>`).join('');
+
+  document.getElementById('todoHistoryList').innerHTML = TODO_DONE.map(t => `
+    <div class="hist-item">
+      <i class="bi bi-check-circle-fill icon-done todo-icon"></i>
+      <span class="hist-text">${t.text}</span>
+      <span class="hist-date">Done ${fmtDate(t.done)}</span>
+    </div>`).join('');
+
+  const pending = TODO_ACTIVE.filter(t => t.status !== 'done').length;
+  document.getElementById('todoPendingCount').textContent = pending + ' pending';
+  document.getElementById('historyCount').textContent = TODO_DONE.length + ' items';
+}
+
+function markDone(id) {
+  const idx = TODO_ACTIVE.findIndex(t => t.id === id);
+  if (idx === -1) return;
+  const item = TODO_ACTIVE.splice(idx,1)[0];
+  item.done = '2026-04-27';
+  TODO_DONE.unshift(item);
+  renderTodos();
+  if (!document.getElementById('todoHistoryList').classList.contains('open'))
+    document.getElementById('historyToggle').click();
+}
+
+function toggleAddTodo() {
+  const f = document.getElementById('todoAddForm');
+  f.classList.toggle('open');
+  if (f.classList.contains('open')) document.getElementById('todoActionInput').focus();
+}
+
+function addTodoItem() {
+  const text = document.getElementById('todoActionInput').value.trim();
+  const due  = document.getElementById('todoDueInput').value;
+  if (!text) return;
+  TODO_ACTIVE.push({ id:nextId++, text, created:'2026-04-27', due:due||'2026-05-07', status:'pending' });
+  document.getElementById('todoActionInput').value = '';
+  document.getElementById('todoDueInput').value = '';
+  toggleAddTodo();
+  renderTodos();
+}
+
+function toggleHistory() {
+  document.getElementById('historyToggle').classList.toggle('open');
+  document.getElementById('todoHistoryList').classList.toggle('open');
+}
+
+/* ─── INIT ─── */
+renderPlanTable('leads_apr');
+renderPlanTable('leads_mar');
+renderTodos();
+</script>
+</body>
+</html>

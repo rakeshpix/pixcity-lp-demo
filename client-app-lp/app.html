@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#1230f5"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Pix.city"/>
+  <link rel="manifest" href="manifest.json"/>
+  <title>Pix.city — Client Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&display=swap" rel="stylesheet"/>
+  <style>
+    /* ─── Variables ─────────────────────────────────────────── */
+    :root {
+      --blue:        #1230f5;
+      --blue-dark:   #0952E0;
+      --blue-light:  #2069F7;
+      --blue-pale:   #EEF1FE;
+      --pink:        #ed5485;
+      --pink-pale:   #FDEEF4;
+      --green:       #12a25a;
+      --green-pale:  #E9FCF7;
+      --yellow:      #ffbf0d;
+      --yellow-pale: #FFF8E1;
+      --orange:      #f97316;
+      --orange-pale: #FFF1E6;
+      --cream:       #FAF4EC;
+      --cream2:      #F2EAE0;
+      --dark:        #111827;
+      --dark2:       #1f2937;
+      --gray:        #6b7280;
+      --gray2:       #9ca3af;
+      --gray-light:  #f3f4f6;
+      --border:      rgba(0,0,0,0.07);
+      --safe-top:    env(safe-area-inset-top, 0px);
+      --safe-bot:    env(safe-area-inset-bottom, 0px);
+
+      --cm-color:  #1230f5; --cm-pale: #EEF1FE;
+      --pa-color:  #12a25a; --pa-pale: #E9FCF7;
+      --pac-color: #f97316; --pac-pale: #FFF1E6;
+      --ps-color:  #ed5485; --ps-pale: #FDEEF4;
+    }
+
+    /* ─── Reset ─────────────────────────────────────────────── */
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+    html,body { height:100%; overflow:hidden; background:#d6dae8; }
+    body {
+      font-family:'Bricolage Grotesque',ui-sans-serif,system-ui,sans-serif;
+      -webkit-font-smoothing:antialiased;
+      display:flex; align-items:center; justify-content:center;
+    }
+
+    /* ─── Phone shell ────────────────────────────────────────── */
+    #app {
+      position:relative;
+      width:100%; max-width:430px;
+      height:100%; max-height:932px;
+      background:var(--cream);
+      overflow:hidden;
+    }
+    @media(min-width:500px){
+      #app {
+        border-radius:44px;
+        box-shadow:0 0 0 8px #161b2e, 0 40px 100px rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.2);
+        height:calc(100vh - 40px); max-height:880px;
+      }
+    }
+
+    /* ─── Screens ────────────────────────────────────────────── */
+    .screen {
+      position:absolute; inset:0;
+      display:flex; flex-direction:column;
+      opacity:0; pointer-events:none;
+      transition:opacity 0.22s ease, transform 0.28s cubic-bezier(0.4,0,0.2,1);
+      background:var(--cream);
+    }
+    .screen.active  { opacity:1; pointer-events:all; transform:translateX(0) !important; }
+    .screen.push    { transform:translateX(100%); }
+    .screen.pop     { transform:translateX(-30%); }
+
+    /* ─── Typography ─────────────────────────────────────────── */
+    .t-display { font-weight:800; letter-spacing:-0.035em; line-height:1.1; }
+    .t-heading { font-weight:700; letter-spacing:-0.025em; line-height:1.2; }
+    .t-label   { font-size:0.68rem; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; }
+    .t-body    { font-size:0.875rem; line-height:1.65; color:var(--gray); }
+
+    /* ─── Status bar ─────────────────────────────────────────── */
+    .status-bar {
+      height:calc(44px + var(--safe-top));
+      padding-top:var(--safe-top);
+      display:flex; align-items:flex-end; justify-content:space-between;
+      padding-left:1.5rem; padding-right:1.5rem; padding-bottom:0.5rem;
+      flex-shrink:0; z-index:10;
+    }
+    .status-time  { font-size:0.875rem; font-weight:700; color:var(--dark); }
+    .status-icons { display:flex; gap:5px; align-items:center; }
+
+    /* ─── App header ─────────────────────────────────────────── */
+    .app-header {
+      display:flex; align-items:center; gap:0.5rem;
+      padding:0 1rem 0.875rem;
+      flex-shrink:0;
+    }
+    .header-btn {
+      width:38px; height:38px; border-radius:12px;
+      border:none; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      background:transparent; color:var(--dark); flex-shrink:0;
+      transition:background 0.15s ease;
+    }
+    .header-btn:hover  { background:rgba(0,0,0,0.06); }
+    .header-btn:active { background:rgba(0,0,0,0.1); }
+    .header-title { flex:1; font-size:1.05rem; font-weight:800; color:var(--dark); letter-spacing:-0.02em; }
+    .avatar {
+      width:34px; height:34px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:0.75rem; font-weight:800; color:#fff; flex-shrink:0; cursor:pointer;
+      background:linear-gradient(135deg,var(--blue),var(--blue-light));
+    }
+
+    /* ─── Scroll area ────────────────────────────────────────── */
+    .scroll-area {
+      flex:1; overflow-y:auto; overflow-x:hidden;
+      -webkit-overflow-scrolling:touch;
+    }
+    .scroll-area::-webkit-scrollbar { display:none; }
+
+    /* ─── Bottom nav ─────────────────────────────────────────── */
+    .bottom-nav {
+      flex-shrink:0; display:flex; align-items:stretch;
+      background:#fff; border-top:1px solid var(--border);
+      padding-bottom:var(--safe-bot);
+    }
+    .bnav-item {
+      flex:1; display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      gap:3px; padding:0.5rem 0.25rem;
+      cursor:pointer; border:none; background:none;
+      color:#9ca3af; font-size:0.6rem; font-weight:700;
+      letter-spacing:0.03em; text-transform:uppercase;
+      transition:color 0.15s ease;
+    }
+    .bnav-item.active { color:var(--blue); }
+    .bnav-item svg { transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1); }
+    .bnav-item.active svg { transform:scale(1.15); }
+
+    /* ─── Drawer overlay ─────────────────────────────────────── */
+    #drawer-overlay {
+      position:absolute; inset:0; background:rgba(0,0,0,0.45);
+      z-index:100; opacity:0; pointer-events:none;
+      transition:opacity 0.3s ease; backdrop-filter:blur(2px);
+    }
+    #drawer-overlay.open { opacity:1; pointer-events:all; }
+
+    /* ─── Drawer ─────────────────────────────────────────────── */
+    #drawer {
+      position:absolute; top:0; left:0; bottom:0;
+      width:82%; max-width:300px;
+      background:#fff; z-index:101;
+      transform:translateX(-100%);
+      transition:transform 0.32s cubic-bezier(0.4,0,0.2,1);
+      display:flex; flex-direction:column;
+      border-right:1px solid var(--border);
+    }
+    #drawer.open { transform:translateX(0); }
+
+    .drawer-top {
+      background:linear-gradient(145deg,#0A0F3C 0%,var(--blue) 100%);
+      padding:calc(1.75rem + var(--safe-top)) 1.5rem 1.75rem;
+    }
+    .drawer-avatar {
+      width:58px; height:58px; border-radius:50%;
+      background:rgba(255,255,255,0.2);
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.25rem; font-weight:800; color:#fff;
+      border:2px solid rgba(255,255,255,0.35);
+      margin-bottom:0.875rem;
+    }
+    .drawer-name  { font-size:1rem; font-weight:800; color:#fff; margin-bottom:0.2rem; }
+    .drawer-email { font-size:0.75rem; color:rgba(255,255,255,0.65); font-weight:600; }
+
+    .drawer-nav { flex:1; padding:0.5rem 0; overflow-y:auto; }
+    .drawer-section-label {
+      font-size:0.62rem; font-weight:800; letter-spacing:0.1em; text-transform:uppercase;
+      color:#c0c0c0; padding:0.75rem 1.5rem 0.375rem;
+    }
+    .drawer-item {
+      display:flex; align-items:center; gap:0.875rem;
+      padding:0.7rem 1.5rem; cursor:pointer;
+      transition:background 0.15s ease; border:none; background:none;
+      width:100%; text-align:left; color:var(--dark2);
+    }
+    .drawer-item:hover { background:var(--blue-pale); }
+    .drawer-item.active { background:var(--blue-pale); color:var(--blue); }
+    .drawer-item-icon {
+      width:34px; height:34px; border-radius:10px;
+      display:flex; align-items:center; justify-content:center;
+      background:var(--gray-light); flex-shrink:0;
+    }
+    .drawer-item.active .drawer-item-icon { background:var(--blue); }
+    .drawer-item.active .drawer-item-icon svg { stroke:#fff; }
+    .drawer-item-text { font-size:0.875rem; font-weight:700; }
+    .drawer-item-badge {
+      margin-left:auto; min-width:20px; height:20px; border-radius:10px;
+      background:var(--blue); color:#fff;
+      font-size:0.62rem; font-weight:800;
+      display:flex; align-items:center; justify-content:center; padding:0 5px;
+    }
+    .drawer-footer {
+      padding:1rem 1.5rem calc(1rem + var(--safe-bot));
+      border-top:1px solid var(--border);
+    }
+    .logout-btn {
+      display:flex; align-items:center; gap:0.75rem;
+      padding:0.7rem 1rem; border-radius:12px;
+      border:1.5px solid rgba(239,68,68,0.2);
+      cursor:pointer; background:rgba(239,68,68,0.04);
+      color:#ef4444; font-size:0.875rem; font-weight:700;
+      font-family:inherit; width:100%;
+      transition:background 0.15s ease;
+    }
+    .logout-btn:hover { background:rgba(239,68,68,0.08); }
+
+    /* ─── Shared card ────────────────────────────────────────── */
+    .card {
+      background:#fff; border-radius:1.25rem;
+      border:1px solid var(--border);
+      box-shadow:0 1px 3px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.05);
+    }
+
+    /* ─── Badge ──────────────────────────────────────────────── */
+    .badge {
+      display:inline-flex; align-items:center; gap:3px;
+      padding:0.18rem 0.55rem; border-radius:100px;
+      font-size:0.66rem; font-weight:800; letter-spacing:0.04em; text-transform:uppercase;
+    }
+    .badge-cm    { background:var(--cm-pale);    color:var(--cm-color); }
+    .badge-pa    { background:var(--pa-pale);    color:var(--pa-color); }
+    .badge-pac   { background:var(--pac-pale);   color:var(--pac-color); }
+    .badge-ps    { background:var(--ps-pale);    color:var(--ps-color); }
+    .badge-blue  { background:var(--blue-pale);  color:var(--blue); }
+    .badge-green { background:var(--green-pale); color:var(--green); }
+    .badge-yellow{ background:var(--yellow-pale);color:#92400e; }
+    .badge-orange{ background:var(--orange-pale);color:var(--orange); }
+    .badge-pink  { background:var(--pink-pale);  color:var(--pink); }
+
+    /* ─── Button ─────────────────────────────────────────────── */
+    .btn-primary {
+      display:inline-flex; align-items:center; justify-content:center; gap:0.5rem;
+      background:var(--blue); color:#fff;
+      font-family:inherit; font-size:1rem; font-weight:700;
+      padding:0.9rem 2rem; border-radius:100px; border:none;
+      cursor:pointer; width:100%;
+      box-shadow:0 4px 18px rgba(18,48,245,0.35);
+      transition:background 0.15s ease, transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.15s ease;
+    }
+    .btn-primary:hover  { background:var(--blue-dark); transform:translateY(-1px); }
+    .btn-primary:active { transform:scale(0.97); }
+
+    .btn-outline {
+      display:inline-flex; align-items:center; justify-content:center; gap:0.5rem;
+      background:#fff; color:var(--blue);
+      font-family:inherit; font-size:0.9rem; font-weight:700;
+      padding:0.75rem 1.5rem; border-radius:100px;
+      border:1.5px solid rgba(18,48,245,0.2);
+      cursor:pointer; width:100%;
+      transition:background 0.15s ease, border-color 0.15s ease;
+    }
+    .btn-outline:hover  { background:var(--blue-pale); border-color:var(--blue); }
+    .btn-outline:active { transform:scale(0.97); }
+
+    /* ─── Input ──────────────────────────────────────────────── */
+    .input-wrap { position:relative; }
+    .input-wrap svg { position:absolute; left:0.875rem; top:50%; transform:translateY(-50%); opacity:0.4; pointer-events:none; }
+    .input-field {
+      width:100%; padding:0.875rem 0.875rem 0.875rem 2.75rem;
+      border:1.5px solid var(--border); border-radius:0.875rem;
+      font-family:inherit; font-size:0.95rem; color:var(--dark);
+      background:#fff; outline:none;
+      transition:border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .input-field::placeholder { color:#c4c4c4; }
+    .input-field:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(18,48,245,0.1); }
+
+    /* ─── Section header ─────────────────────────────────────── */
+    .section-header {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 1.25rem; margin-bottom:0.75rem;
+    }
+    .section-title { font-size:1rem; font-weight:800; color:var(--dark); letter-spacing:-0.02em; }
+    .section-link  { font-size:0.8rem; font-weight:700; color:var(--blue); cursor:pointer; }
+
+    /* ─── Notification dot ───────────────────────────────────── */
+    .notif-dot {
+      position:absolute; top:7px; right:7px;
+      width:8px; height:8px; border-radius:50%;
+      background:var(--pink); border:2px solid #fff;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       SCREEN: LOGIN
+    ══════════════════════════════════════════════════════════ */
+    #screen-login {
+      background:linear-gradient(160deg,#06082B 0%,#1230f5 45%,#3157F6 70%,#4060E8 100%);
+      justify-content:flex-end;
+    }
+    .login-top {
+      flex:1; display:flex; flex-direction:column;
+      align-items:center; justify-content:center; padding:2rem 2rem 0;
+    }
+    .login-logo-wrap {
+      width:76px; height:76px; border-radius:24px;
+      background:rgba(255,255,255,0.14);
+      border:1.5px solid rgba(255,255,255,0.28);
+      display:flex; align-items:center; justify-content:center;
+      margin-bottom:1.5rem;
+      box-shadow:0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+    .login-logo-grain {
+      position:absolute; inset:0; border-radius:24px;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events:none;
+    }
+    .login-sheet {
+      background:#fff; border-radius:2rem 2rem 0 0;
+      padding:2rem 1.75rem calc(2.5rem + var(--safe-bot));
+      box-shadow:0 -12px 48px rgba(0,0,0,0.14);
+    }
+    .login-sheet h2 { font-size:1.55rem; font-weight:800; letter-spacing:-0.03em; color:var(--dark); margin-bottom:0.35rem; }
+    .login-sheet p  { font-size:0.875rem; color:var(--gray); margin-bottom:1.75rem; }
+    .input-group    { display:flex; flex-direction:column; gap:0.875rem; margin-bottom:1.25rem; }
+    .forgot-link {
+      text-align:right; font-size:0.8rem; font-weight:700;
+      color:var(--blue); cursor:pointer; margin-bottom:1.25rem; display:block;
+    }
+    .login-divider {
+      display:flex; align-items:center; gap:0.75rem;
+      margin:1.25rem 0; color:#d1d5db; font-size:0.8rem; font-weight:600;
+    }
+    .login-divider::before,.login-divider::after { content:''; flex:1; height:1px; background:var(--border); }
+
+    /* ══════════════════════════════════════════════════════════
+       SCREEN: DASHBOARD
+    ══════════════════════════════════════════════════════════ */
+    #screen-dashboard { background:var(--cream); }
+
+    .greeting-card {
+      margin:0 1.25rem 1.25rem;
+      background:linear-gradient(130deg,#081068 0%,var(--blue) 50%,var(--blue-light) 100%);
+      border-radius:1.5rem; padding:1.5rem;
+      position:relative; overflow:hidden;
+    }
+    .greeting-card::before {
+      content:''; position:absolute; top:-40px; right:-20px;
+      width:140px; height:140px; border-radius:50%;
+      background:rgba(255,255,255,0.06);
+    }
+    .greeting-card::after {
+      content:''; position:absolute; bottom:-30px; right:30px;
+      width:90px; height:90px; border-radius:50%;
+      background:rgba(255,255,255,0.05);
+    }
+    .greeting-label { font-size:0.75rem; font-weight:700; color:rgba(255,255,255,0.65); margin-bottom:0.25rem; }
+    .greeting-name  { font-size:1.5rem; font-weight:800; color:#fff; letter-spacing:-0.03em; margin-bottom:1rem; }
+    .greeting-stats { display:flex; gap:0.75rem; }
+    .gstat {
+      background:rgba(255,255,255,0.13);
+      border:1px solid rgba(255,255,255,0.15);
+      border-radius:0.875rem; padding:0.625rem 0.875rem; flex:1;
+    }
+    .gstat-label { font-size:0.6rem; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; letter-spacing:0.05em; }
+    .gstat-value { font-size:1rem; font-weight:800; color:#fff; letter-spacing:-0.02em; }
+
+    /* Mission cards */
+    .mission-card {
+      background:#fff; border-radius:1.25rem;
+      border:1px solid var(--border);
+      box-shadow:0 1px 3px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.05);
+      padding:1rem 1.125rem; cursor:pointer; position:relative; overflow:hidden;
+      transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease;
+    }
+    .mission-card:hover  { box-shadow:0 4px 24px rgba(18,48,245,0.12); }
+    .mission-card:active { transform:scale(0.97); }
+    .mission-card-accent {
+      position:absolute; top:0; left:0; right:0; height:3px;
+      border-radius:1.25rem 1.25rem 0 0;
+    }
+    .mission-icon {
+      width:42px; height:42px; border-radius:12px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.2rem; margin-bottom:0.625rem;
+    }
+    .mission-name { font-size:0.88rem; font-weight:800; color:var(--dark); margin-bottom:0.2rem; letter-spacing:-0.015em; }
+    .mission-sub  { font-size:0.7rem; font-weight:600; color:var(--gray); margin-bottom:0.5rem; }
+    .mission-footer {
+      display:flex; align-items:center; justify-content:space-between;
+      padding-top:0.625rem; border-top:1px solid var(--border);
+    }
+    .mission-events-count { font-size:0.7rem; font-weight:700; }
+
+    /* Date items */
+    .date-item {
+      display:flex; align-items:center; gap:0.875rem;
+      padding:0.75rem 1.25rem; border-bottom:1px solid var(--border);
+    }
+    .date-item:last-child { border-bottom:none; }
+    .date-dot-wrap {
+      width:40px; height:40px; border-radius:12px;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      flex-shrink:0; line-height:1.2;
+    }
+    .date-num  { font-size:0.875rem; font-weight:800; }
+    .date-mon  { font-size:0.55rem; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; }
+    .date-info { flex:1; min-width:0; }
+    .date-title{ font-size:0.875rem; font-weight:700; color:var(--dark); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .date-sub  { font-size:0.73rem; font-weight:600; color:var(--gray); }
+
+    /* Invoice rows */
+    .invoice-row {
+      display:flex; align-items:center; gap:0.875rem;
+      padding:0.875rem 1.25rem; border-bottom:1px solid var(--border);
+    }
+    .invoice-row:last-child { border-bottom:none; }
+    .invoice-icon-wrap {
+      width:40px; height:40px; border-radius:12px;
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    }
+    .invoice-amount { font-size:0.95rem; font-weight:800; color:var(--dark); }
+    .invoice-sub    { font-size:0.73rem; font-weight:600; color:var(--gray); }
+
+    /* Owner card */
+    .owner-card {
+      margin:0 1.25rem;
+      display:flex; align-items:center; gap:1rem;
+      padding:1rem 1.125rem; background:#fff; border-radius:1.25rem;
+      border:1px solid var(--border);
+      box-shadow:0 1px 3px rgba(0,0,0,0.04);
+      cursor:pointer;
+    }
+    .owner-avatar-wrap { position:relative; flex-shrink:0; }
+    .owner-avatar {
+      width:52px; height:52px; border-radius:50%;
+      object-fit:cover; display:block;
+      background:linear-gradient(135deg,var(--pink),var(--blue));
+      border:2.5px solid rgba(18,48,245,0.15);
+    }
+    .owner-status-dot {
+      position:absolute; bottom:1px; right:1px;
+      width:12px; height:12px; border-radius:50%;
+      background:#22c55e; border:2px solid #fff;
+    }
+    .owner-info  { flex:1; min-width:0; }
+    .owner-name  { font-size:0.9rem; font-weight:800; color:var(--dark); }
+    .owner-role  { font-size:0.73rem; font-weight:600; color:var(--gray); margin-bottom:0.5rem; }
+    .owner-actions { display:flex; gap:0.5rem; }
+    .owner-action-btn {
+      display:flex; align-items:center; gap:0.3rem;
+      padding:0.3rem 0.6rem; border-radius:8px; border:none; cursor:pointer;
+      font-family:inherit; font-size:0.7rem; font-weight:700;
+      transition:filter 0.15s ease;
+    }
+    .owner-action-btn:hover { filter:brightness(0.92); }
+    .owner-action-call { background:var(--green-pale); color:var(--green); }
+    .owner-action-msg  { background:var(--blue-pale);  color:var(--blue); }
+
+    /* ══════════════════════════════════════════════════════════
+       SCREEN: MISSION DETAIL
+    ══════════════════════════════════════════════════════════ */
+    #screen-mission { background:var(--cream); }
+
+    .mission-hero {
+      margin:0 1.25rem 1.25rem;
+      border-radius:1.5rem; padding:1.5rem;
+      position:relative; overflow:hidden;
+    }
+    .mission-hero::before {
+      content:''; position:absolute; top:-30px; right:-20px;
+      width:120px; height:120px; border-radius:50%;
+      background:rgba(255,255,255,0.1);
+    }
+    .mission-hero-icon {
+      font-size:2rem; margin-bottom:0.625rem; display:block;
+    }
+    .mission-hero-type {
+      font-size:0.68rem; font-weight:700; color:rgba(255,255,255,0.65);
+      text-transform:uppercase; letter-spacing:0.07em; margin-bottom:0.25rem;
+    }
+    .mission-hero-name {
+      font-size:1.6rem; font-weight:800; color:#fff; letter-spacing:-0.03em; margin-bottom:1rem;
+    }
+    .mission-hero-stats { display:flex; gap:0.625rem; }
+    .mhstat {
+      flex:1; background:rgba(255,255,255,0.14);
+      border:1px solid rgba(255,255,255,0.15);
+      border-radius:0.75rem; padding:0.5rem 0.75rem;
+    }
+    .mhstat-label { font-size:0.58rem; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; letter-spacing:0.05em; }
+    .mhstat-value { font-size:0.9rem; font-weight:800; color:#fff; }
+
+    /* Quotation card */
+    .quotation-card {
+      margin:0 1.25rem 1.25rem;
+      background:#fff; border-radius:1.25rem;
+      border:1px solid var(--border);
+      box-shadow:0 1px 3px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.05);
+      overflow:hidden;
+    }
+    .quotation-header {
+      padding:1rem 1.25rem 0.875rem;
+      border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .quotation-ref { font-size:0.68rem; font-weight:700; color:var(--gray); letter-spacing:0.05em; text-transform:uppercase; }
+    .quotation-rate {
+      font-size:1.5rem; font-weight:800; color:var(--dark); letter-spacing:-0.03em;
+    }
+    .quotation-rate-label { font-size:0.75rem; font-weight:600; color:var(--gray); }
+    .quotation-inclusions {
+      padding:0.875rem 1.25rem;
+      display:flex; flex-wrap:wrap; gap:0.4rem;
+    }
+    .inclusion-chip {
+      display:inline-flex; align-items:center; gap:0.3rem;
+      background:var(--gray-light); color:var(--dark2);
+      font-size:0.72rem; font-weight:700;
+      padding:0.3rem 0.6rem; border-radius:8px;
+    }
+    .inclusion-chip svg { flex-shrink:0; color:var(--blue); }
+
+    /* Contract card */
+    .contract-card {
+      margin:0 1.25rem 0.875rem;
+      background:#fff; border-radius:1.25rem;
+      border:1px solid var(--border);
+      box-shadow:0 1px 3px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.05);
+      overflow:hidden; cursor:pointer;
+      transition:box-shadow 0.2s ease, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .contract-card:hover  { box-shadow:0 4px 24px rgba(18,48,245,0.1); }
+    .contract-card:active { transform:scale(0.98); }
+    .contract-card-header {
+      padding:1rem 1.25rem 0.75rem;
+      display:flex; align-items:center; justify-content:space-between;
+      border-bottom:1px solid var(--border);
+    }
+    .contract-label { font-size:0.9rem; font-weight:800; color:var(--dark); }
+    .contract-period { font-size:0.73rem; font-weight:600; color:var(--gray); margin-top:0.1rem; }
+    .contract-amount { font-size:1rem; font-weight:800; }
+
+    /* Month strip */
+    .month-strip {
+      padding:0.875rem 1.25rem;
+      display:flex; gap:0.375rem; overflow-x:auto;
+    }
+    .month-strip::-webkit-scrollbar { display:none; }
+    .month-pill {
+      display:flex; flex-direction:column; align-items:center; gap:2px;
+      flex-shrink:0; width:36px;
+      padding:0.4rem 0.25rem; border-radius:10px;
+      font-size:0.62rem; font-weight:800; letter-spacing:0.02em;
+      transition:transform 0.15s ease;
+    }
+    .month-pill-dot { width:6px; height:6px; border-radius:50%; }
+    .month-pill.paid     { background:var(--green-pale); color:var(--green); }
+    .month-pill.current  { background:var(--blue);       color:#fff; }
+    .month-pill.upcoming { background:var(--gray-light);  color:var(--gray); }
+    .month-pill.paid .month-pill-dot     { background:var(--green); }
+    .month-pill.current .month-pill-dot  { background:rgba(255,255,255,0.7); }
+    .month-pill.upcoming .month-pill-dot { background:var(--gray2); }
+
+    .contract-card-footer {
+      padding:0.75rem 1.25rem;
+      display:flex; align-items:center; justify-content:space-between;
+      border-top:1px solid var(--border);
+    }
+    .contract-open-btn {
+      display:inline-flex; align-items:center; gap:0.4rem;
+      font-size:0.8rem; font-weight:700; color:var(--blue);
+      background:var(--blue-pale); padding:0.4rem 0.875rem; border-radius:100px;
+      border:none; cursor:pointer; font-family:inherit;
+      transition:background 0.15s ease;
+    }
+    .contract-open-btn:hover { background:#d9e0fd; }
+
+    /* ══════════════════════════════════════════════════════════
+       SCREEN: CALENDAR
+    ══════════════════════════════════════════════════════════ */
+    #screen-calendar { background:#fff; }
+
+    /* Contract context bar */
+    .cal-context-bar {
+      display:flex; align-items:center; gap:0.5rem;
+      padding:0 1.25rem 0.625rem;
+      flex-shrink:0;
+    }
+    .cal-context-chip {
+      display:inline-flex; align-items:center; gap:0.3rem;
+      padding:0.25rem 0.75rem; border-radius:100px;
+      font-size:0.7rem; font-weight:700;
+      background:var(--blue-pale); color:var(--blue);
+      border:1px solid rgba(18,48,245,0.15);
+    }
+
+    /* Calendar header */
+    .cal-header { background:#fff; padding:0 1.25rem 0; flex-shrink:0; }
+    .cal-month-nav {
+      display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;
+    }
+    .cal-month-title { font-size:1.1rem; font-weight:800; color:var(--dark); letter-spacing:-0.025em; }
+    .cal-nav-btn {
+      width:34px; height:34px; border-radius:10px;
+      border:1px solid var(--border); background:#fff;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; color:var(--gray);
+      transition:background 0.15s ease;
+    }
+    .cal-nav-btn:hover { background:var(--gray-light); }
+
+    .cal-dow {
+      display:grid; grid-template-columns:repeat(7,1fr); margin-bottom:0.375rem;
+    }
+    .cal-dow-cell {
+      text-align:center; font-size:0.62rem; font-weight:800;
+      color:#c0c4cc; letter-spacing:0.05em; text-transform:uppercase; padding:0.25rem 0;
+    }
+
+    .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
+    .cal-day {
+      aspect-ratio:1; display:flex; flex-direction:column;
+      align-items:center; justify-content:flex-start;
+      padding:4px 2px 3px; border-radius:10px;
+      cursor:pointer; position:relative;
+      transition:background 0.15s ease;
+    }
+    .cal-day:hover { background:var(--gray-light); }
+    .cal-day.today .cal-day-num {
+      background:var(--blue); color:#fff;
+      width:24px; height:24px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .cal-day.selected { background:var(--blue-pale); }
+    .cal-day.other-month .cal-day-num { color:#d1d5db; }
+    .cal-day-num {
+      font-size:0.77rem; font-weight:700; color:var(--dark); margin-bottom:2px; line-height:1;
+    }
+    .cal-day-dots { display:flex; gap:2px; flex-wrap:wrap; justify-content:center; }
+    .cal-dot { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+
+    /* Chip filters */
+    .chip-row {
+      display:flex; gap:0.45rem; padding:0 1.25rem;
+      overflow-x:auto; flex-shrink:0;
+    }
+    .chip-row::-webkit-scrollbar { display:none; }
+    .chip {
+      display:inline-flex; align-items:center; gap:0.3rem;
+      padding:0.375rem 0.875rem; border-radius:100px;
+      font-size:0.75rem; font-weight:700;
+      border:1.5px solid var(--border); background:#fff;
+      cursor:pointer; white-space:nowrap; flex-shrink:0;
+      transition:all 0.15s ease; color:var(--gray);
+    }
+    .chip.active-cm  { background:var(--cm-pale);  border-color:var(--cm-color);  color:var(--cm-color); }
+    .chip.active-pa  { background:var(--pa-pale);  border-color:var(--pa-color);  color:var(--pa-color); }
+    .chip.active-pac { background:var(--pac-pale); border-color:var(--pac-color); color:var(--pac-color); }
+    .chip.active-ps  { background:var(--ps-pale);  border-color:var(--ps-color);  color:var(--ps-color); }
+    .chip.active-all { background:var(--blue); border-color:var(--blue); color:#fff; }
+    .chip-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+
+    /* Event list */
+    .cal-divider { height:1px; background:var(--border); margin:0.625rem 1.25rem; flex-shrink:0; }
+    .cal-event-list { flex:1; overflow-y:auto; }
+    .cal-event-list::-webkit-scrollbar { display:none; }
+
+    .cal-event-section-label {
+      font-size:0.7rem; font-weight:800; color:var(--gray);
+      letter-spacing:0.05em; text-transform:uppercase;
+      padding:0.625rem 1.25rem 0.375rem;
+      position:sticky; top:0; background:#fff; z-index:1;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .event-item {
+      display:flex; align-items:center; gap:0.75rem;
+      padding:0.75rem 1.25rem; cursor:pointer; border-bottom:1px solid var(--border);
+      transition:background 0.15s ease;
+    }
+    .event-item:last-child { border-bottom:none; }
+    .event-item:hover { background:var(--gray-light); }
+    .event-color-bar { width:3px; height:40px; border-radius:2px; flex-shrink:0; }
+    .event-icon {
+      width:38px; height:38px; border-radius:10px;
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    }
+    .event-info  { flex:1; min-width:0; }
+    .event-title { font-size:0.875rem; font-weight:700; color:var(--dark); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .event-meta  { font-size:0.71rem; font-weight:600; color:var(--gray); display:flex; align-items:center; gap:0.4rem; margin-top:2px; }
+    .event-status-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+
+    /* Empty state */
+    .empty-state {
+      display:flex; flex-direction:column; align-items:center;
+      justify-content:center; gap:0.75rem; padding:3rem 1.5rem;
+      color:var(--gray); text-align:center;
+    }
+    .empty-state svg { opacity:0.2; }
+    .empty-state p { font-size:0.875rem; font-weight:600; }
+
+    /* ══════════════════════════════════════════════════════════
+       BOTTOM SHEET: EVENT DETAIL
+    ══════════════════════════════════════════════════════════ */
+    #sheet-overlay {
+      position:absolute; inset:0; background:rgba(0,0,0,0.4);
+      z-index:200; opacity:0; pointer-events:none;
+      transition:opacity 0.25s ease; backdrop-filter:blur(2px);
+    }
+    #sheet-overlay.open { opacity:1; pointer-events:all; }
+
+    #event-sheet {
+      position:absolute; left:0; right:0; bottom:0;
+      background:#fff; border-radius:1.75rem 1.75rem 0 0;
+      z-index:201; padding-bottom:var(--safe-bot);
+      transform:translateY(100%);
+      transition:transform 0.32s cubic-bezier(0.4,0,0.2,1);
+      max-height:88%; overflow-y:auto;
+    }
+    #event-sheet.open { transform:translateY(0); }
+    #event-sheet::-webkit-scrollbar { display:none; }
+
+    .sheet-handle {
+      width:36px; height:4px; border-radius:2px;
+      background:#e5e7eb; margin:0.875rem auto 0;
+    }
+    .sheet-header {
+      display:flex; align-items:flex-start; justify-content:space-between;
+      padding:1rem 1.5rem 0.5rem; gap:1rem;
+    }
+    .sheet-close {
+      width:30px; height:30px; border-radius:50%; border:none;
+      background:var(--gray-light); cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      flex-shrink:0; color:var(--gray); transition:background 0.15s ease;
+    }
+    .sheet-close:hover { background:#e5e7eb; }
+    .sheet-title { font-size:1.05rem; font-weight:800; color:var(--dark); letter-spacing:-0.02em; line-height:1.3; }
+    .sheet-body  { padding:0 1.5rem 1.5rem; }
+
+    .detail-row {
+      display:flex; align-items:center; gap:0.75rem;
+      padding:0.75rem 0; border-bottom:1px solid var(--border);
+    }
+    .detail-row:last-child { border-bottom:none; }
+    .detail-icon {
+      width:34px; height:34px; border-radius:10px;
+      background:var(--gray-light);
+      display:flex; align-items:center; justify-content:center;
+      flex-shrink:0; color:var(--gray);
+    }
+    .detail-label { font-size:0.68rem; font-weight:700; color:#c0c4cc; text-transform:uppercase; letter-spacing:0.05em; }
+    .detail-value { font-size:0.875rem; font-weight:700; color:var(--dark); }
+
+    .task-row {
+      display:flex; align-items:center; gap:0.75rem; margin-bottom:0.625rem;
+    }
+    .task-name    { font-size:0.78rem; font-weight:700; color:var(--dark); width:3rem; flex-shrink:0; }
+    .task-bar-bg  { flex:1; height:6px; border-radius:3px; background:var(--border); overflow:hidden; }
+    .task-bar-fill{ height:100%; border-radius:3px; transition:width 0.5s ease; }
+    .task-pct     { font-size:0.7rem; font-weight:700; color:var(--gray); width:2.5rem; text-align:right; flex-shrink:0; }
+
+    /* Animations */
+    @keyframes slideUp {
+      from { opacity:0; transform:translateY(10px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .animate-in { animation:slideUp 0.28s ease both; }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ══════════════ DRAWER ══════════════ -->
+  <div id="drawer-overlay" onclick="closeDrawer()"></div>
+  <div id="drawer">
+    <div class="drawer-top">
+      <div class="drawer-avatar">TR</div>
+      <div class="drawer-name">Thomas Renard</div>
+      <div class="drawer-email">thomas@lefontaine.fr</div>
+    </div>
+    <nav class="drawer-nav">
+      <div class="drawer-section-label">Main</div>
+      <button class="drawer-item active" onclick="navigate('dashboard');closeDrawer()">
+        <div class="drawer-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <span class="drawer-item-text">Dashboard</span>
+      </button>
+      <button class="drawer-item" onclick="navigate('dashboard');closeDrawer()">
+        <div class="drawer-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <span class="drawer-item-text">Missions</span>
+        <span class="drawer-item-badge">2</span>
+      </button>
+      <button class="drawer-item" onclick="openCalendar(0,0);closeDrawer()">
+        <div class="drawer-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+        <span class="drawer-item-text">Calendar</span>
+      </button>
+      <div class="drawer-section-label">Finance</div>
+      <button class="drawer-item" onclick="closeDrawer()">
+        <div class="drawer-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+        <span class="drawer-item-text">Invoices</span>
+      </button>
+      <button class="drawer-item" onclick="closeDrawer()">
+        <div class="drawer-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <span class="drawer-item-text">Contracts</span>
+      </button>
+      <div class="drawer-section-label">Account</div>
+      <button class="drawer-item" onclick="closeDrawer()">
+        <div class="drawer-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+        <span class="drawer-item-text">Profile</span>
+      </button>
+      <button class="drawer-item" onclick="closeDrawer()">
+        <div class="drawer-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+        <span class="drawer-item-text">Settings</span>
+      </button>
+    </nav>
+    <div class="drawer-footer">
+      <button class="logout-btn" onclick="logout()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign out
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════ SCREEN: LOGIN ══════════════ -->
+  <div class="screen active" id="screen-login">
+    <div class="login-top">
+      <div class="login-logo-wrap" style="position:relative;">
+        <div class="login-logo-grain"></div>
+        <img src="brand_assets/pixcity-logo.webp" alt="Pix.city" style="height:38px;width:auto;position:relative;z-index:1;"/>
+      </div>
+      <div style="text-align:center;margin-bottom:2rem;">
+        <div style="font-size:1.6rem;font-weight:800;color:#fff;letter-spacing:-0.035em;margin-bottom:0.375rem;">Client Portal</div>
+        <div style="font-size:0.875rem;color:rgba(255,255,255,0.6);font-weight:600;">Your missions &amp; content calendar</div>
+      </div>
+    </div>
+    <div class="login-sheet">
+      <h2>Welcome back 👋</h2>
+      <p>Sign in to access your dashboard</p>
+      <div class="input-group">
+        <div class="input-wrap">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <input class="input-field" type="email" placeholder="Email address" value="thomas@lefontaine.fr"/>
+        </div>
+        <div class="input-wrap">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <input class="input-field" type="password" placeholder="Password" value="••••••••"/>
+        </div>
+      </div>
+      <a class="forgot-link" href="#">Forgot password?</a>
+      <button class="btn-primary" onclick="doLogin()">
+        Sign in
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+      <div class="login-divider">or</div>
+      <div style="text-align:center;font-size:0.8rem;color:var(--gray);font-weight:600;">
+        Don't have an account? <span style="color:var(--blue);font-weight:700;cursor:pointer;">Contact your manager</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ SCREEN: DASHBOARD ══════════════ -->
+  <div class="screen push" id="screen-dashboard">
+    <div class="status-bar" style="background:var(--cream);">
+      <span class="status-time" id="status-time">9:41</span>
+      <div class="status-icons">
+        <svg width="15" height="11" viewBox="0 0 24 18" fill="var(--dark)"><rect x="0" y="9" width="4" height="9" rx="1"/><rect x="6" y="6" width="4" height="12" rx="1"/><rect x="12" y="3" width="4" height="15" rx="1"/><rect x="18" y="0" width="4" height="18" rx="1"/></svg>
+        <svg width="14" height="11" viewBox="0 0 24 18" fill="none" stroke="var(--dark)" stroke-width="2.5"><path d="M1 3a15 15 0 0 1 22 0M5 7a10 10 0 0 1 14 0M9 11a5 5 0 0 1 6 0"/><circle cx="12" cy="16" r="1.5" fill="var(--dark)" stroke="none"/></svg>
+        <svg width="22" height="11" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="2.5" stroke="var(--dark)" stroke-width="1.5" fill="none"/><rect x="3" y="3" width="14" height="7" rx="1.5" fill="var(--dark)"/><path d="M23.5 4.5v4a2 2 0 0 0 0-4z" fill="var(--dark)" opacity="0.4"/></svg>
+      </div>
+    </div>
+
+    <div class="app-header">
+      <button class="header-btn" onclick="openDrawer()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6"  x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
+      </button>
+      <span class="header-title">Dashboard</span>
+      <button class="header-btn" style="position:relative;">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="notif-dot"></div>
+      </button>
+      <div class="avatar" onclick="openDrawer()">TR</div>
+    </div>
+
+    <div class="scroll-area" style="padding-bottom:1rem;">
+      <!-- Greeting -->
+      <div class="greeting-card">
+        <div class="greeting-label">Good morning ☀️</div>
+        <div class="greeting-name">Thomas Renard</div>
+        <div class="greeting-stats">
+          <div class="gstat">
+            <div class="gstat-label">Next Payment</div>
+            <div class="gstat-value">May 1</div>
+          </div>
+          <div class="gstat">
+            <div class="gstat-label">Active Missions</div>
+            <div class="gstat-value">2</div>
+          </div>
+          <div class="gstat">
+            <div class="gstat-label">Events Today</div>
+            <div class="gstat-value">3</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Missions -->
+      <div class="section-header" style="margin-top:1.25rem;">
+        <span class="section-title">Your Missions</span>
+        <span class="section-link">View all</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;padding:0 1.25rem;margin-bottom:1.25rem;">
+
+        <div class="mission-card" onclick="openMission(0)">
+          <div class="mission-card-accent" style="background:linear-gradient(90deg,#1230f5,#2069F7);"></div>
+          <div class="mission-icon" style="background:var(--blue-pale);">🍽️</div>
+          <div class="mission-name">Le Fontaine</div>
+          <div class="mission-sub">Restaurant · Contract 1</div>
+          <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:0.5rem;">
+            <span class="badge badge-cm">CM</span>
+            <span class="badge badge-pa">PA</span>
+            <span class="badge badge-ps">PS</span>
+          </div>
+          <div class="mission-footer">
+            <span class="mission-events-count" style="color:var(--blue);">8 events</span>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#c0c4cc" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <div class="mission-card" onclick="openMission(1)">
+          <div class="mission-card-accent" style="background:linear-gradient(90deg,#ed5485,#f97316);"></div>
+          <div class="mission-icon" style="background:var(--pink-pale);">💈</div>
+          <div class="mission-name">Salon Luxe</div>
+          <div class="mission-sub">Beauty · Contract 1</div>
+          <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:0.5rem;">
+            <span class="badge badge-cm">CM</span>
+            <span class="badge badge-pa">PA</span>
+            <span class="badge badge-pac">PAC</span>
+          </div>
+          <div class="mission-footer">
+            <span class="mission-events-count" style="color:var(--pink);">5 events</span>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#c0c4cc" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Important dates -->
+      <div class="section-header">
+        <span class="section-title">Important Dates</span>
+        <span class="section-link" onclick="openCalendar(0,0)">Calendar</span>
+      </div>
+      <div class="card" style="margin:0 1.25rem 1.25rem;">
+        <div class="date-item">
+          <div class="date-dot-wrap" style="background:var(--yellow-pale);color:#92400e;">
+            <div class="date-num">21</div><div class="date-mon">Apr</div>
+          </div>
+          <div class="date-info">
+            <div class="date-title">Chef's Special Story</div>
+            <div class="date-sub">Le Fontaine · CM · Writing</div>
+          </div>
+          <span class="badge badge-yellow">Today</span>
+        </div>
+        <div class="date-item">
+          <div class="date-dot-wrap" style="background:var(--orange-pale);color:var(--orange);">
+            <div class="date-num">22</div><div class="date-mon">Apr</div>
+          </div>
+          <div class="date-info">
+            <div class="date-title">Meta Challenge Launch</div>
+            <div class="date-sub">Le Fontaine · PAC · Integration</div>
+          </div>
+          <span class="badge badge-pac">Tomorrow</span>
+        </div>
+        <div class="date-item">
+          <div class="date-dot-wrap" style="background:var(--pink-pale);color:var(--pink);">
+            <div class="date-num">23</div><div class="date-mon">Apr</div>
+          </div>
+          <div class="date-info">
+            <div class="date-title">Client Testimonial Story</div>
+            <div class="date-sub">Salon Luxe · CM · Writing</div>
+          </div>
+          <span class="badge badge-pink">2 days</span>
+        </div>
+        <div class="date-item">
+          <div class="date-dot-wrap" style="background:var(--blue-pale);color:var(--blue);">
+            <div class="date-num">1</div><div class="date-mon">May</div>
+          </div>
+          <div class="date-info">
+            <div class="date-title">Next Invoice Due</div>
+            <div class="date-sub">All missions · €1,540 total</div>
+          </div>
+          <span class="badge badge-blue">10 days</span>
+        </div>
+      </div>
+
+      <!-- Last invoices -->
+      <div class="section-header">
+        <span class="section-title">Last Invoices</span>
+        <span class="section-link">View all</span>
+      </div>
+      <div class="card" style="margin:0 1.25rem 1.25rem;">
+        <div class="invoice-row">
+          <div class="invoice-icon-wrap" style="background:var(--green-pale);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div style="flex:1;">
+            <div class="invoice-amount">€890 — Le Fontaine</div>
+            <div class="invoice-sub">Apr 1, 2026 · Paid</div>
+          </div>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="invoice-row">
+          <div class="invoice-icon-wrap" style="background:var(--green-pale);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div style="flex:1;">
+            <div class="invoice-amount">€650 — Salon Luxe</div>
+            <div class="invoice-sub">Apr 1, 2026 · Paid</div>
+          </div>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+
+      <!-- Account manager -->
+      <div class="section-header">
+        <span class="section-title">Account Manager</span>
+      </div>
+      <div class="owner-card" style="margin-bottom:1.5rem;">
+        <div class="owner-avatar-wrap">
+          <img src="https://placehold.co/52x52/1230f5/ffffff?text=MG" alt="Maxime Gaudet" class="owner-avatar"/>
+          <div class="owner-status-dot"></div>
+        </div>
+        <div class="owner-info">
+          <div class="owner-name">Maxime Gaudet</div>
+          <div class="owner-role">Senior Account Manager · Paris</div>
+          <div class="owner-actions">
+            <button class="owner-action-btn owner-action-call" onclick="event.stopPropagation()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.63 19a19.5 19.5 0 0 1-5-5 19.79 19.79 0 0 1-2.93-8.25A2 2 0 0 1 5.68 3.58h3a2 2 0 0 1 2 1.72c.127.96.361 1.9.7 2.81a2 2 0 0 1-.45 2.11L9.91 11.09a16 16 0 0 0 5.98 5.98l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.573 2.81.7A2 2 0 0 1 24 18v-.08z"/></svg>
+              Call
+            </button>
+            <button class="owner-action-btn owner-action-msg" onclick="event.stopPropagation()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              Message
+            </button>
+          </div>
+        </div>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <!-- Bottom nav -->
+    <div class="bottom-nav">
+      <button class="bnav-item active" onclick="navigate('dashboard')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Home
+      </button>
+      <button class="bnav-item" onclick="navigate('dashboard')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Missions
+      </button>
+      <button class="bnav-item" onclick="openCalendar(0,0)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </button>
+      <button class="bnav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        Account
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════ SCREEN: MISSION DETAIL ══════════════ -->
+  <div class="screen push" id="screen-mission">
+    <div class="status-bar" style="background:var(--cream);" id="ms-status-bar">
+      <span class="status-time">9:41</span>
+      <div class="status-icons">
+        <svg width="15" height="11" viewBox="0 0 24 18" fill="var(--dark)"><rect x="0" y="9" width="4" height="9" rx="1"/><rect x="6" y="6" width="4" height="12" rx="1"/><rect x="12" y="3" width="4" height="15" rx="1"/><rect x="18" y="0" width="4" height="18" rx="1"/></svg>
+        <svg width="22" height="11" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="2.5" stroke="var(--dark)" stroke-width="1.5" fill="none"/><rect x="3" y="3" width="14" height="7" rx="1.5" fill="var(--dark)"/></svg>
+      </div>
+    </div>
+    <div class="app-header">
+      <button class="header-btn" onclick="navigate('dashboard')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span class="header-title" id="ms-title">Mission</span>
+      <button class="header-btn" onclick="openDrawer()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+      </button>
+    </div>
+
+    <div class="scroll-area" id="ms-scroll" style="padding-bottom:1.5rem;">
+
+      <!-- Mission hero card -->
+      <div class="mission-hero" id="ms-hero">
+        <span class="mission-hero-icon" id="ms-emoji"></span>
+        <div class="mission-hero-type" id="ms-type"></div>
+        <div class="mission-hero-name" id="ms-name"></div>
+        <div class="mission-hero-stats">
+          <div class="mhstat">
+            <div class="mhstat-label">Monthly</div>
+            <div class="mhstat-value" id="ms-monthly"></div>
+          </div>
+          <div class="mhstat">
+            <div class="mhstat-label">Contracts</div>
+            <div class="mhstat-value" id="ms-contract-count"></div>
+          </div>
+          <div class="mhstat">
+            <div class="mhstat-label">This Month</div>
+            <div class="mhstat-value" id="ms-events-count"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quotation -->
+      <div class="section-header">
+        <span class="section-title">Quotation</span>
+        <span class="section-link">Download PDF</span>
+      </div>
+      <div class="quotation-card" id="ms-quotation-card">
+        <div class="quotation-header">
+          <div>
+            <div class="quotation-ref" id="ms-qt-ref"></div>
+            <div class="quotation-rate-label">Issued <span id="ms-qt-date"></span></div>
+          </div>
+          <div style="text-align:right;">
+            <div class="quotation-rate" id="ms-qt-rate"></div>
+            <div class="quotation-rate-label">per month</div>
+          </div>
+        </div>
+        <div class="quotation-inclusions" id="ms-qt-inclusions"></div>
+      </div>
+
+      <!-- Contracts -->
+      <div class="section-header" style="margin-top:0.25rem;">
+        <span class="section-title">Contracts</span>
+      </div>
+      <div id="ms-contracts-list"></div>
+
+    </div>
+
+    <!-- Bottom nav -->
+    <div class="bottom-nav">
+      <button class="bnav-item" onclick="navigate('dashboard')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Home
+      </button>
+      <button class="bnav-item active">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Missions
+      </button>
+      <button class="bnav-item" id="ms-bnav-cal">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </button>
+      <button class="bnav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        Account
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════ SCREEN: CALENDAR ══════════════ -->
+  <div class="screen push" id="screen-calendar">
+    <div class="status-bar" style="background:#fff;">
+      <span class="status-time">9:41</span>
+      <div class="status-icons">
+        <svg width="15" height="11" viewBox="0 0 24 18" fill="var(--dark)"><rect x="0" y="9" width="4" height="9" rx="1"/><rect x="6" y="6" width="4" height="12" rx="1"/><rect x="12" y="3" width="4" height="15" rx="1"/><rect x="18" y="0" width="4" height="18" rx="1"/></svg>
+        <svg width="22" height="11" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="2.5" stroke="var(--dark)" stroke-width="1.5" fill="none"/><rect x="3" y="3" width="14" height="7" rx="1.5" fill="var(--dark)"/></svg>
+      </div>
+    </div>
+
+    <div class="app-header">
+      <button class="header-btn" onclick="backFromCalendar()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span class="header-title" id="cal-mission-title">Le Fontaine</span>
+      <button class="header-btn" onclick="openDrawer()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+      </button>
+    </div>
+
+    <!-- Contract context chip -->
+    <div class="cal-context-bar" id="cal-context-bar"></div>
+
+    <!-- Calendar grid -->
+    <div class="cal-header">
+      <div class="cal-month-nav">
+        <button class="cal-nav-btn" onclick="changeMonth(-1)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="cal-month-title" id="cal-month-label">April 2026</div>
+        <button class="cal-nav-btn" onclick="changeMonth(1)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+      <div class="cal-dow">
+        <div class="cal-dow-cell">S</div><div class="cal-dow-cell">M</div>
+        <div class="cal-dow-cell">T</div><div class="cal-dow-cell">W</div>
+        <div class="cal-dow-cell">T</div><div class="cal-dow-cell">F</div>
+        <div class="cal-dow-cell">S</div>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+
+    <!-- Chip filters -->
+    <div class="chip-row" style="margin:0.625rem 0 0.5rem;">
+      <div class="chip active-all" data-filter="all" onclick="setFilter('all',this)">All</div>
+      <div class="chip" data-filter="CM"  onclick="setFilter('CM',this)"><span class="chip-dot" style="background:var(--cm-color);"></span>CM</div>
+      <div class="chip" data-filter="PA"  onclick="setFilter('PA',this)"><span class="chip-dot" style="background:var(--pa-color);"></span>PA</div>
+      <div class="chip" data-filter="PAC" onclick="setFilter('PAC',this)"><span class="chip-dot" style="background:var(--pac-color);"></span>PAC</div>
+      <div class="chip" data-filter="PS"  onclick="setFilter('PS',this)"><span class="chip-dot" style="background:var(--ps-color);"></span>Photo</div>
+    </div>
+
+    <div class="cal-divider"></div>
+    <div class="cal-event-list" id="cal-event-list"></div>
+
+    <!-- Bottom nav -->
+    <div class="bottom-nav">
+      <button class="bnav-item" onclick="navigate('dashboard')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Home
+      </button>
+      <button class="bnav-item" id="cal-bnav-mission">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Missions
+      </button>
+      <button class="bnav-item active">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </button>
+      <button class="bnav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        Account
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════ EVENT DETAIL SHEET ══════════════ -->
+  <div id="sheet-overlay" onclick="closeSheet()"></div>
+  <div id="event-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div style="flex:1;">
+        <div style="margin-bottom:0.5rem;" id="sheet-badges"></div>
+        <div class="sheet-title" id="sheet-title">Event Title</div>
+      </div>
+      <button class="sheet-close" onclick="closeSheet()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="sheet-body">
+      <div style="margin-bottom:1.25rem;">
+        <div class="detail-row">
+          <div class="detail-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+          <div><div class="detail-label">Date</div><div class="detail-value" id="sheet-date">—</div></div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <div><div class="detail-label">Mission</div><div class="detail-value" id="sheet-mission">—</div></div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div><div class="detail-label">Status</div><div class="detail-value" id="sheet-status">—</div></div>
+        </div>
+      </div>
+
+      <div style="font-size:0.85rem;font-weight:800;color:var(--dark);letter-spacing:-0.015em;margin-bottom:0.875rem;">Task Breakdown</div>
+      <div id="sheet-tasks"></div>
+
+      <div style="display:flex;gap:0.75rem;margin-top:1.5rem;">
+        <button style="flex:1;padding:0.75rem;border-radius:0.875rem;border:1.5px solid var(--border);background:#fff;font-family:inherit;font-size:0.875rem;font-weight:700;color:var(--gray);cursor:pointer;">
+          View Details
+        </button>
+        <button style="flex:1;padding:0.75rem;border-radius:0.875rem;border:none;background:var(--blue);color:#fff;font-family:inherit;font-size:0.875rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(18,48,245,0.3);">
+          Mark Done ✓
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- #app -->
+
+<script>
+// ─────────────────────────────────────────
+// DATA MODEL
+// ─────────────────────────────────────────
+const MISSIONS = [
+  {
+    id: 0,
+    name: "Le Fontaine",
+    emoji: "🍽️",
+    type: "Restaurant",
+    color: { from:"#1230f5", to:"#2069F7", pale:"#EEF1FE" },
+    quotation: {
+      ref:      "QT-2025-047",
+      date:     "Dec 15, 2025",
+      monthly:  "€890",
+      yearly:   "€10,680",
+      inclusions: [
+        "9 static posts / mo",
+        "3 reels / mo",
+        "Meta + Google Ads",
+        "Quarterly photo shoots",
+        "Monthly performance reports",
+        "Story management",
+      ]
+    },
+    contracts: [
+      {
+        id: 1, label: "Contract 1",
+        start: "Jan 2026", end: "Dec 2026",
+        status: "active",
+        monthly: "€890",
+        months: [
+          { key:"2026-01", label:"Jan", status:"paid" },
+          { key:"2026-02", label:"Feb", status:"paid" },
+          { key:"2026-03", label:"Mar", status:"paid" },
+          { key:"2026-04", label:"Apr", status:"current" },
+          { key:"2026-05", label:"May", status:"upcoming" },
+          { key:"2026-06", label:"Jun", status:"upcoming" },
+          { key:"2026-07", label:"Jul", status:"upcoming" },
+          { key:"2026-08", label:"Aug", status:"upcoming" },
+          { key:"2026-09", label:"Sep", status:"upcoming" },
+          { key:"2026-10", label:"Oct", status:"upcoming" },
+          { key:"2026-11", label:"Nov", status:"upcoming" },
+          { key:"2026-12", label:"Dec", status:"upcoming" },
+        ]
+      }
+    ],
+    events: [
+      { date:"2026-04-07", type:"CM",  task:"Writing",     title:"Weekly Post — Spring Menu",    status:"done" },
+      { date:"2026-04-08", type:"CM",  task:"Design",      title:"Spring Menu Visual",           status:"done" },
+      { date:"2026-04-10", type:"PA",  task:"Integration", title:"Google Ads Campaign Launch",   status:"done" },
+      { date:"2026-04-14", type:"CM",  task:"Writing",     title:"Weekend Special Post",         status:"done" },
+      { date:"2026-04-15", type:"PS",  task:"Shoot",       title:"Easter Menu Photo Shoot",      status:"done" },
+      { date:"2026-04-17", type:"CM",  task:"Design",      title:"Easter Promo Visual",          status:"done" },
+      { date:"2026-04-21", type:"CM",  task:"Writing",     title:"Chef's Special Story",         status:"upcoming" },
+      { date:"2026-04-22", type:"PAC", task:"Integration", title:"Meta Challenge Campaign",      status:"upcoming" },
+      { date:"2026-04-24", type:"CM",  task:"QC",          title:"Monthly Content Review",       status:"upcoming" },
+      { date:"2026-04-28", type:"CM",  task:"Design",      title:"May Preview Post",             status:"upcoming" },
+      { date:"2026-04-30", type:"PA",  task:"QC",          title:"April Ads Performance Review", status:"upcoming" },
+      { date:"2026-05-01", type:"CM",  task:"Writing",     title:"Labour Day Special",           status:"upcoming" },
+      { date:"2026-05-05", type:"CM",  task:"Design",      title:"May Menu Visual",              status:"upcoming" },
+      { date:"2026-05-08", type:"PS",  task:"Shoot",       title:"Summer Menu Photo Shoot",      status:"upcoming" },
+      { date:"2026-05-12", type:"CM",  task:"Writing",     title:"Mother's Day Post",            status:"upcoming" },
+      { date:"2026-05-15", type:"PA",  task:"Integration", title:"May Campaign Launch",          status:"upcoming" },
+    ]
+  },
+  {
+    id: 1,
+    name: "Salon Luxe",
+    emoji: "💈",
+    type: "Beauty Salon",
+    color: { from:"#ed5485", to:"#f97316", pale:"#FDEEF4" },
+    quotation: {
+      ref:     "QT-2026-051",
+      date:    "Feb 20, 2026",
+      monthly: "€650",
+      yearly:  "€3,900",
+      inclusions: [
+        "6 static posts / mo",
+        "2 reels / mo",
+        "Meta Ads management",
+        "Bi-annual photo shoots",
+        "Monthly reports",
+      ]
+    },
+    contracts: [
+      {
+        id: 1, label: "Contract 1",
+        start: "Mar 2026", end: "Aug 2026",
+        status: "active",
+        monthly: "€650",
+        months: [
+          { key:"2026-03", label:"Mar", status:"paid" },
+          { key:"2026-04", label:"Apr", status:"current" },
+          { key:"2026-05", label:"May", status:"upcoming" },
+          { key:"2026-06", label:"Jun", status:"upcoming" },
+          { key:"2026-07", label:"Jul", status:"upcoming" },
+          { key:"2026-08", label:"Aug", status:"upcoming" },
+        ]
+      }
+    ],
+    events: [
+      { date:"2026-04-06", type:"CM",  task:"Writing",     title:"Spring Hair Trends Post",      status:"done" },
+      { date:"2026-04-09", type:"CM",  task:"Design",      title:"Spring Promo Visual",          status:"done" },
+      { date:"2026-04-13", type:"PA",  task:"Integration", title:"Meta Ads Launch",              status:"done" },
+      { date:"2026-04-20", type:"PS",  task:"Shoot",       title:"New Collection Shoot",         status:"upcoming" },
+      { date:"2026-04-23", type:"CM",  task:"Writing",     title:"Client Testimonial Story",     status:"upcoming" },
+      { date:"2026-04-27", type:"PAC", task:"Integration", title:"Spring Challenge Campaign",    status:"upcoming" },
+      { date:"2026-05-03", type:"CM",  task:"Writing",     title:"May Beauty Tips",              status:"upcoming" },
+      { date:"2026-05-10", type:"PA",  task:"QC",          title:"Campaign Performance Review",  status:"upcoming" },
+      { date:"2026-05-17", type:"PS",  task:"Shoot",       title:"Summer Looks Shoot",           status:"upcoming" },
+    ]
+  }
+];
+
+const TYPE_META = {
+  CM:  { color:"#1230f5", pale:"#EEF1FE", label:"Community Mgmt" },
+  PA:  { color:"#12a25a", pale:"#E9FCF7", label:"Paid Ads" },
+  PAC: { color:"#f97316", pale:"#FFF1E6", label:"Paid Ad Challenge" },
+  PS:  { color:"#ed5485", pale:"#FDEEF4", label:"Photo Shoot" },
+};
+
+const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+// ─────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────
+let currentScreen   = 'login';
+let currentMission  = 0;
+let currentContract = 0;
+let calYear         = 2026;
+let calMonth        = 3;   // April
+let selectedDay     = null;
+let activeFilter    = 'all';
+let calFromMission  = true; // true = back to mission, false = back to dashboard
+
+// ─────────────────────────────────────────
+// NAVIGATION
+// ─────────────────────────────────────────
+function navigate(id) {
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.remove('active','push','pop');
+    s.classList.add('push');
+  });
+  const target = document.getElementById('screen-' + id);
+  target.classList.remove('push');
+  target.classList.add('active');
+  currentScreen = id;
+}
+
+function doLogin() {
+  updateStatusTime();
+  navigate('dashboard');
+}
+
+function logout() {
+  closeDrawer();
+  navigate('login');
+}
+
+function openMission(idx) {
+  currentMission = idx;
+  renderMissionScreen(idx);
+  navigate('mission');
+}
+
+function openCalendar(missionIdx, contractIdx) {
+  currentMission  = missionIdx;
+  currentContract = contractIdx;
+  calFromMission  = (currentScreen === 'mission');
+  selectedDay     = null;
+  activeFilter    = 'all';
+
+  // Sync mission filter chips
+  document.querySelectorAll('.chip').forEach(c => {
+    c.className = 'chip';
+    if (c.dataset.filter === 'all') c.classList.add('active-all');
+  });
+
+  const m = MISSIONS[missionIdx];
+  document.getElementById('cal-mission-title').textContent = m.name;
+
+  // Contract context chip
+  const contract = m.contracts[contractIdx];
+  const ctxBar = document.getElementById('cal-context-bar');
+  ctxBar.innerHTML = `
+    <span class="cal-context-chip">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      ${contract.label}
+    </span>
+    <span class="cal-context-chip" style="background:transparent;border-color:var(--border);color:var(--gray);">
+      ${contract.start} – ${contract.end}
+    </span>`;
+
+  // Set initial month to today's month within contract range
+  calYear = 2026; calMonth = 3;
+  document.getElementById('cal-bnav-mission').onclick = () => openMission(missionIdx);
+
+  renderCalendar();
+  renderEventList();
+  navigate('calendar');
+}
+
+function backFromCalendar() {
+  if (calFromMission) {
+    navigate('mission');
+  } else {
+    navigate('dashboard');
+  }
+}
+
+// ─────────────────────────────────────────
+// DRAWER
+// ─────────────────────────────────────────
+function openDrawer()  {
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawer-overlay').classList.add('open');
+}
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawer-overlay').classList.remove('open');
+}
+
+// ─────────────────────────────────────────
+// MISSION SCREEN
+// ─────────────────────────────────────────
+function renderMissionScreen(idx) {
+  const m = MISSIONS[idx];
+
+  // Hero
+  const hero = document.getElementById('ms-hero');
+  hero.style.background = `linear-gradient(135deg,${m.color.from},${m.color.to})`;
+  document.getElementById('ms-title').textContent     = m.name;
+  document.getElementById('ms-emoji').textContent     = m.emoji;
+  document.getElementById('ms-type').textContent      = m.type;
+  document.getElementById('ms-name').textContent      = m.name;
+  document.getElementById('ms-monthly').textContent   = m.quotation.monthly;
+  document.getElementById('ms-contract-count').textContent = m.contracts.length;
+
+  // Events this month
+  const thisMonthEvents = m.events.filter(e => {
+    const d = new Date(e.date);
+    return d.getFullYear() === 2026 && d.getMonth() === 3;
+  });
+  document.getElementById('ms-events-count').textContent = thisMonthEvents.length + ' events';
+
+  // Bottom nav calendar link
+  document.getElementById('ms-bnav-cal').onclick = () => openCalendar(idx, 0);
+
+  // Quotation
+  document.getElementById('ms-qt-ref').textContent  = m.quotation.ref;
+  document.getElementById('ms-qt-date').textContent = m.quotation.date;
+  document.getElementById('ms-qt-rate').textContent = m.quotation.monthly;
+
+  const inclWrap = document.getElementById('ms-qt-inclusions');
+  inclWrap.innerHTML = m.quotation.inclusions.map(i => `
+    <span class="inclusion-chip">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      ${i}
+    </span>`).join('');
+
+  // Contracts
+  const contractsList = document.getElementById('ms-contracts-list');
+  contractsList.innerHTML = '';
+
+  m.contracts.forEach((c, ci) => {
+    const paidCount     = c.months.filter(mo => mo.status === 'paid').length;
+    const totalMonths   = c.months.length;
+    const statusColor   = c.status === 'active' ? 'var(--green)' : 'var(--gray)';
+    const statusPale    = c.status === 'active' ? 'var(--green-pale)' : 'var(--gray-light)';
+    const statusLabel   = c.status === 'active' ? 'Active' : 'Completed';
+
+    const monthsHtml = c.months.map(mo => `
+      <div class="month-pill ${mo.status}">
+        ${mo.label}
+        <div class="month-pill-dot"></div>
+      </div>`).join('');
+
+    const card = document.createElement('div');
+    card.className = 'contract-card';
+    card.innerHTML = `
+      <div class="contract-card-header">
+        <div>
+          <div class="contract-label">${c.label}</div>
+          <div class="contract-period">${c.start} → ${c.end}</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="contract-amount" style="color:${statusColor};">${c.monthly}</div>
+          <span class="badge" style="background:${statusPale};color:${statusColor};font-size:0.6rem;">${statusLabel}</span>
+        </div>
+      </div>
+      <div class="month-strip">${monthsHtml}</div>
+      <div class="contract-card-footer">
+        <span style="font-size:0.75rem;font-weight:700;color:var(--gray);">
+          ${paidCount}/${totalMonths} months paid
+        </span>
+        <button class="contract-open-btn" onclick="event.stopPropagation();openCalendar(${idx},${ci})">
+          Open Calendar
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </button>
+      </div>`;
+    card.addEventListener('click', () => openCalendar(idx, ci));
+    contractsList.appendChild(card);
+  });
+
+  // Reset scroll
+  document.getElementById('ms-scroll').scrollTop = 0;
+}
+
+// ─────────────────────────────────────────
+// CALENDAR
+// ─────────────────────────────────────────
+function changeMonth(delta) {
+  calMonth += delta;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0)  { calMonth = 11; calYear--; }
+  selectedDay = null;
+  renderCalendar();
+  renderEventList();
+}
+
+function setFilter(f, el) {
+  activeFilter = f;
+  document.querySelectorAll('.chip').forEach(c => {
+    c.className = 'chip';
+    if (c.dataset.filter === f) {
+      c.classList.add(f === 'all' ? 'active-all' : 'active-' + f.toLowerCase());
+    }
+  });
+  renderCalendar();
+  renderEventList();
+}
+
+function renderCalendar() {
+  document.getElementById('cal-month-label').textContent = MONTH_NAMES[calMonth] + ' ' + calYear;
+
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+
+  const firstDay    = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const daysInPrev  = new Date(calYear, calMonth, 0).getDate();
+  const todayStr    = `2026-04-21`;
+
+  const eventsByDay = {};
+  const m = MISSIONS[currentMission];
+  m.events.forEach(e => {
+    const d = new Date(e.date);
+    if (d.getFullYear() === calYear && d.getMonth() === calMonth) {
+      const day = d.getDate();
+      if (!eventsByDay[day]) eventsByDay[day] = [];
+      if (activeFilter === 'all' || e.type === activeFilter) eventsByDay[day].push(e);
+    }
+  });
+
+  const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+
+  for (let i = 0; i < totalCells; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cal-day';
+
+    let dayNum, isCurrentMonth = true;
+    if (i < firstDay) {
+      dayNum = daysInPrev - firstDay + i + 1;
+      isCurrentMonth = false;
+      cell.classList.add('other-month');
+    } else if (i >= firstDay + daysInMonth) {
+      dayNum = i - firstDay - daysInMonth + 1;
+      isCurrentMonth = false;
+      cell.classList.add('other-month');
+    } else {
+      dayNum = i - firstDay + 1;
+      const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(dayNum).padStart(2,'0')}`;
+      if (dateStr === todayStr) cell.classList.add('today');
+      if (dayNum === selectedDay) cell.classList.add('selected');
+    }
+
+    const numEl = document.createElement('div');
+    numEl.className = 'cal-day-num';
+    numEl.textContent = dayNum;
+    cell.appendChild(numEl);
+
+    if (isCurrentMonth && eventsByDay[dayNum]) {
+      const dotsWrap = document.createElement('div');
+      dotsWrap.className = 'cal-day-dots';
+      const seen = new Set();
+      eventsByDay[dayNum].forEach(e => {
+        if (!seen.has(e.type)) {
+          seen.add(e.type);
+          const dot = document.createElement('div');
+          dot.className = 'cal-dot';
+          dot.style.background = TYPE_META[e.type].color;
+          dotsWrap.appendChild(dot);
+        }
+      });
+      cell.appendChild(dotsWrap);
+    }
+
+    if (isCurrentMonth) {
+      cell.addEventListener('click', () => {
+        if (selectedDay === dayNum) {
+          // tap same day → deselect (show all month)
+          selectedDay = null;
+        } else {
+          selectedDay = dayNum;
+        }
+        renderCalendar();
+        renderEventList();
+      });
+    }
+
+    grid.appendChild(cell);
+  }
+}
+
+function renderEventList() {
+  const list = document.getElementById('cal-event-list');
+  list.innerHTML = '';
+
+  const m = MISSIONS[currentMission];
+  let events = m.events.filter(e => {
+    const d = new Date(e.date);
+    const matchMonth  = d.getFullYear() === calYear && d.getMonth() === calMonth;
+    const matchFilter = activeFilter === 'all' || e.type === activeFilter;
+    return matchMonth && matchFilter;
+  });
+
+  if (selectedDay !== null) {
+    events = events.filter(e => new Date(e.date).getDate() === selectedDay);
+  }
+
+  if (events.length === 0) {
+    list.innerHTML = `<div class="empty-state">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+      <p>No events${selectedDay ? ' on this day' : ' this month'}</p>
+    </div>`;
+    return;
+  }
+
+  // Group by date
+  const grouped = {};
+  events.forEach(e => {
+    if (!grouped[e.date]) grouped[e.date] = [];
+    grouped[e.date].push(e);
+  });
+
+  Object.keys(grouped).sort().forEach(dateStr => {
+    const d = new Date(dateStr);
+    const isToday = dateStr === '2026-04-21';
+    const label = document.createElement('div');
+    label.className = 'cal-event-section-label';
+    label.innerHTML = `
+      <span>${isToday ? 'Today — ' : ''}${d.toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric'})}</span>
+      <span style="color:var(--blue);font-size:0.65rem;">${grouped[dateStr].length} event${grouped[dateStr].length > 1 ? 's' : ''}</span>`;
+    list.appendChild(label);
+
+    grouped[dateStr].forEach(ev => {
+      const meta = TYPE_META[ev.type];
+      const item = document.createElement('div');
+      item.className = 'event-item animate-in';
+      item.innerHTML = `
+        <div class="event-color-bar" style="background:${meta.color};"></div>
+        <div class="event-icon" style="background:${meta.pale};">
+          <span style="font-size:0.68rem;font-weight:800;color:${meta.color};">${ev.type}</span>
+        </div>
+        <div class="event-info">
+          <div class="event-title">${ev.title}</div>
+          <div class="event-meta">
+            <span class="event-status-dot" style="background:${ev.status==='done'?'var(--green)':'var(--orange)'};"></span>
+            <span>${ev.task}</span>
+            <span>·</span>
+            <span style="color:${ev.status==='done'?'var(--green)':'var(--orange)'};font-weight:700;">${ev.status==='done'?'Done':'Upcoming'}</span>
+          </div>
+        </div>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>`;
+      item.addEventListener('click', () => openSheet(ev));
+      list.appendChild(item);
+    });
+  });
+}
+
+// ─────────────────────────────────────────
+// EVENT DETAIL SHEET
+// ─────────────────────────────────────────
+function openSheet(ev) {
+  const meta = TYPE_META[ev.type];
+  const d    = new Date(ev.date);
+  const missionName = MISSIONS[currentMission].name;
+
+  document.getElementById('sheet-title').textContent   = ev.title;
+  document.getElementById('sheet-date').textContent    = d.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('sheet-mission').textContent = missionName;
+  document.getElementById('sheet-status').innerHTML    = `<span style="color:${ev.status==='done'?'var(--green)':'var(--orange)'};font-weight:800;">${ev.status==='done'?'✓ Completed':'⏳ Upcoming'}</span>`;
+
+  document.getElementById('sheet-badges').innerHTML = `
+    <span class="badge" style="background:${meta.pale};color:${meta.color};margin-right:4px;">${ev.type} — ${meta.label}</span>
+    <span class="badge" style="background:var(--gray-light);color:var(--dark2);">${ev.task}</span>`;
+
+  const taskDefs = {
+    "Writing":     [{ n:"Brief", p: ev.status==='done'?100:85 }, { n:"Draft", p: ev.status==='done'?100:55 }, { n:"Review", p: ev.status==='done'?100:0 }],
+    "Design":      [{ n:"Brief", p: ev.status==='done'?100:100 }, { n:"Design", p: ev.status==='done'?100:50 }, { n:"QC", p: ev.status==='done'?100:0 }],
+    "Integration": [{ n:"Setup", p: ev.status==='done'?100:100 }, { n:"Test", p: ev.status==='done'?100:65 }, { n:"Live", p: ev.status==='done'?100:0 }],
+    "QC":          [{ n:"Check", p: ev.status==='done'?100:75 }, { n:"Report", p: ev.status==='done'?100:0 }],
+    "Shoot":       [{ n:"Prep", p: ev.status==='done'?100:100 }, { n:"Shoot", p: ev.status==='done'?100:0 }, { n:"Edit", p: ev.status==='done'?100:0 }],
+  };
+  const tasks = taskDefs[ev.task] || taskDefs["Writing"];
+  document.getElementById('sheet-tasks').innerHTML = tasks.map(t => `
+    <div class="task-row">
+      <div class="task-name">${t.n}</div>
+      <div class="task-bar-bg"><div class="task-bar-fill" style="width:${t.p}%;background:${meta.color};"></div></div>
+      <div class="task-pct">${t.p}%</div>
+    </div>`).join('');
+
+  document.getElementById('sheet-overlay').classList.add('open');
+  document.getElementById('event-sheet').classList.add('open');
+}
+
+function closeSheet() {
+  document.getElementById('sheet-overlay').classList.remove('open');
+  document.getElementById('event-sheet').classList.remove('open');
+}
+
+// ─────────────────────────────────────────
+// UTILS
+// ─────────────────────────────────────────
+function updateStatusTime() {
+  const now = new Date();
+  const el  = document.getElementById('status-time');
+  if (el) el.textContent = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+}
+
+// Init
+updateStatusTime();
+setInterval(updateStatusTime, 30000);
+
+// Pre-render so calendar is ready when first opened
+renderCalendar();
+renderEventList();
+
+// Expose for screenshot script
+window.doLogin    = doLogin;
+window.openMission = openMission;
+</script>
+</body>
+</html>

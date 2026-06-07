@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PAC Plan — Pix.City Back Office</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --px-primary: #129FB5;
+      --px-dark:    #006877;
+      --px-light:   rgba(18,159,181,0.09);
+      --px-bg:      #F4F6F8;
+      --px-surface: #ffffff;
+      --px-border:  #E4E7EB;
+      --px-text:    #1A1A1B;
+      --px-muted:   #6B7280;
+      --px-success: #16A34A;
+      --px-danger:  #EF4444;
+      --pac:        #129FB5;
+      --bi:         #7C3AED;
+      --leads:      #129FB5;
+      --ecom:       #7C3AED;
+      --traffic:    #2563EB;
+      --followers:  #DB2777;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: var(--px-bg);
+      color: var(--px-text);
+      font-size: 0.875rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── TOP NAV ── */
+    .topnav {
+      background: var(--px-surface);
+      border-bottom: 1px solid var(--px-border);
+      height: 54px; display: flex; align-items: center;
+      padding: 0 22px; gap: 20px;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .logo { font-family:'Epilogue',sans-serif; font-weight:700; font-size:1.05rem; letter-spacing:-0.04em; color:var(--px-text); text-decoration:none; }
+    .logo span { color:var(--px-primary); }
+    .topnav-nav { display:flex; align-items:center; gap:2px; flex:1; }
+    .topnav-nav a { font-size:0.8rem; font-weight:500; color:var(--px-muted); text-decoration:none; padding:5px 11px; border-radius:6px; transition:all 0.12s; }
+    .topnav-nav a:hover { background:var(--px-bg); color:var(--px-text); }
+    .topnav-nav a.active { background:var(--px-light); color:var(--px-primary); font-weight:600; }
+    .topnav-right { display:flex; align-items:center; gap:10px; margin-left:auto; }
+    .notif-btn { position:relative; width:32px; height:32px; display:flex; align-items:center; justify-content:center; border-radius:7px; border:1px solid var(--px-border); background:var(--px-surface); cursor:pointer; color:var(--px-muted); }
+    .notif-dot { position:absolute; top:5px; right:5px; width:7px; height:7px; background:var(--px-danger); border-radius:50%; border:1.5px solid var(--px-surface); }
+    .user-badge { display:flex; align-items:center; gap:7px; padding:3px 10px 3px 5px; border-radius:7px; border:1px solid var(--px-border); background:var(--px-surface); cursor:pointer; font-size:0.73rem; font-weight:600; color:var(--px-muted); }
+    .user-avatar { width:24px; height:24px; border-radius:5px; background:var(--px-danger); display:flex; align-items:center; justify-content:center; font-size:0.68rem; font-weight:700; color:#fff; }
+
+    /* ── SHELL ── */
+    .app-shell { display:flex; height:calc(100vh - 54px); overflow:hidden; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width:242px; min-width:242px;
+      background:var(--px-surface);
+      border-right:1px solid var(--px-border);
+      display:flex; flex-direction:column;
+      overflow-y:auto; overflow-x:hidden;
+    }
+    .sidebar::-webkit-scrollbar { width:4px; }
+    .sidebar::-webkit-scrollbar-thumb { background:var(--px-border); border-radius:999px; }
+    .sb-header {
+      padding:12px 14px 10px;
+      border-bottom:1px solid var(--px-border);
+      display:flex; align-items:center; gap:8px;
+    }
+    .sb-title { font-family:'Epilogue',sans-serif; font-size:0.72rem; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; color:var(--px-muted); flex:1; }
+    .sb-add { width:22px; height:22px; border-radius:5px; border:1px solid var(--px-border); background:none; cursor:pointer; color:var(--px-muted); display:flex; align-items:center; justify-content:center; font-size:0.7rem; transition:all 0.1s; }
+    .sb-add:hover { background:var(--px-light); color:var(--px-primary); border-color:var(--px-primary); }
+
+    /* Project accordion (level 1) */
+    .proj-item { border-bottom:1px solid var(--px-border); }
+    .proj-toggle {
+      display:flex; align-items:center; gap:7px;
+      width:100%; padding:9px 13px;
+      background:none; border:none; cursor:pointer;
+      text-align:left; transition:background 0.1s;
+    }
+    .proj-toggle:hover { background:var(--px-bg); }
+    .proj-toggle.open { background:var(--px-bg); }
+    .proj-name { flex:1; font-size:0.77rem; font-weight:700; color:var(--px-text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .type-badge { font-size:0.57rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; padding:2px 7px; border-radius:4px; flex-shrink:0; }
+    .badge-pac { background:rgba(18,159,181,0.12); color:var(--px-dark); }
+    .badge-bi  { background:rgba(124,58,237,0.1);  color:#5B21B6; }
+    .proj-chev { font-size:0.6rem; color:var(--px-muted); transition:transform 0.2s; flex-shrink:0; }
+    .proj-toggle.open .proj-chev { transform:rotate(180deg); }
+    .proj-body { display:none; background:#FAFBFC; }
+    .proj-body.open { display:block; }
+
+    /* Plan type nav items (level 2) */
+    .plan-nav-btn {
+      display:flex; align-items:center; gap:7px;
+      width:100%; padding:6px 13px 6px 22px;
+      background:none; border:none; cursor:pointer;
+      font:inherit; font-size:0.75rem; color:var(--px-muted);
+      text-align:left; transition:background 0.1s, color 0.1s;
+    }
+    .plan-nav-btn:hover { background:var(--px-light); color:var(--px-primary); }
+    .plan-nav-btn.active { background:var(--px-light); color:var(--px-primary); font-weight:700; }
+    .plan-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+    .plan-nav-btn .ch-count { margin-left:auto; font-size:0.58rem; font-weight:700; background:var(--px-border); color:var(--px-muted); padding:1px 6px; border-radius:999px; }
+    .plan-nav-btn.active .ch-count { background:rgba(18,159,181,0.15); color:var(--px-primary); }
+    .frozen-icon { font-size:0.62rem; color:var(--px-muted); margin-left:auto; }
+
+    /* ── MAIN CONTENT ── */
+    .main-content { flex:1; overflow-y:auto; padding:20px 24px 56px; }
+    .main-content::-webkit-scrollbar { width:5px; }
+    .main-content::-webkit-scrollbar-thumb { background:var(--px-border); border-radius:999px; }
+
+    /* Page heading */
+    .page-bc { display:flex; align-items:center; gap:5px; font-size:0.71rem; color:var(--px-muted); margin-bottom:12px; flex-wrap:wrap; }
+    .page-bc a { color:var(--px-primary); text-decoration:none; font-weight:500; }
+    .page-bc .bi { font-size:0.58rem; }
+    .page-head { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:16px; gap:12px; }
+    .page-head h1 { font-family:'Epilogue',sans-serif; font-size:1.15rem; font-weight:700; letter-spacing:-0.03em; margin:0; }
+    .page-head-meta { font-size:0.71rem; color:var(--px-muted); margin-top:3px; }
+    .head-badges { display:flex; align-items:center; gap:6px; flex-shrink:0; }
+    .hbadge { font-size:0.62rem; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; padding:3px 10px; border-radius:5px; }
+    .hbadge-pac { background:var(--px-light); color:var(--px-dark); }
+    .hbadge-bi  { background:rgba(124,58,237,0.1); color:#5B21B6; }
+    .hbadge-plan { color:#fff; border-radius:999px; padding:3px 11px; }
+
+    /* KPI chips */
+    .kpi-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+    .kpi-chip { background:var(--px-surface); border:1px solid var(--px-border); border-radius:8px; padding:8px 13px; display:flex; flex-direction:column; gap:1px; min-width:100px; }
+    .kpi-label { font-size:0.6rem; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; color:var(--px-muted); }
+    .kpi-val { font-weight:700; font-size:0.92rem; color:var(--px-text); }
+    .kpi-val.up   { color:var(--px-success); }
+    .kpi-val.down { color:var(--px-danger); }
+
+    /* ─── PLAN CARD ─── */
+    .plan-card { background:var(--px-surface); border:1px solid var(--px-border); border-radius:10px; overflow:hidden; }
+
+    /* Tab bar */
+    .tab-bar {
+      display:flex; align-items:stretch;
+      border-bottom:1px solid var(--px-border);
+      background:#FAFBFC;
+      padding:0 16px;
+      gap:2px;
+      overflow-x:auto;
+      scrollbar-width:none;
+    }
+    .tab-bar::-webkit-scrollbar { display:none; }
+    .tab-btn {
+      display:flex; align-items:center; gap:5px;
+      padding:10px 14px;
+      font:inherit; font-size:0.77rem; font-weight:600;
+      color:var(--px-muted);
+      background:none; border:none; cursor:pointer;
+      border-bottom:2px solid transparent;
+      white-space:nowrap;
+      transition:color 0.12s, border-color 0.12s;
+      position:relative;
+    }
+    .tab-btn:hover { color:var(--px-text); }
+    .tab-btn.active { color:var(--px-primary); border-bottom-color:var(--px-primary); }
+    .tab-btn .tab-dot { width:6px; height:6px; border-radius:50%; background:var(--px-success); flex-shrink:0; }
+    .tab-btn .tab-lock { font-size:0.6rem; color:var(--px-muted); }
+    .tab-add-btn {
+      display:flex; align-items:center; gap:5px;
+      padding:10px 12px;
+      font:inherit; font-size:0.75rem; font-weight:600;
+      color:var(--px-primary);
+      background:none; border:none; cursor:pointer;
+      border-bottom:2px solid transparent;
+      white-space:nowrap;
+      margin-left:4px;
+      border-radius:6px 6px 0 0;
+      transition:background 0.1s;
+    }
+    .tab-add-btn:hover { background:var(--px-light); }
+
+    /* Tab panels */
+    .tab-panel { display:none; }
+    .tab-panel.active { display:block; }
+
+    /* Target panel — frozen vs editable states */
+    .target-frozen-bar {
+      display:flex; align-items:center; gap:9px;
+      padding:10px 16px;
+      background:rgba(18,159,181,0.05);
+      border-bottom:1px solid rgba(18,159,181,0.15);
+    }
+    .target-frozen-label { font-size:0.7rem; font-weight:700; color:var(--px-dark); flex:1; }
+    .frozen-badge { font-size:0.62rem; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; padding:3px 9px; border-radius:999px; background:rgba(18,159,181,0.12); color:var(--px-dark); display:flex; align-items:center; gap:4px; }
+    .editable-bar {
+      display:flex; align-items:center; gap:9px;
+      padding:10px 16px;
+      background:#FFFDF5;
+      border-bottom:1px solid #F5E6B0;
+    }
+    .editable-label { font-size:0.7rem; font-weight:700; color:#92400E; flex:1; }
+    .editable-badge { font-size:0.62rem; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; padding:3px 9px; border-radius:999px; background:rgba(245,158,11,0.12); color:#B45309; display:flex; align-items:center; gap:4px; }
+
+    /* Challenge tab header */
+    .challenge-tab-header {
+      display:flex; align-items:center; gap:8px;
+      padding:9px 16px;
+      border-bottom:1px solid var(--px-border);
+      background:#FFFEF8;
+    }
+    .ch-header-rd { font-size:0.8rem; font-weight:700; color:var(--px-text); }
+    .ch-header-date { font-size:0.72rem; color:var(--px-muted); }
+    .latest-pill { font-size:0.6rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; padding:2px 8px; border-radius:999px; background:rgba(22,163,74,0.1); color:#15803D; }
+    .frozen-pill { font-size:0.6rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; padding:2px 8px; border-radius:999px; background:#F3F4F6; color:var(--px-muted); }
+
+    /* Metrics table */
+    .mt-wrap { overflow-x:auto; }
+    .mt { width:100%; border-collapse:collapse; font-size:0.8rem; }
+    .mt th { font-size:0.62rem; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; color:var(--px-muted); padding:8px 14px; text-align:right; border-bottom:1px solid var(--px-border); white-space:nowrap; background:#FAFBFC; }
+    .mt th:first-child { text-align:left; }
+    .mt td { padding:9px 14px; border-bottom:1px solid var(--px-border); text-align:right; font-weight:500; color:var(--px-text); vertical-align:middle; }
+    .mt td:first-child { text-align:left; font-weight:600; }
+    .mt tr:last-child td { border-bottom:none; }
+    .mt tr:hover td { background:#FAFAFA; }
+    .mt input[type=number] { background:none; border:none; text-align:right; width:100%; font:inherit; font-weight:500; outline:none; border-radius:4px; padding:2px 4px; min-width:68px; }
+    .mt input[type=number]:focus { background:var(--px-light); outline:1.5px solid var(--px-primary); }
+    .ro { color:var(--px-text); font-weight:600; }
+    .auto-badge { font-size:0.55rem; font-weight:700; color:var(--px-muted); background:#F3F4F6; padding:1px 5px; border-radius:3px; margin-left:4px; vertical-align:middle; }
+
+    /* Variance */
+    .var-pos { color:var(--px-success); font-weight:700; }
+    .var-neg { color:var(--px-danger);  font-weight:700; }
+    .var-neu { color:var(--px-muted); }
+    .var-bar-wrap { height:3px; border-radius:99px; background:var(--px-border); overflow:hidden; margin-top:3px; width:52px; display:block; }
+    .var-bar { height:100%; border-radius:99px; }
+
+    /* Toolbar */
+    .card-toolbar { display:flex; align-items:center; gap:8px; padding:11px 16px; border-top:1px solid var(--px-border); }
+    .spacer { flex:1; }
+    .btn-px { font-size:0.75rem; font-weight:600; padding:6px 13px; border-radius:7px; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:5px; transition:all 0.12s; }
+    .btn-primary { background:var(--px-primary); color:#fff; }
+    .btn-primary:hover { background:var(--px-dark); }
+    .btn-ghost { background:none; border:1px solid var(--px-border); color:var(--px-text); }
+    .btn-ghost:hover { background:var(--px-bg); border-color:#bbb; }
+    .btn-freeze { background:none; border:1px solid var(--px-border); color:var(--px-dark); font-weight:700; }
+    .btn-freeze:hover { background:var(--px-light); border-color:var(--px-primary); }
+
+    /* Welcome */
+    .welcome { text-align:center; padding:80px 24px; color:var(--px-muted); }
+    .welcome i { font-size:2rem; opacity:0.18; display:block; margin-bottom:12px; }
+    .welcome h2 { font-family:'Epilogue',sans-serif; font-size:0.95rem; font-weight:700; color:var(--px-text); margin-bottom:6px; }
+    .welcome p { font-size:0.78rem; max-width:320px; margin:0 auto; }
+
+    /* Modals */
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.3); z-index:200; align-items:center; justify-content:center; }
+    .modal-overlay.open { display:flex; }
+    .modal-box { background:var(--px-surface); border-radius:12px; width:440px; max-width:95vw; box-shadow:0 20px 60px rgba(0,0,0,0.14); overflow:hidden; }
+    .modal-head { padding:14px 18px; border-bottom:1px solid var(--px-border); display:flex; align-items:center; justify-content:space-between; }
+    .modal-head h5 { font-family:'Epilogue',sans-serif; font-weight:700; font-size:0.9rem; margin:0; }
+    .modal-body { padding:18px; }
+    .modal-foot { padding:12px 18px; border-top:1px solid var(--px-border); display:flex; justify-content:flex-end; gap:8px; }
+    .modal-x { background:none; border:none; cursor:pointer; color:var(--px-muted); font-size:0.95rem; padding:4px; border-radius:5px; }
+    .modal-x:hover { background:var(--px-bg); }
+    .flabel { font-size:0.66rem; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:var(--px-muted); margin-bottom:4px; display:block; }
+    .finput { width:100%; border:1px solid var(--px-border); border-radius:7px; padding:7px 10px; font:inherit; font-size:0.82rem; color:var(--px-text); outline:none; transition:border-color 0.12s; margin-bottom:12px; }
+    .finput:focus { border-color:var(--px-primary); box-shadow:0 0 0 3px var(--px-light); }
+    .pt-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:12px; }
+    .pt-opt { display:flex; align-items:center; gap:7px; padding:8px 10px; border-radius:7px; border:1.5px solid var(--px-border); cursor:pointer; transition:all 0.12s; font-size:0.77rem; font-weight:600; }
+    .pt-opt:hover { border-color:var(--px-primary); }
+    .pt-opt input { cursor:pointer; accent-color:var(--px-primary); }
+
+    @media (max-width:768px) { .sidebar { display:none; } .main-content { padding:14px; } }
+  </style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="logo" href="#">Pix<span>.</span>City</a>
+  <div class="topnav-nav">
+    <a href="#">Dashboard</a>
+    <a href="#">Turnover</a>
+    <a href="#">Prod Planning</a>
+    <a href="#" class="active"><i class="bi bi-bar-chart-steps me-1"></i>PAC Plan</a>
+  </div>
+  <div class="topnav-right">
+    <div class="notif-btn"><i class="bi bi-bell"></i><span class="notif-dot"></span></div>
+    <div class="user-badge"><div class="user-avatar">R</div>Cto</div>
+  </div>
+</nav>
+
+<div class="app-shell">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-header">
+      <span class="sb-title">PAC Plan</span>
+      <button class="sb-add" title="New project" onclick="openNewProject()"><i class="bi bi-plus-lg"></i></button>
+    </div>
+    <!-- built by JS -->
+  </aside>
+
+  <main class="main-content">
+    <div id="viewRoot">
+      <div class="welcome">
+        <i class="bi bi-bar-chart-steps"></i>
+        <h2>Select a project plan</h2>
+        <p>Pick a project from the sidebar, then choose a plan type to view targets and challenges.</p>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<!-- NEW PROJECT MODAL -->
+<div class="modal-overlay" id="modalNewProject">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h5>New Project</h5>
+      <button class="modal-x" onclick="closeModal('modalNewProject')"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="modal-body">
+      <label class="flabel">Month</label>
+      <select class="finput" id="np-month"><option>May 2026</option><option>Jun 2026</option></select>
+      <label class="flabel">Project ID</label>
+      <input class="finput" id="np-id" placeholder="e.g. 888">
+      <label class="flabel">Client</label>
+      <input class="finput" id="np-client" placeholder="Client name">
+      <label class="flabel">Type</label>
+      <div style="display:flex;gap:12px;margin-bottom:12px">
+        <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;font-weight:600;cursor:pointer"><input type="radio" name="np-type" value="PAC" checked> PAC</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;font-weight:600;cursor:pointer"><input type="radio" name="np-type" value="BI"> BI</label>
+      </div>
+      <label class="flabel">Plan Types</label>
+      <div class="pt-grid">
+        <label class="pt-opt"><input type="checkbox" id="np-leads" value="leads"><span style="color:var(--leads)">Leads Plan</span></label>
+        <label class="pt-opt"><input type="checkbox" id="np-ecom"  value="ecom"><span style="color:var(--ecom)">Sales – Ecom</span></label>
+        <label class="pt-opt"><input type="checkbox" id="np-traffic" value="traffic"><span style="color:var(--traffic)">Traffic Plan</span></label>
+        <label class="pt-opt"><input type="checkbox" id="np-followers" value="followers"><span style="color:var(--followers)">Followers Plan</span></label>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-px btn-ghost" onclick="closeModal('modalNewProject')">Cancel</button>
+      <button class="btn-px btn-primary" onclick="createProject()"><i class="bi bi-plus-lg"></i> Create</button>
+    </div>
+  </div>
+</div>
+
+<!-- FREEZE SNAPSHOT MODAL -->
+<div class="modal-overlay" id="modalFreeze">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h5>Freeze Challenge Snapshot</h5>
+      <button class="modal-x" onclick="closeModal('modalFreeze')"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:0.79rem;color:var(--px-muted);margin-bottom:14px">
+        This snapshot captures real performance data for this RD period.<br>
+        <strong>Once frozen, it cannot be edited.</strong>
+      </p>
+      <label class="flabel">RD Reference</label>
+      <input class="finput" id="fr-rd" placeholder="e.g. RD #15 — Week of May 5">
+      <label class="flabel">Date</label>
+      <input class="finput" type="date" id="fr-date">
+      <div id="fr-fields"><!-- metric inputs injected by JS --></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-px btn-ghost" onclick="closeModal('modalFreeze')">Cancel</button>
+      <button class="btn-px btn-primary" onclick="doFreeze()"><i class="bi bi-camera"></i> Freeze</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* ══════════════════════════════════════════
+   PLAN CONFIG — single source of truth
+   ══════════════════════════════════════════ */
+const PLAN_CONFIG = {
+  leads: {
+    label:'Leads Plan', color:'#129FB5',
+    metrics:[
+      { key:'budget',     label:'Budget',             fmt:'eur' },
+      { key:'leads',      label:'Leads',              fmt:'int' },
+      { key:'cpl',        label:'CPL',                fmt:'eur', auto:true, inverse:true },
+      { key:'leads_qual', label:'Leads qualifiés',    fmt:'int' },
+      { key:'pct_qual',   label:'% Leads qualifiés',  fmt:'pct', auto:true },
+      { key:'signatures', label:'Signatures',         fmt:'int' },
+      { key:'roas',       label:'ROAS',               fmt:'x' },
+    ]
+  },
+  ecom: {
+    label:'Sales – Ecom Plan', color:'#7C3AED',
+    metrics:[
+      { key:'budget',     label:'Budget',                 fmt:'eur' },
+      { key:'achats',     label:'Achats',                 fmt:'int' },
+      { key:'cpa',        label:'CPA',                    fmt:'eur', auto:true, inverse:true },
+      { key:'conv_value', label:'Valeur des conversions', fmt:'eur' },
+      { key:'roas',       label:'ROAS',                   fmt:'x', auto:true },
+    ]
+  },
+  traffic: {
+    label:'Traffic Plan', color:'#2563EB',
+    metrics:[
+      { key:'budget', label:'Budget',          fmt:'eur' },
+      { key:'clics',  label:'Number of clicks',fmt:'int' },
+      { key:'cpc',    label:'CPC',             fmt:'eur', auto:true, inverse:true },
+      { key:'reach',  label:'Reach',           fmt:'int' },
+    ]
+  },
+  followers: {
+    label:'Followers Plan', color:'#DB2777',
+    metrics:[
+      { key:'budget',    label:'Budget',              fmt:'eur' },
+      { key:'followers', label:'Number of followers', fmt:'int' },
+      { key:'cpf',       label:'Cost per follower',   fmt:'eur', auto:true, inverse:true },
+      { key:'reach',     label:'Reach',               fmt:'int' },
+    ]
+  }
+};
+
+/* ══════════════════════════════════════════
+   DB — projects
+   ══════════════════════════════════════════ */
+const DB = [
+  {
+    id:'664', month:'May 2026', client:'Acme Corp', type:'PAC',
+    plans:{
+      leads:{
+        frozen: false,
+        target:{ budget:4500, leads:90, cpl:50, leads_qual:27, pct_qual:30, signatures:5, roas:null },
+        challenges:[
+          { rd:'RD #1', date:'2026-05-07', data:{ budget:1100, leads:21, cpl:52.4, leads_qual:5, pct_qual:23.8, signatures:0, roas:null } }
+        ]
+      },
+      ecom:{
+        frozen: false,
+        target:{ budget:5000, achats:100, cpa:50, conv_value:15000, roas:3 },
+        challenges:[]
+      }
+    }
+  },
+  {
+    id:'701', month:'May 2026', client:'XYZ Agency', type:'BI',
+    plans:{
+      traffic:{
+        frozen: true,
+        target:{ budget:2200, clics:44000, cpc:0.05, reach:220000 },
+        challenges:[
+          { rd:'RD #1', date:'2026-05-07', data:{ budget:540, clics:10400, cpc:0.052, reach:51000 } }
+        ]
+      },
+      followers:{
+        frozen: false,
+        target:{ budget:1800, followers:600, cpf:3, reach:90000 },
+        challenges:[]
+      }
+    }
+  },
+  {
+    id:'1239', month:'Apr 2026', client:'Marie Dupont', type:'PAC',
+    plans:{
+      leads:{
+        frozen: true,
+        target:{ budget:4200, leads:84, cpl:50, leads_qual:25, pct_qual:30, signatures:5, roas:null },
+        challenges:[
+          { rd:'RD #12', date:'2026-04-07', data:{ budget:1020, leads:18, cpl:56.7, leads_qual:4, pct_qual:22, signatures:0, roas:null } },
+          { rd:'RD #13', date:'2026-04-14', data:{ budget:2010, leads:35, cpl:57.4, leads_qual:8, pct_qual:23, signatures:1, roas:null } },
+          { rd:'RD #14', date:'2026-04-21', data:{ budget:3104, leads:61, cpl:50.9, leads_qual:17, pct_qual:27.9, signatures:3, roas:null } },
+        ]
+      }
+    }
+  },
+  {
+    id:'1240', month:'Apr 2026', client:'Beaumont SA', type:'PAC',
+    plans:{
+      ecom:{
+        frozen: true,
+        target:{ budget:5500, achats:110, cpa:50, conv_value:16500, roas:3 },
+        challenges:[
+          { rd:'RD #12', date:'2026-04-07', data:{ budget:1100, achats:21, cpa:52.4, conv_value:2100, roas:1.91 } },
+          { rd:'RD #13', date:'2026-04-14', data:{ budget:2200, achats:43, cpa:51.2, conv_value:4305, roas:1.96 } },
+          { rd:'RD #14', date:'2026-04-21', data:{ budget:4316, achats:88, cpa:49.1, conv_value:8369, roas:1.94 } },
+        ]
+      }
+    }
+  }
+];
+
+/* ══ helpers ══ */
+function fmt(v, t) {
+  if (v == null || v === '') return '—';
+  switch(t) {
+    case 'eur': return '€'+Number(v).toLocaleString('fr-FR',{minimumFractionDigits:0,maximumFractionDigits:2});
+    case 'int': return Number(v).toLocaleString('fr-FR');
+    case 'pct': return Number(v).toFixed(1)+'%';
+    case 'x':   return Number(v).toFixed(2)+'x';
+    default: return v;
+  }
+}
+
+function varCell(m, t, a) {
+  if (t == null || a == null) return '<span class="var-neu">—</span>';
+  const diff  = a - t;
+  const pct   = ((diff/t)*100).toFixed(1);
+  const good  = m.inverse ? diff <= 0 : diff >= 0;
+  const cls   = good ? 'var-pos' : 'var-neg';
+  const arrow = good ? '↑' : '↓';
+  const sign  = diff >= 0 ? '+' : '';
+  const fillW = Math.min(Math.round((a/t)*100),100);
+  const fillC = good ? '#16A34A' : '#EF4444';
+  return `<div style="display:flex;flex-direction:column;align-items:flex-end">
+    <span class="${cls}" style="display:flex;align-items:center;gap:3px">
+      <span style="font-size:0.6rem">${arrow}</span>${sign}${fmt(diff,m.fmt)}<span style="font-weight:500;margin-left:3px">(${sign}${pct}%)</span>
+    </span>
+    <span class="var-bar-wrap"><span class="var-bar" style="width:${fillW}%;background:${fillC}"></span></span>
+  </div>`;
+}
+
+/* ══ RENDER PLAN PAGE ══ */
+let _currentFreeze = null; // { projId, planType }
+
+function renderPlanPage(projId, planType) {
+  const proj = DB.find(p => p.id === projId);
+  if (!proj) return;
+  const plan  = proj.plans[planType];
+  const pcfg  = PLAN_CONFIG[planType];
+  const chs   = plan.challenges;
+  const target = plan.target;
+
+  /* ── tab bar ── */
+  const targetTabIcon = plan.frozen
+    ? '<i class="bi bi-lock-fill tab-lock"></i>'
+    : '<span class="tab-dot" style="background:#F59E0B"></span>';
+
+  let tabsHtml = `
+    <button class="tab-btn active" id="tb_target_${projId}_${planType}"
+      onclick="switchTab('target','${projId}','${planType}')">
+      ${targetTabIcon} Target Plan
+    </button>`;
+
+  chs.forEach((ch, i) => {
+    const isLatest = i === chs.length - 1;
+    tabsHtml += `
+      <button class="tab-btn${isLatest?' active':''}" id="tb_ch${i}_${projId}_${planType}"
+        onclick="switchTab('ch${i}','${projId}','${planType}')">
+        <i class="bi bi-lightning" style="font-size:0.65rem"></i>${ch.rd}
+        ${isLatest ? '<span class="tab-dot"></span>' : ''}
+      </button>`;
+  });
+
+  tabsHtml += `
+    <button class="tab-add-btn" onclick="openFreeze('${projId}','${planType}')">
+      <i class="bi bi-plus-lg"></i> Add challenge
+    </button>`;
+
+  /* ── Target panel ── */
+  const metricRows = pcfg.metrics.map(m => {
+    const v = target ? target[m.key] : null;
+    const autoBadge = m.auto ? '<span class="auto-badge">AUTO</span>' : '';
+    const cell = plan.frozen || m.auto
+      ? `<span class="ro">${fmt(v,m.fmt)}</span>`
+      : `<input type="number" value="${v??''}" step="any" onchange="updateTarget('${projId}','${planType}','${m.key}',this.value)">`;
+    return `<tr><td>${m.label}${autoBadge}</td><td>${cell}</td></tr>`;
+  }).join('');
+
+  const targetStateBar = plan.frozen
+    ? `<div class="target-frozen-bar">
+        <i class="bi bi-lock-fill" style="color:var(--px-primary);font-size:0.85rem"></i>
+        <span class="target-frozen-label">Target Plan is frozen — read only</span>
+        <span class="frozen-badge"><i class="bi bi-lock-fill"></i> Frozen by manager</span>
+       </div>`
+    : `<div class="editable-bar">
+        <i class="bi bi-pencil" style="color:#B45309;font-size:0.82rem"></i>
+        <span class="editable-label">Edit targets below, then freeze when ready</span>
+        <span class="editable-badge"><i class="bi bi-unlock-fill"></i> Editable</span>
+       </div>`;
+
+  const targetToolbar = plan.frozen
+    ? `<div class="card-toolbar">
+        <span style="font-size:0.72rem;color:var(--px-muted)"><i class="bi bi-lock-fill me-1"></i>Frozen on ${plan.frozenDate||'—'}</span>
+        <div class="spacer"></div>
+        <button class="btn-px btn-ghost" onclick="window.open('delivery-file.html','_blank')"><i class="bi bi-box-arrow-up-right"></i> Delivery File</button>
+       </div>`
+    : `<div class="card-toolbar">
+        <button class="btn-px btn-primary" onclick="saveTarget('${projId}','${planType}')"><i class="bi bi-floppy"></i> Save</button>
+        <button class="btn-px btn-ghost" onclick="renderPlanPage('${projId}','${planType}')"><i class="bi bi-arrow-counterclockwise"></i> Reset</button>
+        <div class="spacer"></div>
+        <button class="btn-px btn-freeze" onclick="freezeTarget('${projId}','${planType}')">
+          <i class="bi bi-lock"></i> Freeze Target
+        </button>
+       </div>`;
+
+  const targetPanel = `
+    <div class="tab-panel${chs.length===0?' active':''}" id="panel_target_${projId}_${planType}">
+      ${targetStateBar}
+      <div class="mt-wrap"><table class="mt">
+        <thead><tr><th>Metric</th><th>Target</th></tr></thead>
+        <tbody>${metricRows}</tbody>
+      </table></div>
+      ${targetToolbar}
+    </div>`;
+
+  /* ── Challenge panels ── */
+  const chPanels = chs.map((ch, i) => {
+    const isLatest = i === chs.length - 1;
+    const compRows = pcfg.metrics.map(m => {
+      const t = target ? target[m.key] : null;
+      const a = ch.data[m.key];
+      const autoBadge = m.auto ? '<span class="auto-badge">AUTO</span>' : '';
+      return `<tr>
+        <td>${m.label}${autoBadge}</td>
+        <td style="text-align:right">${fmt(t,m.fmt)}</td>
+        <td style="text-align:right;font-weight:700">${fmt(a,m.fmt)}</td>
+        <td>${varCell(m,t,a)}</td>
+      </tr>`;
+    }).join('');
+
+    return `
+      <div class="tab-panel${isLatest?' active':''}" id="panel_ch${i}_${projId}_${planType}">
+        <div class="challenge-tab-header">
+          <i class="bi bi-lightning-charge" style="color:${pcfg.color};font-size:0.82rem"></i>
+          <span class="ch-header-rd">${ch.rd}</span>
+          <span class="ch-header-date">${new Date(ch.date).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'})}</span>
+          ${isLatest ? '<span class="latest-pill">Latest</span>' : '<span class="frozen-pill"><i class="bi bi-lock-fill" style="font-size:0.55rem"></i> Frozen</span>'}
+        </div>
+        <div class="mt-wrap"><table class="mt">
+          <thead><tr><th>Metric</th><th>Target Plan</th><th>${ch.rd}</th><th>Variance</th></tr></thead>
+          <tbody>${compRows}</tbody>
+        </table></div>
+        <div class="card-toolbar">
+          ${isLatest ? `<button class="btn-px btn-ghost" onclick="window.open('delivery-file.html','_blank')"><i class="bi bi-box-arrow-up-right"></i> Delivery File</button>` : '<span style="font-size:0.7rem;color:var(--px-muted)"><i class="bi bi-lock-fill me-1"></i>Read-only snapshot</span>'}
+          <div class="spacer"></div>
+          <span style="font-size:0.7rem;color:var(--px-muted)">${chs.length} snapshot${chs.length>1?'s':''} total</span>
+        </div>
+      </div>`;
+  }).join('');
+
+  /* ── KPI chips (latest challenge vs target) ── */
+  let kpiHtml = '';
+  if (chs.length) {
+    const ld = chs[chs.length-1].data;
+    const chips = [];
+    const bpct = target?.budget ? Math.round((ld.budget/target.budget)*100) : null;
+    chips.push({ l:'Budget', v:fmt(ld.budget,'eur'), cls:'' });
+    if (bpct) chips.push({ l:'Budget pace', v:bpct+'%', cls:bpct>=85?'up':bpct<65?'down':'' });
+    if (ld.roas   != null) chips.push({ l:'ROAS', v:ld.roas.toFixed(2)+'x', cls:ld.roas>=2?'up':'down' });
+    if (ld.leads  != null) {
+      const lp = target?.leads ? Math.round((ld.leads/target.leads)*100) : null;
+      chips.push({ l:'Leads', v:fmt(ld.leads,'int'), cls:'' });
+      if (lp) chips.push({ l:'Leads pace', v:lp+'%', cls:lp>=85?'up':lp<65?'down':'' });
+    }
+    if (ld.achats    != null) chips.push({ l:'Achats', v:fmt(ld.achats,'int'), cls:'' });
+    if (ld.followers != null) chips.push({ l:'Followers', v:fmt(ld.followers,'int'), cls:'' });
+    if (ld.clics     != null) chips.push({ l:'Clicks', v:fmt(ld.clics,'int'), cls:'' });
+    kpiHtml = `<div class="kpi-row">${chips.map(c=>`<div class="kpi-chip"><span class="kpi-label">${c.l}</span><span class="kpi-val ${c.cls}">${c.v}</span></div>`).join('')}</div>`;
+  }
+
+  /* ── Assemble ── */
+  document.getElementById('viewRoot').innerHTML = `
+    <div class="page-bc">
+      <a href="#">Back Office</a><i class="bi bi-chevron-right"></i>
+      <a href="#">PAC Plan</a><i class="bi bi-chevron-right"></i>
+      <span>#${proj.id} — ${proj.month}</span><i class="bi bi-chevron-right"></i>
+      <span style="color:var(--px-text);font-weight:600">${pcfg.label}</span>
+    </div>
+    <div class="page-head">
+      <div>
+        <h1>${pcfg.label}</h1>
+        <div class="page-head-meta"><i class="bi bi-person me-1"></i>${proj.client} &nbsp;·&nbsp; Project #${proj.id} &nbsp;·&nbsp; ${proj.month}</div>
+      </div>
+      <div class="head-badges">
+        <span class="hbadge hbadge-${proj.type.toLowerCase()}">${proj.type}</span>
+        <span class="hbadge hbadge-plan" style="background:${pcfg.color}">${pcfg.label}</span>
+      </div>
+    </div>
+    ${kpiHtml}
+    <div class="plan-card">
+      <div class="tab-bar">${tabsHtml}</div>
+      ${targetPanel}
+      ${chPanels}
+    </div>
+  `;
+
+  /* default: show latest challenge tab if challenges exist, else target */
+  if (chs.length > 0) {
+    switchTab(`ch${chs.length-1}`, projId, planType);
+  } else {
+    switchTab('target', projId, planType);
+  }
+}
+
+/* ══ TAB SWITCH ══ */
+function switchTab(tabKey, projId, planType) {
+  const prefix = `_${projId}_${planType}`;
+  document.querySelectorAll(`[id^="tb_"]`).forEach(b => {
+    if (b.id.endsWith(prefix)) b.classList.remove('active');
+  });
+  document.querySelectorAll(`[id^="panel_"]`).forEach(p => {
+    if (p.id.endsWith(prefix)) p.classList.remove('active');
+  });
+  const tb = document.getElementById(`tb_${tabKey}${prefix}`);
+  const pn = document.getElementById(`panel_${tabKey}${prefix}`);
+  if (tb) tb.classList.add('active');
+  if (pn) pn.classList.add('active');
+}
+
+/* ══ SIDEBAR ══ */
+function buildSidebar() {
+  const sb = document.getElementById('sidebar');
+  // remove old items
+  sb.querySelectorAll('.proj-item').forEach(e => e.remove());
+
+  DB.forEach(proj => {
+    const planKeys = Object.keys(proj.plans);
+    const planItems = planKeys.map(pt => {
+      const pcfg = PLAN_CONFIG[pt];
+      const chs = proj.plans[pt].challenges.length;
+      const frozen = proj.plans[pt].frozen;
+      return `<button class="plan-nav-btn" id="pnb_${proj.id}_${pt}"
+        onclick="selectPlan('${proj.id}','${pt}')">
+        <span class="plan-dot" style="background:${pcfg.color}"></span>
+        ${pcfg.label}
+        ${frozen ? '<i class="bi bi-lock-fill frozen-icon"></i>' : ''}
+        ${chs > 0 ? `<span class="ch-count">${chs}</span>` : ''}
+      </button>`;
+    }).join('');
+
+    const el = document.createElement('div');
+    el.className = 'proj-item';
+    el.innerHTML = `
+      <button class="proj-toggle open" onclick="toggleProj(this)">
+        <span class="proj-name">#${proj.id} – ${proj.month}</span>
+        <span class="type-badge badge-${proj.type.toLowerCase()}">${proj.type}</span>
+        <i class="bi bi-chevron-down proj-chev"></i>
+      </button>
+      <div class="proj-body open">${planItems}</div>`;
+    sb.appendChild(el);
+  });
+}
+
+function selectPlan(projId, planType) {
+  document.querySelectorAll('.plan-nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`pnb_${projId}_${planType}`)?.classList.add('active');
+  renderPlanPage(projId, planType);
+}
+
+function toggleProj(btn) {
+  btn.classList.toggle('open');
+  btn.nextElementSibling.classList.toggle('open');
+}
+
+/* ══ TARGET ACTIONS ══ */
+function updateTarget(projId, planType, key, val) {
+  const proj = DB.find(p => p.id === projId);
+  if (proj) proj.plans[planType].target[key] = val === '' ? null : parseFloat(val);
+}
+
+function saveTarget(projId, planType) {
+  // In prod: persist to backend. Here just show feedback.
+  const btn = event.currentTarget;
+  btn.innerHTML = '<i class="bi bi-check-lg"></i> Saved';
+  setTimeout(() => { btn.innerHTML = '<i class="bi bi-floppy"></i> Save'; }, 1800);
+}
+
+function freezeTarget(projId, planType) {
+  if (!confirm('Freeze this Target Plan? It will become read-only for growth hackers.')) return;
+  const proj = DB.find(p => p.id === projId);
+  if (!proj) return;
+  proj.plans[planType].frozen = true;
+  proj.plans[planType].frozenDate = new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'});
+  buildSidebar();
+  renderPlanPage(projId, planType);
+  document.getElementById(`pnb_${projId}_${planType}`)?.classList.add('active');
+}
+
+/* ══ FREEZE SNAPSHOT ══ */
+function openFreeze(projId, planType) {
+  _currentFreeze = { projId, planType };
+  const pcfg = PLAN_CONFIG[planType];
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('fr-rd').value = '';
+  document.getElementById('fr-date').value = today;
+  // Inject editable metric fields (only non-auto)
+  const fields = pcfg.metrics.filter(m => !m.auto).map(m =>
+    `<label class="flabel">${m.label}</label>
+     <input class="finput" id="fr_${m.key}" type="number" step="any" placeholder="0">`
+  ).join('');
+  document.getElementById('fr-fields').innerHTML = fields;
+  showModal('modalFreeze');
+}
+
+function doFreeze() {
+  if (!_currentFreeze) return;
+  const { projId, planType } = _currentFreeze;
+  const rd   = document.getElementById('fr-rd').value.trim();
+  const date = document.getElementById('fr-date').value;
+  if (!rd || !date) { alert('Fill in RD reference and date.'); return; }
+
+  const pcfg = PLAN_CONFIG[planType];
+  const data = {};
+  pcfg.metrics.filter(m => !m.auto).forEach(m => {
+    const v = document.getElementById(`fr_${m.key}`)?.value;
+    data[m.key] = v === '' || v == null ? null : parseFloat(v);
+  });
+
+  const proj = DB.find(p => p.id === projId);
+  proj.plans[planType].challenges.push({ rd, date, data });
+
+  closeModal('modalFreeze');
+  buildSidebar();
+  renderPlanPage(projId, planType);
+  document.getElementById(`pnb_${projId}_${planType}`)?.classList.add('active');
+}
+
+/* ══ NEW PROJECT ══ */
+function openNewProject() { showModal('modalNewProject'); }
+
+function createProject() {
+  const month  = document.getElementById('np-month').value;
+  const id     = document.getElementById('np-id').value.trim();
+  const client = document.getElementById('np-client').value.trim();
+  const type   = document.querySelector('input[name="np-type"]:checked')?.value || 'PAC';
+  const pts    = ['leads','ecom','traffic','followers'].filter(k => document.getElementById('np-'+k)?.checked);
+  if (!id || !client || !pts.length) { alert('Fill in all fields and pick at least one plan type.'); return; }
+  const plans = {};
+  pts.forEach(k => { plans[k] = { frozen:false, target:{}, challenges:[] }; });
+  DB.unshift({ id, month, client, type, plans });
+  buildSidebar();
+  closeModal('modalNewProject');
+}
+
+/* ══ MODALS ══ */
+function showModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(o =>
+  o.addEventListener('click', e => { if (e.target===o) o.classList.remove('open'); })
+);
+
+/* ══ INIT ══ */
+buildSidebar();
+selectPlan('1239', 'leads'); // default: Apr 2026 project with challenges
+</script>
+</body>
+</html>
