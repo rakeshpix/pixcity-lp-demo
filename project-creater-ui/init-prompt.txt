@@ -1,0 +1,37 @@
+I what you to design modern interactive a project creator UI
+
+Theme, font, and design should as similar as @brand_assets/backoffice-theme.png
+
+I am planning to add one more tab called projects for the contract accordion.
+
+FYI:-
+1. A contract is a 6 or 12 months agreement.
+2. Each month can have multiple projects.
+3. The output of project listing view should be like @brand_assets/project-listing.png
+ - read the file and understand the logic.
+ - you can design better ui/ux
+4. The system has the contract inventory, read the @brand_assets/inventory-sample.png for better understanding.
+5. The UI should ask the user all below questions to get the data to plan then create the future projects.
+ - Which service type?
+ CM
+ - Select the template?
+ CM - Small
+ - Select the Months
+ Jan, Feb, Mar, apr, may, jun,jul, aug (Provide a multiselect months from contract)
+ - KO Start day of the Month
+ 6th
+
+ Let me explain you a few key points before continuing the prompt:
+ # CM is a service type, It's called community management. Similarly PA is Paid Ads, PAC is paid ad challenge, PS is photo shoot.
+ # And a project consist of multiple tasks - OK-kickoff, W-Writing, D-Design, QC-Quality Check, RD-Result Delivery, I-Integration (Publishing to social media)
+ # CM (or any) project has multiple templates depends on client or requirement. Refer @brand_assets/project-template.png
+ 
+ We have to fetch the available remaining tasks from CM contract inventory and calculate items we can work and publish for a month.
+ Example: inventory/no of months
+
+ We should ask a question regrading the preferred publication date for each requirement.
+ 
+The user should be able to review the generated data on UI and do the final submission.
+With all these data the first month project will get created and then second month project and so on
+
+Hope all clear to you..
