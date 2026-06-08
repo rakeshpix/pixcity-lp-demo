@@ -6,28 +6,29 @@
     <title>Pix.city — Library</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,400;0,600;0,700;0,800;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Geist:wght@300;400;500&display=swap" rel="stylesheet" />
     <style>
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
       :root {
-        --teal: #129FB5;
-        --teal-dim: rgba(18,159,181,0.12);
-        --teal-glow: rgba(18,159,181,0.18);
-        --bg: #0B0C10;
-        --surface: #13151C;
-        --surface-2: #1A1D27;
-        --border: rgba(255,255,255,0.07);
-        --border-hover: rgba(18,159,181,0.5);
-        --text: #F0F1F3;
-        --muted: #6B7385;
-        --muted-2: #8A8FA0;
+        --teal: #12B5C8;
+        --teal-soft: rgba(18,181,200,0.10);
+        --teal-glow: rgba(18,181,200,0.14);
+        --teal-border: rgba(18,181,200,0.35);
+        --bg: #080A0F;
+        --surface: #0E1018;
+        --surface-up: #141720;
+        --border: rgba(255,255,255,0.06);
+        --border-mid: rgba(255,255,255,0.10);
+        --text: #E8EAF0;
+        --text-dim: #9CA3AF;
+        --text-faint: #4B5563;
       }
 
       html { scroll-behavior: smooth; }
 
       body {
-        font-family: 'DM Sans', sans-serif;
+        font-family: 'Geist', 'DM Sans', sans-serif;
         background: var(--bg);
         color: var(--text);
         min-height: 100vh;
@@ -35,26 +36,27 @@
         overflow-x: hidden;
       }
 
-      /* ── NOISE TEXTURE OVERLAY ── */
+      /* dot-grid background */
       body::before {
         content: '';
         position: fixed;
         inset: 0;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+        background-image: radial-gradient(circle, rgba(255,255,255,0.035) 1px, transparent 1px);
+        background-size: 28px 28px;
         pointer-events: none;
         z-index: 0;
-        opacity: 0.4;
       }
 
-      /* ── AMBIENT GLOW ── */
-      .ambient {
+      /* top-right glow */
+      body::after {
+        content: '';
         position: fixed;
-        width: 600px;
-        height: 600px;
+        width: 700px;
+        height: 700px;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(18,159,181,0.08) 0%, transparent 70%);
-        top: -200px;
-        right: -100px;
+        background: radial-gradient(circle, rgba(18,181,200,0.055) 0%, transparent 65%);
+        top: -250px;
+        right: -200px;
         pointer-events: none;
         z-index: 0;
       }
@@ -64,229 +66,273 @@
         position: sticky;
         top: 0;
         z-index: 100;
-        background: rgba(11,12,16,0.85);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+        background: rgba(8,10,15,0.82);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
         border-bottom: 1px solid var(--border);
-        padding: 0 40px;
-        height: 52px;
+        padding: 0 48px;
+        height: 54px;
         display: flex;
         align-items: center;
         justify-content: space-between;
       }
 
       .logo {
-        font-family: 'Epilogue', sans-serif;
+        font-family: 'Syne', sans-serif;
         font-weight: 800;
-        font-size: 1rem;
-        letter-spacing: -0.05em;
+        font-size: 1.05rem;
+        letter-spacing: -0.04em;
         color: var(--text);
         text-decoration: none;
-        display: flex;
-        align-items: center;
-        gap: 1px;
       }
       .logo-dot { color: var(--teal); }
 
       .header-right {
         display: flex;
         align-items: center;
-        gap: 16px;
+        gap: 20px;
       }
 
-      .badge {
-        font-size: 0.65rem;
-        font-weight: 500;
+      .header-meta {
+        font-size: 0.68rem;
+        font-weight: 400;
+        color: var(--text-faint);
+        letter-spacing: 0.04em;
+      }
+
+      .pill {
+        font-size: 0.62rem;
+        font-weight: 600;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--teal);
-        background: var(--teal-dim);
-        border: 1px solid rgba(18,159,181,0.2);
-        padding: 3px 10px;
+        background: var(--teal-soft);
+        border: 1px solid var(--teal-border);
+        padding: 3px 10px 3px;
         border-radius: 999px;
-      }
-
-      .count-pill {
-        font-size: 0.7rem;
-        font-weight: 500;
-        color: var(--muted);
-        letter-spacing: 0.02em;
       }
 
       /* ── MAIN ── */
       main {
         position: relative;
         z-index: 1;
-        max-width: 1000px;
+        max-width: 1040px;
         margin: 0 auto;
-        padding: 56px 32px 80px;
+        padding: 72px 40px 96px;
       }
 
       /* ── HERO ── */
       .hero {
-        margin-bottom: 64px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 48px;
+        align-items: end;
+        margin-bottom: 72px;
+        padding-bottom: 56px;
+        border-bottom: 1px solid var(--border);
       }
 
-      .hero-eyebrow {
-        font-size: 0.7rem;
-        font-weight: 500;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--teal);
-        margin-bottom: 14px;
-        display: flex;
+      @media (max-width: 640px) {
+        .hero { grid-template-columns: 1fr; }
+        .hero-stats { display: none; }
+        header { padding: 0 20px; }
+        main { padding: 48px 20px 72px; }
+      }
+
+      .hero-left {}
+
+      .hero-tag {
+        display: inline-flex;
         align-items: center;
         gap: 8px;
+        font-size: 0.65rem;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--teal);
+        margin-bottom: 20px;
       }
-      .hero-eyebrow::before {
+      .hero-tag::before {
         content: '';
         display: block;
-        width: 20px;
+        width: 16px;
         height: 1px;
         background: var(--teal);
-        opacity: 0.6;
       }
 
       .hero h1 {
-        font-family: 'Epilogue', sans-serif;
-        font-size: clamp(2rem, 5vw, 3.2rem);
+        font-family: 'Syne', sans-serif;
+        font-size: clamp(2.4rem, 6vw, 4rem);
         font-weight: 800;
-        letter-spacing: -0.04em;
-        line-height: 1.05;
+        letter-spacing: -0.045em;
+        line-height: 1;
         color: var(--text);
-        margin-bottom: 16px;
+        margin-bottom: 20px;
       }
       .hero h1 em {
         font-style: italic;
         color: var(--teal);
       }
 
-      .hero-sub {
-        font-size: 0.9rem;
-        color: var(--muted-2);
-        line-height: 1.7;
-        max-width: 480px;
+      .hero-desc {
+        font-size: 0.875rem;
+        color: var(--text-dim);
+        line-height: 1.75;
+        max-width: 400px;
         font-weight: 300;
       }
 
-      /* ── STATS ROW ── */
-      .stats {
+      /* right-side stat stack */
+      .hero-stats {
         display: flex;
+        flex-direction: column;
         gap: 0;
-        margin-top: 40px;
-        border: 1px solid var(--border);
-        border-radius: 12px;
+        border: 1px solid var(--border-mid);
+        border-radius: 14px;
         overflow: hidden;
+        min-width: 140px;
         background: var(--surface);
       }
 
-      .stat {
-        flex: 1;
-        padding: 18px 24px;
-        border-right: 1px solid var(--border);
+      .hstat {
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border);
       }
-      .stat:last-child { border-right: none; }
+      .hstat:last-child { border-bottom: none; }
 
-      .stat-val {
-        font-family: 'Epilogue', sans-serif;
-        font-size: 1.6rem;
+      .hstat-n {
+        font-family: 'Syne', sans-serif;
+        font-size: 1.8rem;
         font-weight: 800;
-        letter-spacing: -0.04em;
+        letter-spacing: -0.05em;
         color: var(--text);
         line-height: 1;
-        margin-bottom: 4px;
       }
-      .stat-val.accent { color: var(--teal); }
+      .hstat-n.c { color: var(--teal); }
 
-      .stat-lbl {
-        font-size: 0.72rem;
-        color: var(--muted);
-        font-weight: 400;
-        letter-spacing: 0.02em;
+      .hstat-l {
+        font-size: 0.65rem;
+        color: var(--text-faint);
+        letter-spacing: 0.04em;
+        margin-top: 3px;
       }
 
       /* ── SECTION ── */
       .section {
-        margin-bottom: 48px;
+        margin-bottom: 52px;
       }
 
-      .section-header {
+      .section-head {
         display: flex;
-        align-items: baseline;
-        gap: 10px;
-        margin-bottom: 16px;
-        padding-bottom: 12px;
-        border-bottom: 1px solid var(--border);
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 18px;
       }
 
-      .section-label {
-        font-family: 'Epilogue', sans-serif;
-        font-size: 0.78rem;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--muted);
-      }
-
-      .section-count {
+      .section-title {
+        font-family: 'Syne', sans-serif;
         font-size: 0.7rem;
-        color: var(--muted);
-        opacity: 0.5;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-faint);
       }
 
-      /* ── CARDS GRID ── */
-      .grid {
+      .section-line {
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      .section-n {
+        font-size: 0.65rem;
+        color: var(--text-faint);
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* ── GRID ── */
+      .grid-apps {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+      .grid-lps {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
+        gap: 10px;
       }
-      @media (max-width: 780px) {
-        .grid { grid-template-columns: 1fr 1fr; }
+
+      @media (max-width: 900px) {
+        .grid-apps { grid-template-columns: 1fr 1fr; }
+        .grid-lps  { grid-template-columns: 1fr 1fr; }
       }
-      @media (max-width: 500px) {
-        .grid { grid-template-columns: 1fr; }
-        header { padding: 0 20px; }
-        main { padding: 40px 20px 60px; }
+      @media (max-width: 520px) {
+        .grid-apps, .grid-lps { grid-template-columns: 1fr; }
       }
 
       /* ── CARD ── */
       .card {
         background: var(--surface);
         border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 20px;
+        border-radius: 12px;
+        padding: 18px 18px 16px;
         text-decoration: none;
         color: inherit;
         display: flex;
         flex-direction: column;
-        gap: 14px;
+        gap: 12px;
         position: relative;
         overflow: hidden;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s;
+        /* staggered entrance */
+        opacity: 0;
+        transform: translateY(10px);
+        animation: cardIn 0.45s ease forwards;
       }
 
+      @keyframes cardIn {
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      /* accent bar top */
       .card::before {
         content: '';
         position: absolute;
-        inset: 0;
-        background: radial-gradient(ellipse at 80% 0%, var(--teal-glow) 0%, transparent 60%);
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--teal) 0%, transparent 100%);
         opacity: 0;
-        transition: opacity 0.3s ease;
+        transition: opacity 0.2s;
+      }
+
+      /* hover glow */
+      .card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at 50% -10%, var(--teal-glow) 0%, transparent 55%);
+        opacity: 0;
+        transition: opacity 0.25s;
         pointer-events: none;
       }
 
       .card:hover {
-        border-color: var(--border-hover);
-        box-shadow: 0 0 0 1px rgba(18,159,181,0.15), 0 8px 32px rgba(0,0,0,0.4);
-        transform: translateY(-2px);
+        border-color: var(--teal-border);
+        box-shadow: 0 0 0 1px rgba(18,181,200,0.10), 0 12px 40px rgba(0,0,0,0.5);
+        transform: translateY(-3px);
       }
-
       .card:hover::before { opacity: 1; }
+      .card:hover::after  { opacity: 1; }
+      .card:active { transform: translateY(-1px); }
 
-      .card:active { transform: translateY(0); }
+      /* stagger delays */
+      .card:nth-child(1) { animation-delay: 0.05s; }
+      .card:nth-child(2) { animation-delay: 0.10s; }
+      .card:nth-child(3) { animation-delay: 0.15s; }
+      .card:nth-child(4) { animation-delay: 0.20s; }
 
-      /* ── CARD TOP ── */
-      .card-top {
+      /* ── CARD INNER ── */
+      .card-head {
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
@@ -294,39 +340,51 @@
       }
 
       .card-icon {
-        width: 36px;
-        height: 36px;
-        border-radius: 10px;
-        background: var(--surface-2);
-        border: 1px solid var(--border);
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: var(--surface-up);
+        border: 1px solid var(--border-mid);
         display: flex;
         align-items: center;
         justify-content: center;
+        font-size: 0.95rem;
         flex-shrink: 0;
-        font-size: 1rem;
-        line-height: 1;
+        position: relative;
+        z-index: 1;
       }
 
-      .card-tag {
-        font-size: 0.62rem;
+      .card-badges {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 5px;
+      }
+
+      .tag {
+        font-size: 0.58rem;
         font-weight: 600;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.09em;
         text-transform: uppercase;
-        background: var(--teal-dim);
+        background: var(--teal-soft);
         color: var(--teal);
-        padding: 3px 8px;
+        padding: 2px 7px;
         border-radius: 999px;
-        border: 1px solid rgba(18,159,181,0.15);
+        border: 1px solid rgba(18,181,200,0.15);
         white-space: nowrap;
+        position: relative;
+        z-index: 1;
       }
 
-      .card-status {
+      .status {
         display: flex;
         align-items: center;
-        gap: 5px;
-        font-size: 0.65rem;
-        color: var(--muted);
-        letter-spacing: 0.03em;
+        gap: 4px;
+        font-size: 0.6rem;
+        color: var(--text-faint);
+        letter-spacing: 0.04em;
+        position: relative;
+        z-index: 1;
       }
 
       .dot {
@@ -334,58 +392,59 @@
         height: 5px;
         border-radius: 50%;
         flex-shrink: 0;
-        background: #22c55e;
-        box-shadow: 0 0 6px rgba(34,197,94,0.5);
       }
-      .dot.app { background: var(--teal); box-shadow: 0 0 6px rgba(18,159,181,0.5); }
+      .dot-green { background: #22c55e; box-shadow: 0 0 5px rgba(34,197,94,0.5); }
+      .dot-teal  { background: var(--teal); box-shadow: 0 0 5px rgba(18,181,200,0.5); }
 
-      /* ── CARD BODY ── */
       .card-name {
-        font-family: 'Epilogue', sans-serif;
-        font-size: 0.95rem;
+        font-family: 'Syne', sans-serif;
+        font-size: 0.88rem;
         font-weight: 700;
         color: var(--text);
-        letter-spacing: -0.025em;
-        line-height: 1.25;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+        position: relative;
+        z-index: 1;
       }
 
       .card-desc {
-        font-size: 0.775rem;
-        line-height: 1.6;
-        color: var(--muted-2);
+        font-size: 0.735rem;
+        line-height: 1.65;
+        color: var(--text-dim);
         font-weight: 300;
         flex: 1;
+        position: relative;
+        z-index: 1;
       }
 
-      /* ── CARD FOOTER ── */
       .card-foot {
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding-top: 12px;
         border-top: 1px solid var(--border);
+        position: relative;
+        z-index: 1;
       }
 
-      .card-meta {
-        font-size: 0.68rem;
-        color: var(--muted);
-        letter-spacing: 0.02em;
-      }
-
-      .card-arrow {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        font-size: 0.72rem;
-        font-weight: 600;
-        color: var(--teal);
-        opacity: 0.7;
-        transition: opacity 0.15s, gap 0.15s;
+      .card-slug {
+        font-size: 0.62rem;
+        color: var(--text-faint);
+        font-family: 'Geist Mono', monospace;
         letter-spacing: 0.01em;
       }
-      .card:hover .card-arrow {
+
+      .card-cta {
+        font-size: 0.68rem;
+        font-weight: 600;
+        color: var(--teal);
+        opacity: 0.6;
+        letter-spacing: 0.02em;
+        transition: opacity 0.15s, letter-spacing 0.15s;
+      }
+      .card:hover .card-cta {
         opacity: 1;
-        gap: 7px;
+        letter-spacing: 0.06em;
       }
 
       /* ── FOOTER ── */
@@ -393,108 +452,122 @@
         position: relative;
         z-index: 1;
         text-align: center;
-        font-size: 0.68rem;
-        color: var(--muted);
-        padding-bottom: 40px;
-        letter-spacing: 0.03em;
+        font-size: 0.65rem;
+        color: var(--text-faint);
+        padding-bottom: 48px;
+        letter-spacing: 0.05em;
       }
     </style>
   </head>
   <body>
 
-    <div class="ambient"></div>
-
     <header>
       <a href="/" class="logo">pix<span class="logo-dot">.</span>city</a>
       <div class="header-right">
-        <span class="count-pill">6 projects</span>
-        <span class="badge">Library</span>
+        <span class="header-meta">7 projects</span>
+        <span class="pill">Library</span>
       </div>
     </header>
 
     <main>
 
+      <!-- HERO -->
       <div class="hero">
-        <p class="hero-eyebrow">Pix.city — Demo Library</p>
-        <h1>All <em>projects</em>,<br>one place.</h1>
-        <p class="hero-sub">Client applications and landing pages. Click any card to open the project.</p>
-
-        <div class="stats">
-          <div class="stat">
-            <div class="stat-val">6</div>
-            <div class="stat-lbl">Total projects</div>
+        <div class="hero-left">
+          <p class="hero-tag">Pix.city — Demo Library</p>
+          <h1>Every<br><em>project</em>,<br>one place.</h1>
+          <p class="hero-desc">All client applications and landing pages in one index. Click any card to open the project.</p>
+        </div>
+        <div class="hero-stats">
+          <div class="hstat">
+            <div class="hstat-n">7</div>
+            <div class="hstat-l">Total projects</div>
           </div>
-          <div class="stat">
-            <div class="stat-val">3</div>
-            <div class="stat-lbl">Applications</div>
+          <div class="hstat">
+            <div class="hstat-n">4</div>
+            <div class="hstat-l">Applications</div>
           </div>
-          <div class="stat">
-            <div class="stat-val">3</div>
-            <div class="stat-lbl">Landing pages</div>
+          <div class="hstat">
+            <div class="hstat-n">3</div>
+            <div class="hstat-l">Landing pages</div>
           </div>
-          <div class="stat">
-            <div class="stat-val accent">FR</div>
-            <div class="stat-lbl">Market</div>
+          <div class="hstat">
+            <div class="hstat-n c">FR</div>
+            <div class="hstat-l">Market</div>
           </div>
         </div>
       </div>
 
       <!-- APPLICATIONS -->
       <div class="section">
-        <div class="section-header">
-          <span class="section-label">Applications</span>
-          <span class="section-count">3</span>
+        <div class="section-head">
+          <span class="section-title">Applications</span>
+          <div class="section-line"></div>
+          <span class="section-n">4</span>
         </div>
-        <div class="grid">
+        <div class="grid-apps">
 
-          <!-- Client App -->
           <a href="/client-app-lp/login.html" class="card">
-            <div class="card-top">
+            <div class="card-head">
               <div class="card-icon">⚡</div>
-              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
-                <span class="card-tag">Client Portal</span>
-                <span class="card-status"><span class="dot app"></span>Live</span>
+              <div class="card-badges">
+                <span class="tag">Client Portal</span>
+                <span class="status"><span class="dot dot-teal"></span>Live</span>
               </div>
             </div>
             <div class="card-name">Client App</div>
-            <div class="card-desc">Pix.city client portal. Dashboard, campaign tracking, reports and project management.</div>
+            <div class="card-desc">Client portal — dashboard, campaign tracking, reports and project management.</div>
             <div class="card-foot">
-              <span class="card-meta">client-app-lp</span>
-              <span class="card-arrow">Open →</span>
+              <span class="card-slug">client-app-lp</span>
+              <span class="card-cta">Open →</span>
             </div>
           </a>
 
-          <!-- CityMaker -->
           <a href="/citymaker-app-lp/" class="card">
-            <div class="card-top">
+            <div class="card-head">
               <div class="card-icon">🏙️</div>
-              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
-                <span class="card-tag">App</span>
-                <span class="card-status"><span class="dot app"></span>Live</span>
+              <div class="card-badges">
+                <span class="tag">App</span>
+                <span class="status"><span class="dot dot-teal"></span>Live</span>
               </div>
             </div>
             <div class="card-name">CityMaker</div>
-            <div class="card-desc">Mobile-first app for creating and managing urban projects. PWA with offline support.</div>
+            <div class="card-desc">Mobile-first app for urban project creation and management. PWA with offline support.</div>
             <div class="card-foot">
-              <span class="card-meta">citymaker-app-lp</span>
-              <span class="card-arrow">Open →</span>
+              <span class="card-slug">citymaker-app-lp</span>
+              <span class="card-cta">Open →</span>
             </div>
           </a>
 
-          <!-- PAC Plan -->
           <a href="/pac-plan/" class="card">
-            <div class="card-top">
+            <div class="card-head">
               <div class="card-icon">📊</div>
-              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
-                <span class="card-tag">Back Office</span>
-                <span class="card-status"><span class="dot app"></span>Live</span>
+              <div class="card-badges">
+                <span class="tag">Back Office</span>
+                <span class="status"><span class="dot dot-teal"></span>Live</span>
               </div>
             </div>
             <div class="card-name">PAC Plan</div>
-            <div class="card-desc">Pix.city back office. Track commercial action plans, KPIs and client deliverables.</div>
+            <div class="card-desc">Back office — track commercial action plans, KPIs and client deliverables.</div>
             <div class="card-foot">
-              <span class="card-meta">pac-plan</span>
-              <span class="card-arrow">Open →</span>
+              <span class="card-slug">pac-plan</span>
+              <span class="card-cta">Open →</span>
+            </div>
+          </a>
+
+          <a href="/project-creater-ui/" class="card">
+            <div class="card-head">
+              <div class="card-icon">✦</div>
+              <div class="card-badges">
+                <span class="tag">Creator</span>
+                <span class="status"><span class="dot dot-teal"></span>Live</span>
+              </div>
+            </div>
+            <div class="card-name">Project Creator</div>
+            <div class="card-desc">UI for creating and configuring new Pix.city client projects from scratch.</div>
+            <div class="card-foot">
+              <span class="card-slug">project-creater-ui</span>
+              <span class="card-cta">Open →</span>
             </div>
           </a>
 
@@ -503,60 +576,58 @@
 
       <!-- LANDING PAGES -->
       <div class="section">
-        <div class="section-header">
-          <span class="section-label">Landing Pages</span>
-          <span class="section-count">3</span>
+        <div class="section-head">
+          <span class="section-title">Landing Pages</span>
+          <div class="section-line"></div>
+          <span class="section-n">3</span>
         </div>
-        <div class="grid">
+        <div class="grid-lps">
 
-          <!-- M. Lobry -->
           <a href="/m-lobry/" class="card">
-            <div class="card-top">
+            <div class="card-head">
               <div class="card-icon">🏠</div>
-              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
-                <span class="card-tag">Toiture</span>
-                <span class="card-status"><span class="dot"></span>Live</span>
+              <div class="card-badges">
+                <span class="tag">Roofing</span>
+                <span class="status"><span class="dot dot-green"></span>Live</span>
               </div>
             </div>
             <div class="card-name">M. Lobry Couvreur</div>
             <div class="card-desc">Roofing expert in Argenteuil. Fast quotes, ten-year guarantee, integrated contact form.</div>
             <div class="card-foot">
-              <span class="card-meta">Argenteuil · 95100</span>
-              <span class="card-arrow">Open →</span>
+              <span class="card-slug">Argenteuil · 95100</span>
+              <span class="card-cta">Open →</span>
             </div>
           </a>
 
-          <!-- Beaulieu Piscines -->
           <a href="/beaulieu-piscines/" class="card">
-            <div class="card-top">
+            <div class="card-head">
               <div class="card-icon">🏊</div>
-              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
-                <span class="card-tag">Piscines</span>
-                <span class="card-status"><span class="dot"></span>Live</span>
+              <div class="card-badges">
+                <span class="tag">Pools</span>
+                <span class="status"><span class="dot dot-green"></span>Live</span>
               </div>
             </div>
             <div class="card-name">Beaulieu Piscines</div>
             <div class="card-desc">Custom pool builder. Premium conversion-focused page for high-end residential projects.</div>
             <div class="card-foot">
-              <span class="card-meta">Région SUD</span>
-              <span class="card-arrow">Open →</span>
+              <span class="card-slug">Région SUD</span>
+              <span class="card-cta">Open →</span>
             </div>
           </a>
 
-          <!-- Beaulieu Piscines Ratz -->
           <a href="/beaulieu-piscines-ratz/" class="card">
-            <div class="card-top">
+            <div class="card-head">
               <div class="card-icon">🏊</div>
-              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
-                <span class="card-tag">Piscines</span>
-                <span class="card-status"><span class="dot"></span>Live</span>
+              <div class="card-badges">
+                <span class="tag">Pools · v2</span>
+                <span class="status"><span class="dot dot-green"></span>Live</span>
               </div>
             </div>
             <div class="card-name">Beaulieu Piscines v2</div>
-            <div class="card-desc">Redesign variant of the Beaulieu Piscines page. New visual direction and brand identity.</div>
+            <div class="card-desc">Redesign variant — new visual direction and brand identity for Beaulieu Piscines.</div>
             <div class="card-foot">
-              <span class="card-meta">Région SUD · v2</span>
-              <span class="card-arrow">Open →</span>
+              <span class="card-slug">Région SUD · v2</span>
+              <span class="card-cta">Open →</span>
             </div>
           </a>
 
@@ -565,9 +636,7 @@
 
     </main>
 
-    <footer>
-      © 2026 Pix.city — All rights reserved.
-    </footer>
+    <footer>© 2026 Pix.city — All rights reserved.</footer>
 
   </body>
 </html>
