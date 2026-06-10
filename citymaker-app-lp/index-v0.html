@@ -132,20 +132,6 @@
         transform: translateY(-2px);
         box-shadow: 0 8px 30px -6px rgba(0, 0, 0, 0.18);
       }
-      .task-tile {
-        transition:
-          box-shadow 0.2s,
-          transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-      }
-      .task-tile:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 30px -6px rgba(0, 0, 0, 0.18);
-      }
-      .task-tab-btn {
-        transition:
-          background-color 0.15s,
-          color 0.15s;
-      }
       .checkbox-custom input:checked + span {
         background: #00b89c;
         border-color: #00b89c;
@@ -710,23 +696,6 @@
             Dashboard
           </button>
           <button
-            onclick="appNav('tasks')"
-            id="snav-tasks"
-            class="snav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-150 text-slate-400 hover:text-white hover:bg-white/5">
-            <svg
-              class="w-4 h-4 flex-shrink-0"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-            </svg>
-            My Tasks
-          </button>
-          <button
             onclick="appNav('earnings')"
             id="snav-earnings"
             class="snav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-150 text-slate-400 hover:text-white hover:bg-white/5">
@@ -887,310 +856,93 @@
             <!-- My Recent Tasks -->
             <div class="mb-3 flex items-center justify-between">
               <h3 class="font-bold text-dark-800 text-base">My Recent Tasks</h3>
-              <button
-                onclick="appNav('tasks')"
-                class="flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-500 focus-visible:underline transition-colors">
-                View all
-                <svg
-                  class="w-3 h-3"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2.5"
-                    d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
+              <span class="text-xs text-slate-400">3 active</span>
             </div>
-            <div class="space-y-2.5 mb-8">
-              <!-- Task tile 1 — Accepted -->
+            <div class="space-y-3">
+              <!-- Mission card 1 — Accepted -->
               <div
-                class="task-tile bg-white rounded-2xl shadow-card p-4 flex items-center gap-3">
-                <div class="w-11 h-11 rounded-xl overflow-hidden flex-shrink-0">
+                class="mission-card bg-white rounded-2xl shadow-card p-5 flex items-start gap-4">
+                <div class="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0">
                   <img
-                    src="https://placehold.co/44x44/e8f5e9/00b89c?text=🏪"
+                    src="https://placehold.co/48x48/e8f5e9/00b89c?text=🏪"
                     alt=""
                     class="w-full h-full object-cover" />
                 </div>
                 <div class="flex-1 min-w-0">
-                  <p class="font-semibold text-dark-800 text-sm truncate">
-                    Le Petit Bistro — Social Content
+                  <div class="flex items-start justify-between gap-2 mb-1">
+                    <p class="font-semibold text-dark-800 text-sm truncate">
+                      Le Petit Bistro — Social Content
+                    </p>
+                    <span
+                      class="flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full bg-brand-500/10 text-brand-600"
+                      >Accepted</span
+                    >
+                  </div>
+                  <p class="text-slate-500 text-xs mb-2">
+                    Photo Shooting · Nanterre, 92000
                   </p>
-                  <p class="text-slate-400 text-xs truncate mt-0.5">
-                    Photo Shooting · Nanterre, 92000 · Due May 15
-                  </p>
-                </div>
-                <div class="flex flex-col items-end gap-1 flex-shrink-0">
-                  <span
-                    class="text-xs font-semibold px-2 py-0.5 rounded-full bg-brand-500/10 text-brand-600"
-                    >Accepted</span
-                  >
-                  <span class="text-xs font-bold text-dark-800">€150</span>
+                  <div class="flex items-center gap-3">
+                    <span class="text-xs text-slate-400">Due May 15, 2026</span>
+                    <span class="text-xs font-semibold text-dark-800"
+                      >€150</span
+                    >
+                  </div>
                 </div>
               </div>
 
-              <!-- Task tile 2 — Accepted -->
+              <!-- Mission card 2 — Accepted -->
               <div
-                class="task-tile bg-white rounded-2xl shadow-card p-4 flex items-center gap-3">
+                class="mission-card bg-white rounded-2xl shadow-card p-5 flex items-start gap-4">
                 <div
-                  class="w-11 h-11 rounded-xl bg-violet-50 flex items-center justify-center flex-shrink-0 text-lg">
+                  class="w-12 h-12 rounded-xl bg-violet-50 flex items-center justify-center flex-shrink-0 text-xl">
                   ⭐
                 </div>
                 <div class="flex-1 min-w-0">
-                  <p class="font-semibold text-dark-800 text-sm truncate">
-                    Boutique Mode — Influencer Campaign
+                  <div class="flex items-start justify-between gap-2 mb-1">
+                    <p class="font-semibold text-dark-800 text-sm truncate">
+                      Boutique Mode — Influencer Campaign
+                    </p>
+                    <span
+                      class="flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full bg-brand-500/10 text-brand-600"
+                      >Accepted</span
+                    >
+                  </div>
+                  <p class="text-slate-500 text-xs mb-2">
+                    Influencer · Puteaux, 92800
                   </p>
-                  <p class="text-slate-400 text-xs truncate mt-0.5">
-                    Influencer · Puteaux, 92800 · Due May 20
-                  </p>
-                </div>
-                <div class="flex flex-col items-end gap-1 flex-shrink-0">
-                  <span
-                    class="text-xs font-semibold px-2 py-0.5 rounded-full bg-brand-500/10 text-brand-600"
-                    >Accepted</span
-                  >
-                  <span class="text-xs font-bold text-dark-800">€200</span>
+                  <div class="flex items-center gap-3">
+                    <span class="text-xs text-slate-400">Due May 20, 2026</span>
+                    <span class="text-xs font-semibold text-dark-800"
+                      >€200</span
+                    >
+                  </div>
                 </div>
               </div>
 
-              <!-- Task tile 3 — Assigned -->
+              <!-- Mission card 3 — Assigned -->
               <div
-                class="task-tile bg-white rounded-2xl shadow-card p-4 flex items-center gap-3">
+                class="mission-card bg-white rounded-2xl shadow-card p-5 flex items-start gap-4">
                 <div
-                  class="w-11 h-11 rounded-xl bg-amber-50 flex items-center justify-center flex-shrink-0 text-lg">
+                  class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center flex-shrink-0 text-xl">
                   ✍️
                 </div>
                 <div class="flex-1 min-w-0">
-                  <p class="font-semibold text-dark-800 text-sm truncate">
-                    Café des Arts — Blog Articles
-                  </p>
-                  <p class="text-slate-400 text-xs truncate mt-0.5">
-                    Content Writer · Levallois, 92300 · Due Jun 1
-                  </p>
-                </div>
-                <div class="flex flex-col items-end gap-1 flex-shrink-0">
-                  <span
-                    class="text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600"
-                    >Assigned</span
-                  >
-                  <span class="text-xs font-bold text-dark-800">€70</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Bank Details snippet -->
-            <div class="mb-3 flex items-center justify-between">
-              <h3 class="font-bold text-dark-800 text-base">Bank Details</h3>
-            </div>
-            <button
-              onclick="appNav('bank')"
-              class="task-tile w-full text-left bg-white rounded-2xl shadow-card p-4 flex items-center gap-3 border border-red-100 focus-visible:ring-2 focus-visible:ring-brand-500/30">
-              <div
-                class="w-11 h-11 rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0">
-                <svg
-                  class="w-5 h-5 text-red-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
-                </svg>
-              </div>
-              <div class="flex-1 min-w-0">
-                <p class="font-semibold text-dark-800 text-sm">IBAN missing</p>
-                <p class="text-slate-500 text-xs mt-0.5">
-                  Add your bank details to receive payments
-                </p>
-              </div>
-              <span class="flex-shrink-0 text-brand-600 text-xs font-semibold"
-                >Update →</span
-              >
-            </button>
-          </div>
-
-          <!-- ── TASKS ── -->
-          <div
-            id="app-tasks"
-            class="app-panel hidden p-5 lg:p-8 max-w-4xl mx-auto w-full fade-in">
-            <div class="mb-6">
-              <h2
-                class="text-xl font-bold text-dark-800 tracking-tight"
-                style="font-family: &quot;Georgia&quot;, serif">
-                My Tasks
-              </h2>
-              <p class="text-slate-500 text-sm mt-1">
-                Review your mission invitations and history.
-              </p>
-            </div>
-
-            <!-- Tabs -->
-            <div
-              class="inline-flex bg-white rounded-xl p-1 shadow-card mb-5 gap-1">
-              <button
-                onclick="taskTab('pending')"
-                id="tasktab-pending"
-                class="task-tab-btn px-5 py-2 rounded-lg text-sm font-semibold bg-brand-500/10 text-brand-600">
-                Pending <span class="text-xs font-bold">(3)</span>
-              </button>
-              <button
-                onclick="taskTab('refused')"
-                id="tasktab-refused"
-                class="task-tab-btn px-5 py-2 rounded-lg text-sm font-semibold text-slate-500 hover:text-dark-800">
-                Refused <span class="text-xs font-bold">(2)</span>
-              </button>
-            </div>
-
-            <!-- Pending tasks -->
-            <div id="tasklist-pending" class="space-y-3">
-              <!-- Pending 1 -->
-              <div class="bg-white rounded-2xl shadow-card p-4">
-                <div class="flex items-center gap-3 mb-3">
-                  <div
-                    class="w-11 h-11 rounded-xl bg-amber-50 flex items-center justify-center flex-shrink-0 text-lg">
-                    ✍️
-                  </div>
-                  <div class="flex-1 min-w-0">
+                  <div class="flex items-start justify-between gap-2 mb-1">
                     <p class="font-semibold text-dark-800 text-sm truncate">
                       Café des Arts — Blog Articles
                     </p>
-                    <p class="text-slate-400 text-xs truncate mt-0.5">
-                      Content Writer · Levallois, 92300
-                    </p>
+                    <span
+                      class="flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600"
+                      >Assigned</span
+                    >
                   </div>
-                  <div class="text-right flex-shrink-0">
-                    <p class="text-sm font-bold text-dark-800">€70</p>
-                    <p class="text-xs text-slate-400">Due Jun 1</p>
-                  </div>
-                </div>
-                <div class="flex gap-2 pt-3 border-t border-slate-100">
-                  <button
-                    class="flex-1 btn-brand text-white text-xs font-semibold py-2 rounded-lg shadow-brand-sm">
-                    Accept
-                  </button>
-                  <button
-                    class="flex-1 text-slate-500 text-xs font-semibold py-2 rounded-lg border border-slate-200 hover:bg-slate-50 active:bg-slate-100 transition-colors">
-                    Decline
-                  </button>
-                </div>
-              </div>
-
-              <!-- Pending 2 -->
-              <div class="bg-white rounded-2xl shadow-card p-4">
-                <div class="flex items-center gap-3 mb-3">
-                  <div
-                    class="w-11 h-11 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 text-lg">
-                    📷
-                  </div>
-                  <div class="flex-1 min-w-0">
-                    <p class="font-semibold text-dark-800 text-sm truncate">
-                      Pharmacie du Centre — Window Display Shoot
-                    </p>
-                    <p class="text-slate-400 text-xs truncate mt-0.5">
-                      Photo Shooting · Nanterre, 92000
-                    </p>
-                  </div>
-                  <div class="text-right flex-shrink-0">
-                    <p class="text-sm font-bold text-dark-800">€90</p>
-                    <p class="text-xs text-slate-400">Expires Jun 12</p>
-                  </div>
-                </div>
-                <div class="flex gap-2 pt-3 border-t border-slate-100">
-                  <button
-                    class="flex-1 btn-brand text-white text-xs font-semibold py-2 rounded-lg shadow-brand-sm">
-                    Accept
-                  </button>
-                  <button
-                    class="flex-1 text-slate-500 text-xs font-semibold py-2 rounded-lg border border-slate-200 hover:bg-slate-50 active:bg-slate-100 transition-colors">
-                    Decline
-                  </button>
-                </div>
-              </div>
-
-              <!-- Pending 3 -->
-              <div class="bg-white rounded-2xl shadow-card p-4">
-                <div class="flex items-center gap-3 mb-3">
-                  <div
-                    class="w-11 h-11 rounded-xl bg-violet-50 flex items-center justify-center flex-shrink-0 text-lg">
-                    ⭐
-                  </div>
-                  <div class="flex-1 min-w-0">
-                    <p class="font-semibold text-dark-800 text-sm truncate">
-                      Librairie Page 32 — Instagram Reels
-                    </p>
-                    <p class="text-slate-400 text-xs truncate mt-0.5">
-                      Influencer · Courbevoie, 92400
-                    </p>
-                  </div>
-                  <div class="text-right flex-shrink-0">
-                    <p class="text-sm font-bold text-dark-800">€120</p>
-                    <p class="text-xs text-slate-400">Expires Jun 15</p>
-                  </div>
-                </div>
-                <div class="flex gap-2 pt-3 border-t border-slate-100">
-                  <button
-                    class="flex-1 btn-brand text-white text-xs font-semibold py-2 rounded-lg shadow-brand-sm">
-                    Accept
-                  </button>
-                  <button
-                    class="flex-1 text-slate-500 text-xs font-semibold py-2 rounded-lg border border-slate-200 hover:bg-slate-50 active:bg-slate-100 transition-colors">
-                    Decline
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Refused tasks -->
-            <div id="tasklist-refused" class="hidden space-y-3">
-              <!-- Refused 1 -->
-              <div
-                class="task-tile bg-white rounded-2xl shadow-card p-4 flex items-center gap-3 opacity-75">
-                <div
-                  class="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center flex-shrink-0 text-lg">
-                  📷
-                </div>
-                <div class="flex-1 min-w-0">
-                  <p class="font-semibold text-dark-800 text-sm truncate">
-                    Salon Coiffure Élégance — Photo Shoot
+                  <p class="text-slate-500 text-xs mb-2">
+                    Content Writer · Levallois, 92300
                   </p>
-                  <p class="text-slate-400 text-xs truncate mt-0.5">
-                    Photo Shooting · Nanterre, 92000
-                  </p>
-                </div>
-                <div class="flex flex-col items-end gap-1 flex-shrink-0">
-                  <span
-                    class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500"
-                    >Refused</span
-                  >
-                  <span class="text-xs text-slate-400">Apr 2, 2026</span>
-                </div>
-              </div>
-
-              <!-- Refused 2 -->
-              <div
-                class="task-tile bg-white rounded-2xl shadow-card p-4 flex items-center gap-3 opacity-75">
-                <div
-                  class="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center flex-shrink-0 text-lg">
-                  ✍️
-                </div>
-                <div class="flex-1 min-w-0">
-                  <p class="font-semibold text-dark-800 text-sm truncate">
-                    Restaurant Le Mistral — Social Content
-                  </p>
-                  <p class="text-slate-400 text-xs truncate mt-0.5">
-                    Content Writer · Puteaux, 92800
-                  </p>
-                </div>
-                <div class="flex flex-col items-end gap-1 flex-shrink-0">
-                  <span
-                    class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500"
-                    >Refused</span
-                  >
-                  <span class="text-xs text-slate-400">Mar 18, 2026</span>
+                  <div class="flex items-center gap-3">
+                    <span class="text-xs text-slate-400">Due Jun 1, 2026</span>
+                    <span class="text-xs font-semibold text-dark-800">€70</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1844,23 +1596,6 @@
               <span class="text-[10px] font-semibold">Home</span>
             </button>
             <button
-              onclick="appNav('tasks')"
-              id="bnav-tasks"
-              class="bnav-item flex-1 flex flex-col items-center justify-center gap-1 py-3 text-slate-400 transition-colors duration-150">
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-              </svg>
-              <span class="text-[10px] font-semibold">Tasks</span>
-            </button>
-            <button
               onclick="appNav('earnings')"
               id="bnav-earnings"
               class="bnav-item flex-1 flex flex-col items-center justify-center gap-1 py-3 text-slate-400 transition-colors duration-150">
@@ -2011,24 +1746,6 @@
 
         currentPanel = panel;
         window.scrollTo(0, 0);
-      }
-
-      // ── Tasks tabs ──
-      function taskTab(tab) {
-        document.querySelectorAll(".task-tab-btn").forEach((b) => {
-          b.classList.remove("bg-brand-500/10", "text-brand-600");
-          b.classList.add("text-slate-500");
-        });
-        const active = document.getElementById("tasktab-" + tab);
-        active.classList.remove("text-slate-500");
-        active.classList.add("bg-brand-500/10", "text-brand-600");
-
-        document
-          .getElementById("tasklist-pending")
-          .classList.toggle("hidden", tab !== "pending");
-        document
-          .getElementById("tasklist-refused")
-          .classList.toggle("hidden", tab !== "refused");
       }
 
       // ── Forms ──

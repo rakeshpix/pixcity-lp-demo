@@ -1,0 +1,465 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>CityMaker - My Tasks</title>
+    <!-- Tailwind CSS CDN with Plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Google Fonts: Inter -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+      rel="stylesheet" />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+            colors: {
+              brand: {
+                dark: "#0f172a",
+                teal: "#0db291",
+                "teal-hover": "#099276",
+                bg: "#f8fafc",
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style data-purpose="custom-layout">
+      body {
+        background-color: #f8fafc;
+        font-family: "Inter", sans-serif;
+      }
+      /* Custom scrollbar for a cleaner look */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+      }
+      .sidebar-item-active {
+        background-color: rgba(13, 178, 145, 0.1);
+        border-right: 4px solid #0db291;
+        color: #0db291;
+      }
+    </style>
+  </head>
+  <body class="flex min-h-screen">
+    <!-- BEGIN: Sidebar -->
+    <aside
+      class="w-64 bg-white border-r border-gray-200 flex flex-col h-screen sticky top-0"
+      data-purpose="navigation-sidebar">
+      <!-- Logo Section -->
+      <div class="p-6 border-b border-gray-100">
+        <div class="flex items-center gap-2">
+          <div
+            class="w-8 h-8 bg-brand-dark rounded-md flex items-center justify-center">
+            <span class="text-white font-bold text-xs">CM</span>
+          </div>
+          <span class="font-bold text-xl tracking-tight text-brand-dark"
+            >CityMaker</span
+          >
+        </div>
+      </div>
+      <!-- Nav Links -->
+      <nav class="flex-1 py-4">
+        <ul class="space-y-1">
+          <li>
+            <a
+              class="flex items-center px-6 py-3 text-gray-500 hover:text-brand-teal transition-colors duration-200 group"
+              href="#">
+              <svg
+                class="w-5 h-5 mr-3 group-hover:text-brand-teal"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24">
+                <path
+                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"></path>
+              </svg>
+              <span class="font-medium">Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <!-- Active State for Tasks -->
+            <a
+              class="flex items-center px-6 py-3 sidebar-item-active group"
+              href="#">
+              <svg
+                class="w-5 h-5 mr-3"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24">
+                <path
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"></path>
+              </svg>
+              <span class="font-medium">Tasks</span>
+            </a>
+          </li>
+          <li>
+            <a
+              class="flex items-center px-6 py-3 text-gray-500 hover:text-brand-teal transition-colors duration-200 group"
+              href="#">
+              <svg
+                class="w-5 h-5 mr-3"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24">
+                <path
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"></path>
+              </svg>
+              <span class="font-medium">Community</span>
+            </a>
+          </li>
+          <li>
+            <a
+              class="flex items-center px-6 py-3 text-gray-500 hover:text-brand-teal transition-colors duration-200 group"
+              href="#">
+              <svg
+                class="w-5 h-5 mr-3"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24">
+                <path
+                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"></path>
+              </svg>
+              <span class="font-medium">Earnings</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!-- User Section -->
+      <div class="p-6 border-t border-gray-100">
+        <div class="flex items-center gap-3">
+          <img
+            alt="User Profile"
+            class="w-10 h-10 rounded-full border border-gray-200"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoYkZwWQJ_vkg5af_T-GFgCP2e9E0to0rEbXzieg1Q03kzvFXbmqjo2H8lfwxlJlwZRXSYBHUyKykXG9ycdn1V4JSGAjxMthq60y-qRgaaKLguqyIx2vPQ3CCIdTY2BYlqc3sPdtyoQHFelS6x35Ds_yRbq3QOhVQhDvKpsDyJtX59g1qqdquBiO7LaheSC_kLPvSMq4GqP2lqo1eV-K20RnPZZWJ8uqLAqZKyISJ-OF_wN4WvJ0PbUCjXVPWswW4T17fwd9IY9wU" />
+          <div class="overflow-hidden">
+            <p class="text-sm font-semibold text-brand-dark truncate">
+              Alex Rivard
+            </p>
+            <p class="text-xs text-gray-500 truncate">Paris, France</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <!-- END: Sidebar -->
+    <!-- BEGIN: Main Content Area -->
+    <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+      <!-- Top Header -->
+      <header
+        class="bg-white border-b border-gray-200 px-8 py-6 flex justify-between items-center"
+        data-purpose="main-header">
+        <h1 class="text-2xl font-bold text-brand-dark">My Tasks</h1>
+        <button
+          class="bg-brand-teal hover:bg-brand-teal-hover text-white px-4 py-2 rounded-lg font-medium text-sm transition-all">
+          Browse New Missions
+        </button>
+      </header>
+      <!-- Content Container -->
+      <div class="p-8 max-w-6xl w-full mx-auto">
+        <!-- Tab Navigation -->
+        <div
+          class="border-b border-gray-200 mb-8"
+          data-purpose="tab-navigation">
+          <nav aria-label="Tabs" class="-mb-px flex space-x-8">
+            <button
+              class="border-brand-teal text-brand-teal whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-all"
+              id="pending-tab-btn"
+              onclick="switchTab('pending')">
+              Pending
+              <span
+                class="ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium bg-brand-teal bg-opacity-10 text-brand-teal"
+                >3</span
+              >
+            </button>
+            <button
+              class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-all"
+              id="refused-tab-btn"
+              onclick="switchTab('refused')">
+              Refused
+              <span
+                class="ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600"
+                >1</span
+              >
+            </button>
+          </nav>
+        </div>
+        <!-- Tab Content: Pending Tasks -->
+        <section
+          class="space-y-6"
+          data-purpose="pending-tasks-list"
+          id="pending-tab-content">
+          <!-- Task Card 1 -->
+          <article
+            class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+            <div class="flex flex-col md:flex-row">
+              <div class="md:w-48 h-32 md:h-auto bg-gray-200 relative">
+                <img
+                  alt="Boulangerie Local"
+                  class="w-full h-full object-cover"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlm7q8aQYz2OuZDfg2vpIE89pC-NiFSJ4NbZtItPeg8CgCsGvx19NiLbs2U9o3hF5ND2YrfSZ6ABUJuxa2rlJrL6mpwypVlfHzcz-Mzmwcj26IBokAaw_kfXtjcXAi5q54M5UUCL3wWVNOVpPiQ5fftvX75SZk8GzY7Me77-z69dwpyTPmL20hQgqC4AOX3eAV2nCfi--J7HBkswSs0wvxHVHr1qG11iW1CxC3ek27WRygYCC1n54k5IEmq7nZ5BmK5lHxSQ_oJgQ" />
+                <div
+                  class="absolute top-2 left-2 bg-brand-dark bg-opacity-70 text-white text-[10px] px-2 py-1 rounded-md uppercase font-bold tracking-wider">
+                  Content
+                </div>
+              </div>
+              <div class="flex-1 p-6 flex flex-col justify-between">
+                <div>
+                  <div class="flex justify-between items-start mb-2">
+                    <h3 class="text-lg font-bold text-brand-dark">
+                      Social Media Coverage: Artisan Bakery
+                    </h3>
+                    <span class="text-brand-teal font-bold text-lg">€120</span>
+                  </div>
+                  <p class="text-gray-500 text-sm mb-4 line-clamp-2">
+                    Create 3 high-quality Instagram reels and a carousel post
+                    showcasing the morning preparation at "La Fournée d'Or".
+                  </p>
+                  <div class="flex flex-wrap gap-4 text-xs text-gray-400">
+                    <div class="flex items-center gap-1">
+                      <svg
+                        class="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24">
+                        <path
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"></path>
+                        <path
+                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"></path>
+                      </svg>
+                      <span>Le Marais, Paris</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                      <svg
+                        class="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24">
+                        <path
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"></path>
+                      </svg>
+                      <span>Deadline: Oct 24, 2023</span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="mt-6 flex items-center justify-between border-t border-gray-50 pt-4">
+                  <div class="flex items-center gap-2">
+                    <div
+                      class="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+                    <span class="text-xs font-medium text-gray-600"
+                      >Pending Review by Client</span
+                    >
+                  </div>
+                  <button
+                    class="text-brand-teal font-semibold text-sm hover:underline">
+                    View Submission
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+          <!-- Task Card 2 -->
+          <article
+            class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+            <div class="flex flex-col md:flex-row">
+              <div class="md:w-48 h-32 md:h-auto bg-gray-200 relative">
+                <img
+                  alt="Local Boutique"
+                  class="w-full h-full object-cover"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoMb_8ILowT7vkeuo6uOoeTjKvyAidI1vwZje_zD5OMJu7UZhvEV0pYihfLCkJsxOMuiIg1Sb_jpQWs5_6xWPloVNpcQne6Gcq8YXv7eaNTfEOXqKFPHY6AEwAMUzFq6snmAJoZouAoINHkzOnKmHGHpkkieMespD5saLtgML-Uj3MP9ojXcUWZ_u6UG79e0gEttxE1BV3w-Tm6wRJr7v3bok0KUr1ZFYAiGybd-1gGX0EoskNR0rHtV3lXBgqjaaA9lHxK1fja1I" />
+                <div
+                  class="absolute top-2 left-2 bg-brand-dark bg-opacity-70 text-white text-[10px] px-2 py-1 rounded-md uppercase font-bold tracking-wider">
+                  Photo
+                </div>
+              </div>
+              <div class="flex-1 p-6 flex flex-col justify-between">
+                <div>
+                  <div class="flex justify-between items-start mb-2">
+                    <h3 class="text-lg font-bold text-brand-dark">
+                      Product Photography: Concept Store
+                    </h3>
+                    <span class="text-brand-teal font-bold text-lg">€85</span>
+                  </div>
+                  <p class="text-gray-500 text-sm mb-4 line-clamp-2">
+                    10 high-resolution photos of the new Fall collection window
+                    display and interior layout.
+                  </p>
+                  <div class="flex flex-wrap gap-4 text-xs text-gray-400">
+                    <div class="flex items-center gap-1">
+                      <svg
+                        class="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24">
+                        <path
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"></path>
+                        <path
+                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"></path>
+                      </svg>
+                      <span>Saint-Germain, Paris</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                      <svg
+                        class="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24">
+                        <path
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"></path>
+                      </svg>
+                      <span>Deadline: Oct 28, 2023</span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="mt-6 flex items-center justify-between border-t border-gray-50 pt-4">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 bg-blue-400 rounded-full"></div>
+                    <span class="text-xs font-medium text-gray-600"
+                      >Draft - Ready to Upload</span
+                    >
+                  </div>
+                  <button
+                    class="bg-gray-100 text-gray-700 font-semibold text-sm px-4 py-1.5 rounded-md hover:bg-gray-200 transition-colors">
+                    Resume Task
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+        <!-- Tab Content: Refused Tasks (Hidden by default) -->
+        <section
+          class="space-y-6 hidden"
+          data-purpose="refused-tasks-list"
+          id="refused-tab-content">
+          <article
+            class="bg-white rounded-xl shadow-sm border border-red-100 overflow-hidden opacity-90">
+            <div class="flex flex-col md:flex-row">
+              <div
+                class="md:w-48 h-32 md:h-auto bg-gray-100 grayscale relative">
+                <img
+                  alt="Closed Mission"
+                  class="w-full h-full object-cover"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5Sgy2VSQWHVlhFOccpHVp3aEhNP194dqZzRQwPyDzM-HMYYR1jlmHcPgsZZ7XmoKm2oYetfEDIHdBY22N0c7pNv_DcoRFymvaYL4gnW9XEJiZ5xpQ3VV0YEFTBZlEo_ulLRXQjbmIzQJ1JLyhezfT9qP3pZnyg8HH_0t3n9GOpydfQerDJzoABCvljPZfKiUkDNDqWPNWeVFhczo8eqefBeadjdjKgl5tj_RC9vTiucIpEsz83M7Z4ofIONYXk5O0U0XPLLCaCEw" />
+                <div class="absolute inset-0 bg-red-900 bg-opacity-10"></div>
+              </div>
+              <div class="flex-1 p-6">
+                <div class="flex justify-between items-start mb-2">
+                  <h3 class="text-lg font-bold text-gray-500 line-through">
+                    Brand Story: Eco-Friendly Cafe
+                  </h3>
+                  <span class="text-gray-400 font-bold text-lg">€150</span>
+                </div>
+                <!-- Rejection Reason Note -->
+                <div
+                  class="mt-4 p-4 bg-red-50 border-l-4 border-red-400 rounded-r-md">
+                  <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                      <svg
+                        class="h-5 w-5 text-red-400"
+                        fill="currentColor"
+                        viewbox="0 0 20 20">
+                        <path
+                          clip-rule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                          fill-rule="evenodd"></path>
+                      </svg>
+                    </div>
+                    <div class="ml-3">
+                      <p class="text-sm font-semibold text-red-800">
+                        Application Refused
+                      </p>
+                      <p class="text-xs text-red-700 mt-1 italic">
+                        "Thank you for your interest. However, we are looking
+                        for a creator with more specific experience in the
+                        specialty coffee niche at this time."
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-6 flex justify-end">
+                  <button
+                    class="text-gray-400 text-xs font-medium hover:text-gray-600 transition-colors">
+                    Archive Mission
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+      </div>
+    </main>
+    <!-- END: Main Content Area -->
+    <!-- BEGIN: Interactive Scripts -->
+    <script data-purpose="tab-switcher">
+      function switchTab(tabName) {
+        const pendingContent = document.getElementById("pending-tab-content");
+        const refusedContent = document.getElementById("refused-tab-content");
+        const pendingBtn = document.getElementById("pending-tab-btn");
+        const refusedBtn = document.getElementById("refused-tab-btn");
+
+        if (tabName === "pending") {
+          pendingContent.classList.remove("hidden");
+          refusedContent.classList.add("hidden");
+
+          // Update Button Styles
+          pendingBtn.classList.add("border-brand-teal", "text-brand-teal");
+          pendingBtn.classList.remove("border-transparent", "text-gray-500");
+
+          refusedBtn.classList.remove("border-brand-teal", "text-brand-teal");
+          refusedBtn.classList.add("border-transparent", "text-gray-500");
+        } else {
+          pendingContent.classList.add("hidden");
+          refusedContent.classList.remove("hidden");
+
+          // Update Button Styles
+          refusedBtn.classList.add("border-brand-teal", "text-brand-teal");
+          refusedBtn.classList.remove("border-transparent", "text-gray-500");
+
+          pendingBtn.classList.remove("border-brand-teal", "text-brand-teal");
+          pendingBtn.classList.add("border-transparent", "text-gray-500");
+        }
+      }
+    </script>
+    <!-- END: Interactive Scripts -->
+  </body>
+</html>
