@@ -1038,6 +1038,12 @@
                 Pending <span class="text-xs font-bold">(3)</span>
               </button>
               <button
+                onclick="taskTab('accepted')"
+                id="tasktab-accepted"
+                class="task-tab-btn px-5 py-2 rounded-lg text-sm font-semibold text-slate-500 hover:text-dark-800">
+                Accepted <span class="text-xs font-bold">(2)</span>
+              </button>
+              <button
                 onclick="taskTab('refused')"
                 id="tasktab-refused"
                 class="task-tab-btn px-5 py-2 rounded-lg text-sm font-semibold text-slate-500 hover:text-dark-800">
@@ -1144,6 +1150,67 @@
               </div>
             </div>
 
+            <!-- Accepted tasks -->
+            <div id="tasklist-accepted" class="hidden space-y-3">
+              <!-- Accepted 1 -->
+              <div class="task-tile bg-white rounded-2xl shadow-card p-4">
+                <div class="flex items-center gap-3 mb-3">
+                  <div
+                    class="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0 text-lg">
+                    🍽️
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="font-semibold text-dark-800 text-sm truncate">
+                      Le Petit Bistro — Social Content
+                    </p>
+                    <p class="text-slate-400 text-xs truncate mt-0.5">
+                      Photo Shooting · Nanterre, 92000
+                    </p>
+                  </div>
+                  <div class="text-right flex-shrink-0">
+                    <p class="text-sm font-bold text-dark-800">€150</p>
+                    <p class="text-xs text-slate-400">Due May 15</p>
+                  </div>
+                </div>
+                <div class="flex gap-2 pt-3 border-t border-slate-100">
+                  <button
+                    onclick="openTaskDetail('bistro')"
+                    class="flex-1 btn-brand text-white text-xs font-semibold py-2 rounded-lg shadow-brand-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40">
+                    Continue
+                  </button>
+                </div>
+              </div>
+
+              <!-- Accepted 2 -->
+              <div class="task-tile bg-white rounded-2xl shadow-card p-4">
+                <div class="flex items-center gap-3 mb-3">
+                  <div
+                    class="w-11 h-11 rounded-xl bg-violet-50 flex items-center justify-center flex-shrink-0 text-lg">
+                    ⭐
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="font-semibold text-dark-800 text-sm truncate">
+                      Boutique Mode — Influencer Campaign
+                    </p>
+                    <p class="text-slate-400 text-xs truncate mt-0.5">
+                      Influencer · Puteaux, 92800
+                    </p>
+                  </div>
+                  <div class="text-right flex-shrink-0">
+                    <p class="text-sm font-bold text-dark-800">€200</p>
+                    <p class="text-xs text-slate-400">Due May 20</p>
+                  </div>
+                </div>
+                <div class="flex gap-2 pt-3 border-t border-slate-100">
+                  <button
+                    onclick="openTaskDetail('boutique')"
+                    class="flex-1 btn-brand text-white text-xs font-semibold py-2 rounded-lg shadow-brand-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40">
+                    Continue
+                  </button>
+                </div>
+              </div>
+            </div>
+
             <!-- Refused tasks -->
             <div id="tasklist-refused" class="hidden space-y-3">
               <!-- Refused 1 -->
@@ -1194,6 +1261,146 @@
                 </div>
               </div>
             </div>
+          </div>
+
+          <!-- ── TASK DETAIL ── -->
+          <div
+            id="app-task-detail"
+            class="app-panel hidden p-5 lg:p-8 max-w-2xl mx-auto w-full fade-in">
+            <button
+              onclick="appNav('tasks')"
+              class="flex items-center gap-1.5 text-slate-500 hover:text-brand-600 text-sm font-medium mb-4 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40 rounded-lg">
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 19l-7-7 7-7" />
+              </svg>
+              Back to Tasks
+            </button>
+
+            <!-- Task header -->
+            <div
+              class="bg-white rounded-2xl shadow-card p-5 mb-6 flex items-start gap-4">
+              <div
+                id="task-detail-icon"
+                class="w-14 h-14 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0 text-2xl overflow-hidden">
+                🍽️
+              </div>
+              <div class="flex-1 min-w-0">
+                <h2
+                  id="task-detail-title"
+                  class="font-bold text-dark-800 text-base mb-1">
+                  Le Petit Bistro — Social Content
+                </h2>
+                <p
+                  id="task-detail-meta"
+                  class="text-slate-500 text-xs mb-2">
+                  Photo Shooting · Nanterre, 92000 · Due May 15
+                </p>
+                <span
+                  id="task-detail-amount"
+                  class="inline-block text-sm font-bold text-brand-600"
+                  >€150</span
+                >
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div class="bg-white rounded-2xl shadow-card p-5 sm:p-6 mb-6">
+              <h3
+                class="font-bold text-dark-800 text-xs uppercase tracking-widest mb-3">
+                Task Description
+              </h3>
+              <p
+                id="task-detail-description"
+                class="text-slate-600 text-sm leading-relaxed">
+                Visit Le Petit Bistro and capture 8–10 high-quality photos of
+                the dining area, signature dishes, and ambiance for their
+                social media channels. Highlight the restaurant's cozy
+                atmosphere and seasonal menu items, and aim for natural
+                lighting during lunch service.
+              </p>
+            </div>
+
+            <form onsubmit="submitTask(event)" class="space-y-6">
+              <!-- Content -->
+              <div class="bg-white rounded-2xl shadow-card p-5 sm:p-6">
+                <h3
+                  class="font-bold text-dark-800 text-xs uppercase tracking-widest mb-3">
+                  Your Content
+                </h3>
+                <textarea
+                  rows="5"
+                  placeholder="Write captions, descriptions, or content text here..."
+                  class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm text-dark-800 bg-slate-50 placeholder:text-slate-400 resize-none focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-400 transition-colors"></textarea>
+              </div>
+
+              <!-- File upload -->
+              <div class="bg-white rounded-2xl shadow-card p-5 sm:p-6">
+                <h3
+                  class="font-bold text-dark-800 text-xs uppercase tracking-widest mb-3">
+                  Upload Files
+                </h3>
+                <label
+                  for="task-file-upload"
+                  class="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-slate-200 rounded-xl py-8 px-4 cursor-pointer hover:border-brand-400 hover:bg-brand-50/40 active:bg-brand-50/60 transition-colors focus-within:ring-2 focus-within:ring-brand-500/40">
+                  <div
+                    class="w-10 h-10 rounded-full bg-brand-500/10 flex items-center justify-center">
+                    <svg
+                      class="w-5 h-5 text-brand-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M12 12v9m0-9l-3 3m3-3l3 3" />
+                    </svg>
+                  </div>
+                  <p class="text-sm font-semibold text-dark-800">
+                    Click to upload or drag and drop
+                  </p>
+                  <p class="text-xs text-slate-400">
+                    Photos, videos, or documents · max 50MB
+                  </p>
+                  <input
+                    type="file"
+                    id="task-file-upload"
+                    multiple
+                    class="hidden"
+                    onchange="handleTaskFiles(this)" />
+                </label>
+                <div id="task-file-list" class="mt-3 space-y-2"></div>
+              </div>
+
+              <!-- Notes -->
+              <div class="bg-white rounded-2xl shadow-card p-5 sm:p-6">
+                <h3
+                  class="font-bold text-dark-800 text-xs uppercase tracking-widest mb-3">
+                  Additional Notes
+                  <span class="text-slate-400 font-medium normal-case"
+                    >(optional)</span
+                  >
+                </h3>
+                <textarea
+                  rows="3"
+                  placeholder="Any notes for the Pix.City team (optional)"
+                  class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm text-dark-800 bg-slate-50 placeholder:text-slate-400 resize-none focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-400 transition-colors"></textarea>
+              </div>
+
+              <button
+                type="submit"
+                class="btn-brand w-full text-white font-semibold py-3.5 rounded-xl text-sm shadow-brand-md mb-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40 focus-visible:ring-offset-2">
+                Submit Task
+              </button>
+            </form>
           </div>
 
           <!-- ── EARNINGS ── -->
@@ -1967,6 +2174,51 @@
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════
+     TASK SUBMIT MODAL
+═══════════════════════════════════════════════════════════ -->
+    <div
+      id="task-submit-modal"
+      class="fixed inset-0 z-50 hidden items-center justify-center p-5"
+      style="background: rgba(15, 22, 35, 0.7); backdrop-filter: blur(6px)">
+      <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 slide-up">
+        <div
+          class="w-12 h-12 rounded-full bg-brand-500/10 flex items-center justify-center mx-auto mb-4">
+          <svg
+            class="w-6 h-6 text-brand-500"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h3 class="text-center font-bold text-dark-800 text-lg mb-2">
+          Submit Task?
+        </h3>
+        <p class="text-center text-slate-500 text-sm mb-6 leading-relaxed">
+          Hi, We believe you reviewed the task and submitting it!. Once you
+          submit your successful task will move to 'My Earnings' section any
+          you can request for the payment.
+        </p>
+        <div class="space-y-3">
+          <button
+            onclick="confirmTaskSubmit()"
+            class="btn-brand w-full text-white font-semibold py-3 rounded-xl text-sm shadow-brand-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40 focus-visible:ring-offset-2">
+            Yes, Submit
+          </button>
+          <button
+            onclick="closeTaskSubmitModal()"
+            class="w-full text-slate-500 font-medium py-3 rounded-xl text-sm border border-slate-200 hover:bg-slate-50 active:bg-slate-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40">
+            No, Go Back
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
      JAVASCRIPT
 ═══════════════════════════════════════════════════════════ -->
     <script>
@@ -2023,13 +2275,109 @@
         active.classList.remove("text-slate-500");
         active.classList.add("bg-brand-500/10", "text-brand-600");
 
-        document
-          .getElementById("tasklist-pending")
-          .classList.toggle("hidden", tab !== "pending");
-        document
-          .getElementById("tasklist-refused")
-          .classList.toggle("hidden", tab !== "refused");
+        ["pending", "accepted", "refused"].forEach((t) => {
+          document
+            .getElementById("tasklist-" + t)
+            .classList.toggle("hidden", t !== tab);
+        });
       }
+
+      // ── Task detail (Continue flow) ──
+      const taskDetails = {
+        bistro: {
+          icon: "🍽️",
+          iconBg: "bg-emerald-50",
+          title: "Le Petit Bistro — Social Content",
+          meta: "Photo Shooting · Nanterre, 92000 · Due May 15",
+          amount: "€150",
+          description:
+            "Visit Le Petit Bistro and capture 8–10 high-quality photos of the dining area, signature dishes, and ambiance for their social media channels. Highlight the restaurant's cozy atmosphere and seasonal menu items, and aim for natural lighting during lunch service.",
+        },
+        boutique: {
+          icon: "⭐",
+          iconBg: "bg-violet-50",
+          title: "Boutique Mode — Influencer Campaign",
+          meta: "Influencer · Puteaux, 92800 · Due May 20",
+          amount: "€200",
+          description:
+            "Create 2 Instagram Reels and 4 feed posts featuring Boutique Mode's new summer collection. Visit the store, try on at least 3 outfits, and produce engaging lifestyle content. Tag @boutiquemode and use the hashtag #BoutiqueModeSummer.",
+        },
+      };
+
+      function openTaskDetail(key) {
+        const t = taskDetails[key];
+        const icon = document.getElementById("task-detail-icon");
+        icon.className =
+          "w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 text-2xl overflow-hidden " +
+          t.iconBg;
+        icon.textContent = t.icon;
+        document.getElementById("task-detail-title").textContent = t.title;
+        document.getElementById("task-detail-meta").textContent = t.meta;
+        document.getElementById("task-detail-amount").textContent = t.amount;
+        document.getElementById("task-detail-description").textContent =
+          t.description;
+        document.getElementById("task-file-list").innerHTML = "";
+
+        document
+          .querySelectorAll(".app-panel")
+          .forEach((p) => p.classList.add("hidden"));
+        document.getElementById("app-task-detail").classList.remove("hidden");
+        window.scrollTo(0, 0);
+      }
+
+      // ── Task file upload ──
+      function handleTaskFiles(input) {
+        const list = document.getElementById("task-file-list");
+        list.innerHTML = "";
+        Array.from(input.files || []).forEach((file) => {
+          const item = document.createElement("div");
+          item.className =
+            "flex items-center gap-2 bg-slate-50 rounded-lg px-3 py-2 text-xs text-slate-600";
+
+          const icon = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "svg",
+          );
+          icon.setAttribute("class", "w-4 h-4 text-brand-500 flex-shrink-0");
+          icon.setAttribute("fill", "none");
+          icon.setAttribute("viewBox", "0 0 24 24");
+          icon.setAttribute("stroke", "currentColor");
+          icon.innerHTML =
+            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />';
+
+          const name = document.createElement("span");
+          name.className = "truncate flex-1";
+          name.textContent = file.name;
+
+          item.appendChild(icon);
+          item.appendChild(name);
+          list.appendChild(item);
+        });
+      }
+
+      // ── Task submit modal ──
+      function submitTask(e) {
+        e.preventDefault();
+        const modal = document.getElementById("task-submit-modal");
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+      }
+      function closeTaskSubmitModal() {
+        const modal = document.getElementById("task-submit-modal");
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+      }
+      function confirmTaskSubmit() {
+        closeTaskSubmitModal();
+        appNav("earnings");
+      }
+
+      // Close modal on backdrop click
+      document
+        .getElementById("task-submit-modal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) closeTaskSubmitModal();
+        });
 
       // ── Forms ──
       function handleRegister(e) {
