@@ -148,62 +148,56 @@
       border-radius: 2px;
     }
     .hero-title {
-      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      font-size: clamp(1.4rem, 3vw, 1.9rem);
       font-weight: 700;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
       color: var(--neutral);
     }
     .hero-client { color: var(--primary); }
-
-    /* Compact scrollable meta chip strip */
-    .hero-chip-row {
+    .hero-meta-row {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      padding-top: 14px;
+      flex-wrap: wrap;
+      gap: 12px 26px;
+      padding-top: 16px;
       border-top: 1px solid var(--border);
-      overflow-x: auto;
-      scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
+      align-items: flex-end;
     }
-    .hero-chip-row::-webkit-scrollbar { display: none; }
-    .hero-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      flex-shrink: 0;
-      white-space: nowrap;
-      padding: 5px 12px;
-      border-radius: 99px;
-      border: 1px solid var(--border);
-      background: var(--bg);
-      font-size: 0.75rem;
+    .hero-meta-item { display: flex; flex-direction: column; gap: 3px; }
+    .hero-meta-label {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .hero-meta-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.85rem;
       font-weight: 600;
       color: var(--neutral);
     }
-    .hero-chip i { font-size: 0.72rem; color: var(--primary); }
-    .hero-chip.due {
-      background: var(--danger-light);
-      border-color: rgba(239,68,68,0.25);
-      color: var(--danger);
+    .hero-meta-value.danger { color: var(--danger); }
+    .hero-pm {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-left: 24px;
+      border-left: 1px solid var(--border);
     }
-    .hero-chip.due i { color: var(--danger); }
-    .hero-chip.pm {
-      background: var(--primary-light);
-      border-color: var(--primary-mid);
-      padding-left: 5px;
-    }
-    .pm-avatar-mini {
-      width: 19px; height: 19px;
-      border-radius: 50%;
+    .pm-avatar {
+      width: 34px; height: 34px;
+      border-radius: 8px;
       background: var(--primary);
-      color: white;
       display: flex; align-items: center; justify-content: center;
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.6rem;
       font-weight: 700;
+      font-size: 0.8rem;
+      color: white;
       flex-shrink: 0;
     }
+    .pm-name { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 600; color: var(--neutral); }
+    .pm-role  { font-size: 0.63rem; color: var(--muted); }
 
     /* ─── PAGE BODY ─── */
     .page-body {
@@ -817,6 +811,7 @@
     @media (max-width: 800px) {
       .content-grid { grid-template-columns: 1fr; }
       .content-sidebar { position: static; order: -1; }
+      .hero-pm { display: none; }
     }
     @media (max-width: 560px) {
       .metrics-col-header,
@@ -825,14 +820,18 @@
       }
       .metrics-col-header > *:nth-child(2),
       .metric-row > *:nth-child(2) { display: none; }
-      .masthead { padding: 0 14px; gap: 10px; height: 48px; }
+      .masthead { padding: 0 14px; gap: 10px; }
       .masthead-tag { display: none; }
-      .page-body { padding: 14px 14px 48px; }
-      .hero { padding: 14px 14px 12px; }
-      .hero-eyebrow { margin-bottom: 6px; }
-      .hero-title { margin-bottom: 10px; }
-      .hero-chip-row { padding-top: 10px; }
-      .hero-chip.pm { display: none; }
+      .page-body { padding: 16px 14px 48px; }
+      .hero { padding: 16px 14px 14px; }
+      .hero-eyebrow { margin-bottom: 8px; }
+      .hero-title { margin-bottom: 12px; }
+      .hero-meta-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px 16px;
+        padding-top: 12px;
+      }
     }
     @media print {
       .masthead, .btn-print, .todo-add-form, .btn-add-todo, .validate-section { display: none !important; }
@@ -861,14 +860,38 @@
   <div class="hero-inner">
     <div class="hero-eyebrow">Paid Ad Challenges · April 2026</div>
     <h1 class="hero-title">Performance Report for<br><span class="hero-client">Marie Dupont</span></h1>
-    <div class="hero-chip-row">
-      <span class="hero-chip due"><i class="bi bi-calendar-event"></i> Due 21 Apr 2026</span>
-      <span class="hero-chip"><i class="bi bi-bullseye"></i> Paid Ad Challenges</span>
-      <span class="hero-chip"><i class="bi bi-hash"></i> Mission #1239</span>
-      <span class="hero-chip"><i class="bi bi-building"></i> Acme Corp</span>
-      <span class="hero-chip"><i class="bi bi-person"></i> Marie</span>
-      <span class="hero-chip"><i class="bi bi-translate"></i> FR</span>
-      <span class="hero-chip pm"><span class="pm-avatar-mini">JD</span> Jean Dubois</span>
+    <div class="hero-meta-row">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Mission</span>
+        <span class="hero-meta-value">#1239</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Company</span>
+        <span class="hero-meta-value">Acme Corp</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Franchise</span>
+        <span class="hero-meta-value">Marie</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Service</span>
+        <span class="hero-meta-value">Paid Ad Challenges</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Language</span>
+        <span class="hero-meta-value">FR</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Due Date</span>
+        <span class="hero-meta-value danger">21 Apr 2026</span>
+      </div>
+      <div class="hero-pm">
+        <div class="pm-avatar">JD</div>
+        <div>
+          <div class="pm-name">Jean Dubois</div>
+          <div class="pm-role">Project Manager</div>
+        </div>
+      </div>
     </div>
   </div>
 </section>

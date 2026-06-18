@@ -8,9 +8,9 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <style>
     :root {
-      --primary:        #2069f7;
-      --primary-light:  rgba(32,105,247,0.08);
-      --primary-mid:    rgba(32,105,247,0.15);
+      --primary:        #2269F8;
+      --primary-light:  rgba(34,105,248,0.08);
+      --primary-mid:    rgba(34,105,248,0.15);
       --secondary:      #10B981;
       --secondary-light:rgba(16,185,129,0.1);
       --tertiary:       #F5E9DA;
@@ -42,8 +42,8 @@
 
     /* ─── MASTHEAD ─── */
     .masthead {
-      background: var(--white);
-      color: var(--neutral);
+      background: var(--neutral);
+      color: white;
       padding: 0 24px;
       height: 54px;
       display: flex;
@@ -52,31 +52,31 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      border-bottom: 1px solid #232323;
+      border-bottom: 3px solid var(--primary);
     }
     .logo {
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
       font-size: 1.05rem;
       letter-spacing: -0.03em;
-      color: var(--neutral);
+      color: white;
       text-decoration: none;
       flex-shrink: 0;
     }
     .logo-dot { color: var(--primary); }
-    .masthead-sep { width: 1px; height: 18px; background: var(--border); }
+    .masthead-sep { width: 1px; height: 18px; background: rgba(255,255,255,0.15); }
     .masthead-tag {
       font-size: 0.68rem;
       font-weight: 600;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--muted);
+      color: rgba(255,255,255,0.45);
     }
     .masthead-mission {
       font-family: 'Space Grotesk', sans-serif;
       font-size: 0.83rem;
       font-weight: 600;
-      color: var(--neutral);
+      color: white;
     }
     .masthead-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
     .status-pill {
@@ -86,7 +86,7 @@
       text-transform: uppercase;
       padding: 3px 10px;
       border-radius: 99px;
-      background: var(--primary);
+      background: var(--secondary);
       color: white;
     }
     .btn-print {
@@ -94,33 +94,41 @@
       font-weight: 600;
       padding: 5px 12px;
       border-radius: 6px;
-      border: 1px solid var(--border);
-      background: var(--white);
-      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.6);
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 5px;
       transition: all 0.15s;
     }
-    .btn-print:hover { background: var(--border); color: var(--neutral); }
+    .btn-print:hover { background: rgba(255,255,255,0.14); color: white; }
 
     /* ─── HERO ─── */
     .hero {
-      background: var(--white);
-      color: var(--neutral);
-      padding: 22px 24px 20px;
+      background: var(--neutral);
+      color: white;
+      padding: 40px 24px 34px;
       position: relative;
       overflow: hidden;
-      border-bottom: 1px solid #232323;
     }
     .hero::before {
       content: '';
       position: absolute;
-      top: -120px; right: -80px;
-      width: 280px; height: 280px;
+      top: -100px; right: -100px;
+      width: 360px; height: 360px;
       border-radius: 50%;
-      background: radial-gradient(circle, var(--primary-mid) 0%, transparent 68%);
+      background: radial-gradient(circle, rgba(34,105,248,0.22) 0%, transparent 68%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -50px; left: 18%;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(16,185,129,0.14) 0%, transparent 68%);
       pointer-events: none;
     }
     .hero-inner {
@@ -130,12 +138,12 @@
       z-index: 1;
     }
     .hero-eyebrow {
-      font-size: 0.66rem;
+      font-size: 0.68rem;
       font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--primary);
-      margin-bottom: 10px;
+      margin-bottom: 14px;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -148,62 +156,55 @@
       border-radius: 2px;
     }
     .hero-title {
-      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      font-size: clamp(1.75rem, 4vw, 2.6rem);
       font-weight: 700;
-      margin-bottom: 14px;
-      color: var(--neutral);
+      margin-bottom: 24px;
     }
     .hero-client { color: var(--primary); }
-
-    /* Compact scrollable meta chip strip */
-    .hero-chip-row {
+    .hero-meta-row {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border);
-      overflow-x: auto;
-      scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
+      flex-wrap: wrap;
+      gap: 14px 28px;
+      padding-top: 22px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      align-items: flex-end;
     }
-    .hero-chip-row::-webkit-scrollbar { display: none; }
-    .hero-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      flex-shrink: 0;
-      white-space: nowrap;
-      padding: 5px 12px;
-      border-radius: 99px;
-      border: 1px solid var(--border);
-      background: var(--bg);
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--neutral);
-    }
-    .hero-chip i { font-size: 0.72rem; color: var(--primary); }
-    .hero-chip.due {
-      background: var(--danger-light);
-      border-color: rgba(239,68,68,0.25);
-      color: var(--danger);
-    }
-    .hero-chip.due i { color: var(--danger); }
-    .hero-chip.pm {
-      background: var(--primary-light);
-      border-color: var(--primary-mid);
-      padding-left: 5px;
-    }
-    .pm-avatar-mini {
-      width: 19px; height: 19px;
-      border-radius: 50%;
-      background: var(--primary);
-      color: white;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Space Grotesk', sans-serif;
+    .hero-meta-item { display: flex; flex-direction: column; gap: 3px; }
+    .hero-meta-label {
       font-size: 0.6rem;
       font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.38);
+    }
+    .hero-meta-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: white;
+    }
+    .hero-meta-value.danger { color: #FCA5A5; }
+    .hero-pm {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-left: 26px;
+      border-left: 1px solid rgba(255,255,255,0.1);
+    }
+    .pm-avatar {
+      width: 38px; height: 38px;
+      border-radius: 9px;
+      background: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: white;
       flex-shrink: 0;
     }
+    .pm-name { font-family: 'Space Grotesk', sans-serif; font-size: 0.83rem; font-weight: 600; color: white; }
+    .pm-role  { font-size: 0.65rem; color: rgba(255,255,255,0.38); }
 
     /* ─── PAGE BODY ─── */
     .page-body {
@@ -817,6 +818,7 @@
     @media (max-width: 800px) {
       .content-grid { grid-template-columns: 1fr; }
       .content-sidebar { position: static; order: -1; }
+      .hero-pm { display: none; }
     }
     @media (max-width: 560px) {
       .metrics-col-header,
@@ -825,14 +827,9 @@
       }
       .metrics-col-header > *:nth-child(2),
       .metric-row > *:nth-child(2) { display: none; }
-      .masthead { padding: 0 14px; gap: 10px; height: 48px; }
-      .masthead-tag { display: none; }
-      .page-body { padding: 14px 14px 48px; }
-      .hero { padding: 14px 14px 12px; }
-      .hero-eyebrow { margin-bottom: 6px; }
-      .hero-title { margin-bottom: 10px; }
-      .hero-chip-row { padding-top: 10px; }
-      .hero-chip.pm { display: none; }
+      .masthead { padding: 0 14px; }
+      .page-body { padding: 16px 14px 48px; }
+      .hero { padding: 26px 14px 22px; }
     }
     @media print {
       .masthead, .btn-print, .todo-add-form, .btn-add-todo, .validate-section { display: none !important; }
@@ -861,14 +858,38 @@
   <div class="hero-inner">
     <div class="hero-eyebrow">Paid Ad Challenges · April 2026</div>
     <h1 class="hero-title">Performance Report for<br><span class="hero-client">Marie Dupont</span></h1>
-    <div class="hero-chip-row">
-      <span class="hero-chip due"><i class="bi bi-calendar-event"></i> Due 21 Apr 2026</span>
-      <span class="hero-chip"><i class="bi bi-bullseye"></i> Paid Ad Challenges</span>
-      <span class="hero-chip"><i class="bi bi-hash"></i> Mission #1239</span>
-      <span class="hero-chip"><i class="bi bi-building"></i> Acme Corp</span>
-      <span class="hero-chip"><i class="bi bi-person"></i> Marie</span>
-      <span class="hero-chip"><i class="bi bi-translate"></i> FR</span>
-      <span class="hero-chip pm"><span class="pm-avatar-mini">JD</span> Jean Dubois</span>
+    <div class="hero-meta-row">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Mission</span>
+        <span class="hero-meta-value">#1239</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Company</span>
+        <span class="hero-meta-value">Acme Corp</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Franchise</span>
+        <span class="hero-meta-value">Marie</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Service</span>
+        <span class="hero-meta-value">Paid Ad Challenges</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Language</span>
+        <span class="hero-meta-value">FR</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Due Date</span>
+        <span class="hero-meta-value danger">21 Apr 2026</span>
+      </div>
+      <div class="hero-pm">
+        <div class="pm-avatar">JD</div>
+        <div>
+          <div class="pm-name">Jean Dubois</div>
+          <div class="pm-role">Project Manager</div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
