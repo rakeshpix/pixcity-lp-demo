@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mission — Status &amp; Schedule</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet" />
+    <style>
+      /* Match the original screen's look */
+      body {
+        background: #fff;
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        color: #212529;
+        padding: 2rem 1rem;
+      }
+      .section-card {
+        border: 1px solid #e9ecef;
+        border-radius: 0.5rem;
+        overflow: hidden;
+      }
+      .section-header {
+        background: #d9efe7; /* mint header like the screenshot */
+        padding: 0.9rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        user-select: none;
+      }
+      .section-header h2 {
+        font-size: 1rem;
+        font-weight: 700;
+        margin: 0;
+      }
+      .section-header .chev {
+        transition: transform 0.2s;
+      }
+      .section-header[aria-expanded="false"] .chev {
+        transform: rotate(180deg);
+      }
+
+      /* pink "required" info dot like the screenshot */
+      .req-dot {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.05rem;
+        height: 1.05rem;
+        border-radius: 50%;
+        background: #e4547c;
+        color: #fff;
+        font-size: 0.7rem;
+        font-weight: 700;
+        vertical-align: text-bottom;
+        margin-left: 0.35rem;
+      }
+
+      .form-label {
+        font-weight: 600;
+      }
+      .form-hint {
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-top: 0.25rem;
+      }
+
+      /* segmented status choice built on Bootstrap btn-check */
+      .mode-option {
+        text-align: left;
+        width: 100%;
+        border: 1.5px solid #dee2e6;
+        border-radius: 0.5rem;
+        background: #fff;
+        padding: 0.8rem 1rem;
+      }
+      .mode-option .t {
+        display: block;
+        font-weight: 700;
+        font-size: 0.9rem;
+      }
+      .mode-option .d {
+        display: block;
+        font-size: 0.78rem;
+        color: #6c757d;
+      }
+      .btn-check:checked + .mode-option.opt-active {
+        border-color: #0e9f7e;
+        background: #e6f6f1;
+      }
+      .btn-check:checked + .mode-option.opt-now {
+        border-color: #dc3545;
+        background: #fdf0f1;
+      }
+      .btn-check:checked + .mode-option.opt-later {
+        border-color: #fd7e14;
+        background: #fff6ec;
+      }
+      .btn-check:focus-visible + .mode-option {
+        box-shadow: 0 0 0 0.25rem rgba(14, 159, 126, 0.25);
+      }
+
+      /* termination panel flavours */
+      #termPanel.now {
+        border-color: #f1c2c7 !important;
+        background: #fffdfd;
+      }
+      #termPanel.later {
+        border-color: #fbd9ae !important;
+        background: #fffdf8;
+      }
+
+      /* Bootstrap switch, mint when on (matches screenshot toggle) */
+      .form-switch .form-check-input:checked {
+        background-color: #0e9f7e;
+        border-color: #0e9f7e;
+      }
+      .form-check-input:checked {
+        background-color: #4d6bfd;
+        border-color: #4d6bfd;
+      } /* blue checkboxes like screenshot */
+
+      /* "What will happen" timeline */
+      .timeline {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .timeline li {
+        position: relative;
+        padding: 0 0 0.9rem 1.6rem;
+        font-size: 0.9rem;
+      }
+      .timeline li:last-child {
+        padding-bottom: 0;
+      }
+      .timeline li::before {
+        content: "";
+        position: absolute;
+        left: 0.35rem;
+        top: 0.42rem;
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+        background: #0e9f7e;
+      }
+      .timeline li::after {
+        content: "";
+        position: absolute;
+        left: 0.56rem;
+        top: 1.05rem;
+        bottom: -0.1rem;
+        width: 2px;
+        background: #e3ebe8;
+      }
+      .timeline li:last-child::after {
+        display: none;
+      }
+      .timeline li.ev-danger::before {
+        background: #dc3545;
+      }
+      .timeline li.ev-warn::before {
+        background: #fd7e14;
+      }
+      .timeline .when {
+        font-weight: 700;
+        margin-right: 0.35rem;
+      }
+
+      .status-dot {
+        width: 0.65rem;
+        height: 0.65rem;
+        border-radius: 50%;
+        background: #0e9f7e;
+        display: inline-block;
+      }
+      .status-dot.danger {
+        background: #dc3545;
+      }
+      .status-dot.warn {
+        background: #fd7e14;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" style="max-width: 1080px">
+      <!-- ======================= STATUS & SCHEDULE ======================= -->
+      <div class="section-card mb-3">
+        <div
+          class="section-header"
+          data-bs-toggle="collapse"
+          data-bs-target="#statusBody"
+          aria-expanded="true"
+          role="button">
+          <h2>Status &amp; Schedule</h2>
+          <svg
+            class="chev"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none">
+            <path
+              d="M2 10l6-6 6 6"
+              stroke="#212529"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </div>
+
+        <div class="collapse show p-4" id="statusBody">
+          <!-- Mission status : one clear decision -->
+          <div
+            class="text-uppercase text-muted fw-bold mb-3"
+            style="font-size: 0.75rem; letter-spacing: 0.05em">
+            Mission status
+          </div>
+
+          <div
+            class="row g-3 mb-4"
+            role="group"
+            aria-label="Mission status choice">
+            <div class="col-md-4">
+              <input
+                type="radio"
+                class="btn-check"
+                name="mode"
+                id="modeActive"
+                value="active"
+                checked />
+              <label class="mode-option opt-active" for="modeActive">
+                <span class="t">Keep active</span>
+                <span class="d">No change — billing continues as usual</span>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <input
+                type="radio"
+                class="btn-check"
+                name="mode"
+                id="modeNow"
+                value="now" />
+              <label class="mode-option opt-now" for="modeNow">
+                <span class="t">Terminate now</span>
+                <span class="d">Ends the mission today</span>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <input
+                type="radio"
+                class="btn-check"
+                name="mode"
+                id="modeLater"
+                value="later" />
+              <label class="mode-option opt-later" for="modeLater">
+                <span class="t">Schedule termination</span>
+                <span class="d">Ends the mission on a date you pick</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Termination details (both paths share this panel) -->
+          <div class="border rounded p-4 mb-4 d-none" id="termPanel">
+            <div class="row g-4">
+              <div class="col-md-6 d-none" id="fTermDate">
+                <label class="form-label" for="termDate"
+                  >Termination date <span class="req-dot">!</span></label
+                >
+                <input type="date" class="form-control" id="termDate" />
+                <div class="form-hint">
+                  The mission status switches to “terminated” on this date.
+                </div>
+                <div class="invalid-feedback">
+                  Pick a future date for the scheduled termination.
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label" for="churn"
+                  >Churn status <span class="req-dot">!</span></label
+                >
+                <select class="form-select" id="churn">
+                  <option>Churn</option>
+                  <option>Illegal Churn</option>
+                </select>
+                <div class="form-hint">
+                  Required so churn reporting stays accurate.
+                </div>
+                <div class="invalid-feedback">
+                  A churn status is required to terminate a mission.
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label" for="prodEnd"
+                  >Production end date</label
+                >
+                <input type="date" class="form-control" id="prodEnd" />
+                <div class="form-hint">
+                  The team keeps delivering work until this date, even after
+                  billing stops.
+                </div>
+              </div>
+              <div class="col-md-12">
+                <label class="form-label" for="prodEnd">Churn reason</label>
+                <input type="text" class="form-control" id="prodEnd" />
+                <div class="form-hint">Describe the churn reason.</div>
+              </div>
+
+              <div class="col-12">
+                <div
+                  class="border rounded p-3 bg-white d-flex align-items-start gap-3">
+                  <div class="form-check form-switch m-0">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      role="switch"
+                      id="stripeCancel"
+                      checked
+                      style="width: 2.6em; height: 1.4em" />
+                  </div>
+                  <div>
+                    <strong class="d-block" style="font-size: 0.92rem"
+                      >Terminate the mission on Stripe
+                      <span class="req-dot">!</span></strong
+                    >
+                    <small class="text-muted" id="stripeHint"
+                      >The Stripe subscription is cancelled immediately and no
+                      further invoices are issued.</small
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Plain-language recap -->
+          <div class="border rounded p-4 mb-4 bg-light d-none" id="summary">
+            <div
+              class="text-uppercase text-muted fw-bold mb-3"
+              style="font-size: 0.75rem; letter-spacing: 0.05em">
+              What will happen
+            </div>
+            <ul class="timeline" id="timeline"></ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================= SETTINGS (collapsed, as in original) ======================= -->
+      <div class="section-card">
+        <div
+          class="section-header"
+          data-bs-toggle="collapse"
+          data-bs-target="#settingsBody"
+          aria-expanded="false"
+          role="button">
+          <h2>Settings</h2>
+          <svg
+            class="chev"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none">
+            <path
+              d="M2 10l6-6 6 6"
+              stroke="#212529"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </div>
+        <div class="collapse p-4 text-muted" id="settingsBody">
+          Settings content…
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div
+      class="toast-container position-fixed bottom-0 start-50 translate-middle-x mb-4">
+      <div
+        class="toast align-items-center text-bg-dark border-0"
+        id="toast"
+        role="status">
+        <div class="d-flex">
+          <div class="toast-body" id="toastMsg"></div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"></button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      (function () {
+        const $ = (id) => document.getElementById(id);
+        const termPanel = $("termPanel"),
+          fTermDate = $("fTermDate");
+        const termDate = $("termDate"),
+          churn = $("churn"),
+          prodEnd = $("prodEnd");
+        const stripeCancel = $("stripeCancel"),
+          stripeHint = $("stripeHint");
+        const summary = $("summary"),
+          timeline = $("timeline"),
+          btnSave = $("btnSave");
+        const bannerDot = $("bannerDot"),
+          bannerTitle = $("bannerTitle"),
+          bannerSub = $("bannerSub"),
+          bannerPill = $("bannerPill");
+
+        const todayISO = new Date().toISOString().slice(0, 10);
+        termDate.min = todayISO;
+        prodEnd.min = todayISO;
+
+        const fmt = (iso) =>
+          new Date(iso + "T00:00:00").toLocaleDateString("en-GB", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          });
+
+        const getMode = () =>
+          document.querySelector('input[name="mode"]:checked').value;
+
+        document
+          .querySelectorAll('input[name="mode"]')
+          .forEach((r) => r.addEventListener("change", render));
+        [termDate, churn, prodEnd, stripeCancel].forEach((el) =>
+          el.addEventListener("input", render),
+        );
+
+        function validate(silent) {
+          const mode = getMode();
+          if (mode === "active") return false; // nothing to save
+          let ok = true;
+
+          const churnBad = !churn.value;
+          churn.classList.toggle("is-invalid", !silent && churnBad);
+          if (churnBad) ok = false;
+
+          if (mode === "later") {
+            const dateBad = !termDate.value || termDate.value <= todayISO;
+            termDate.classList.toggle("is-invalid", !silent && dateBad);
+            if (dateBad) ok = false;
+          } else {
+            termDate.classList.remove("is-invalid");
+          }
+          return ok;
+        }
+
+        function buildTimeline(mode) {
+          timeline.innerHTML = "";
+          const add = (when, html, cls = "") => {
+            const li = document.createElement("li");
+            if (cls) li.className = cls;
+            li.innerHTML = '<span class="when">' + when + "</span>" + html;
+            timeline.appendChild(li);
+          };
+
+          const tDate = mode === "now" ? todayISO : termDate.value;
+          const tLabel =
+            mode === "now"
+              ? "Today"
+              : tDate
+                ? fmt(tDate)
+                : "On the chosen date";
+
+          add(
+            tLabel,
+            "Mission status becomes <b>terminated</b>" +
+              (churn.value
+                ? ' <span class="text-muted">(churn: ' +
+                  churn.value +
+                  ")</span>"
+                : ""),
+            "ev-danger",
+          );
+
+          if (stripeCancel.checked) {
+            add(
+              tLabel,
+              "Stripe subscription is <b>cancelled</b> — no further invoices",
+              "ev-danger",
+            );
+          } else {
+            add(
+              "—",
+              '<span class="text-muted">Stripe subscription stays untouched (cancel manually if needed)</span>',
+            );
+          }
+
+          if (prodEnd.value) {
+            const after = tDate && prodEnd.value > tDate;
+            add(
+              fmt(prodEnd.value),
+              "Production ends — the team " +
+                (after
+                  ? "keeps delivering until then, <b>after</b> billing has stopped"
+                  : "stops delivering work"),
+              "ev-warn",
+            );
+          } else {
+            add(
+              "—",
+              '<span class="text-muted">No production end date set — delivery stops at termination</span>',
+            );
+          }
+        }
+
+        function render() {
+          const mode = getMode();
+
+          termPanel.classList.toggle("d-none", mode === "active");
+          termPanel.classList.toggle("now", mode === "now");
+          termPanel.classList.toggle("later", mode === "later");
+          fTermDate.classList.toggle("d-none", mode !== "later");
+
+          stripeHint.textContent =
+            mode === "later"
+              ? "The Stripe subscription is scheduled to cancel on the termination date. No invoices are issued after that."
+              : "The Stripe subscription is cancelled immediately and no further invoices are issued.";
+
+          summary.classList.toggle("d-none", mode === "active");
+          if (mode !== "active") buildTimeline(mode);
+
+          const valid = validate(true); // silent check for button state
+          btnSave.disabled = !valid;
+          btnSave.className =
+            "btn " +
+            (mode === "now"
+              ? "btn-danger"
+              : mode === "later"
+                ? "btn-warning text-white"
+                : "btn-success");
+          btnSave.textContent =
+            mode === "now"
+              ? "Terminate mission now"
+              : mode === "later"
+                ? "Schedule termination"
+                : "Save changes";
+        }
+
+        btnSave.addEventListener("click", () => {
+          if (!validate(false)) return;
+          const mode = getMode(),
+            isNow = mode === "now";
+
+          bannerDot.className = "status-dot " + (isNow ? "danger" : "warn");
+          if (isNow) {
+            bannerTitle.textContent = "Mission terminated";
+            bannerSub.textContent =
+              "Churn: " +
+              churn.value +
+              (prodEnd.value
+                ? " · production runs until " + fmt(prodEnd.value)
+                : "");
+            bannerPill.textContent = "Terminated";
+            bannerPill.className = "badge rounded-pill text-bg-danger";
+          } else {
+            bannerTitle.textContent = "Termination scheduled";
+            bannerSub.textContent =
+              "Ends " + fmt(termDate.value) + " · churn: " + churn.value;
+            bannerPill.textContent = "Ends " + fmt(termDate.value);
+            bannerPill.className = "badge rounded-pill text-bg-warning";
+          }
+          $("toastMsg").textContent = isNow
+            ? "Mission terminated"
+            : "Termination scheduled for " + fmt(termDate.value);
+          bootstrap.Toast.getOrCreateInstance($("toast"), {
+            delay: 3200,
+          }).show();
+        });
+
+        $("btnCancel").addEventListener("click", () => {
+          $("modeActive").checked = true;
+          churn.value = "";
+          termDate.value = "";
+          prodEnd.value = "";
+          stripeCancel.checked = true;
+          churn.classList.remove("is-invalid");
+          termDate.classList.remove("is-invalid");
+          render();
+        });
+
+        render();
+      })();
+    </script>
+  </body>
+</html>
