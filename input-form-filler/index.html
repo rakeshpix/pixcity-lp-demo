@@ -18,35 +18,42 @@
         background: #f0f2f5;
       }
 
-      /* ── Section card ── */
-      .section-card {
-        background: #fff;
-        border-radius: 12px;
-        overflow: hidden;
+      /* ── Accordion / Section card ── */
+      .accordion-item {
         border: 1px solid #e4e7eb;
+        border-radius: 12px !important;
+        overflow: hidden;
       }
 
-      /* ── Section header (mint/teal) ── */
-      .section-header {
-        background: #c8ede6;
-        padding: 13px 18px;
+      /* Accordion header row — holds button + actions side-by-side */
+      .accordion-header {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-        cursor: pointer;
-        user-select: none;
+        align-items: stretch;
+        background: #c8ede6;
       }
-      .section-header .section-title {
+
+      .accordion-button.section-btn {
+        flex: 1;
+        background: #c8ede6;
+        color: #1a3c34;
         font-size: 0.92rem;
         font-weight: 700;
-        color: #1a3c34;
-        margin: 0;
+        padding: 13px 18px;
+        box-shadow: none !important;
       }
-      .section-header-right {
+      .accordion-button.section-btn:not(.collapsed) {
+        background: #c8ede6;
+        color: #1a3c34;
+      }
+      .accordion-button.section-btn::after {
+        filter: brightness(0) saturate(100%) invert(18%) sepia(29%) saturate(548%) hue-rotate(117deg) brightness(94%) contrast(94%);
+      }
+      .accordion-button.section-btn:focus { box-shadow: none !important; }
+
+      .section-header-actions {
         display: flex;
         align-items: center;
-        gap: 8px;
+        padding: 0 14px 0 4px;
       }
 
       /* Form Fill trigger button */
@@ -70,17 +77,6 @@
       }
       .btn-form-fill:active {
         transform: scale(0.97);
-      }
-
-      /* Collapse chevron */
-      .chevron {
-        font-size: 0.8rem;
-        color: #1a3c34;
-        line-height: 1;
-        transition: transform 0.2s;
-      }
-      .chevron.collapsed {
-        transform: rotate(180deg);
       }
 
       /* ── Input list ── */
@@ -202,29 +198,41 @@
     </style>
   </head>
   <body class="py-5">
+    <div
+      data-controller="form-fill"
+      data-form-fill-group-class-value="form-fill-headlines">
+
     <div class="container" style="max-width: 680px">
       <!-- ── HEADLINES SECTION ── -->
-      <div class="section-card">
-        <!-- Header -->
-        <div
-          class="section-header"
-          data-bs-target="#headlinesBody"
-          aria-expanded="true">
-          <h2 class="section-title">Headlines</h2>
-          <div class="section-header-right">
-            <!-- Form Fill button — stop propagation so it doesn't toggle collapse -->
-            <button
-              class="btn-form-fill"
-              id="openFormFill"
-              onclick="event.stopPropagation()">
-              ⚡ Form Fill
-            </button>
-            <span class="chevron" id="headlinesChevron">∧</span>
-          </div>
-        </div>
+      <div class="accordion" id="headlinesAccordion">
+        <div class="accordion-item">
 
-        <!-- Body -->
-        <div class="collapse show" id="headlinesBody">
+          <!-- Header -->
+          <div class="accordion-header">
+            <button
+              class="accordion-button section-btn"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#headlinesBody"
+              aria-expanded="true"
+              aria-controls="headlinesBody">
+              Headlines
+            </button>
+            <div class="section-header-actions">
+              <button
+                class="btn-form-fill"
+                type="button"
+                data-action="click->form-fill#open">
+                ⚡ Form Fill
+              </button>
+            </div>
+          </div>
+
+          <!-- Body -->
+          <div
+            id="headlinesBody"
+            class="accordion-collapse collapse show"
+            data-bs-parent="#headlinesAccordion">
           <div class="section-body">
             <div class="input-row">
               <span class="input-index">1</span>
@@ -349,17 +357,16 @@
                 maxlength="30" />
             </div>
           </div>
-        </div>
-      </div>
+          </div><!-- /accordion-collapse -->
+        </div><!-- /accordion-item -->
+      </div><!-- /accordion -->
       <!-- /HEADLINES SECTION -->
-    </div>
+    </div><!-- /container -->
 
-    <!-- ══════════════════════════════════════
-       FORM FILL MODAL
-  ══════════════════════════════════════ -->
+    <!-- ── FORM FILL MODAL ── -->
     <div
       class="modal fade"
-      id="formFillModal"
+      data-form-fill-target="modal"
       tabindex="-1"
       aria-labelledby="formFillModalLabel"
       aria-hidden="true">
@@ -386,19 +393,20 @@
             <!-- Error alert -->
             <div
               class="alert alert-danger py-2 ff-error d-none"
-              data-ff-error
+              data-form-fill-target="error"
               role="alert"></div>
 
             <!-- Textarea -->
             <textarea
               class="form-control ff-textarea"
-              data-ff-textarea
+              data-form-fill-target="textarea"
+              data-action="input->form-fill#updateCounter"
               placeholder="Line 1 → Headline 1&#10;Line 2 → Headline 2&#10;…"
               spellcheck="false"></textarea>
 
             <!-- Counter -->
             <div class="d-flex justify-content-end mt-1">
-              <span class="ff-counter text-muted" data-ff-counter
+              <span class="ff-counter text-muted" data-form-fill-target="counter"
                 >0 / 15 lines</span
               >
             </div>
@@ -411,37 +419,29 @@
               data-bs-dismiss="modal">
               Cancel
             </button>
-            <button type="button" class="btn-confirm" data-ff-confirm>
+            <button
+              type="button"
+              class="btn-confirm"
+              data-action="click->form-fill#confirm">
               Confirm & Fill
             </button>
           </div>
         </div>
       </div>
-    </div>
+    </div><!-- /data-controller -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script type="importmap">
+      { "imports": { "@hotwired/stimulus": "https://cdn.jsdelivr.net/npm/@hotwired/stimulus@3.2.2/dist/stimulus.js" } }
+    </script>
+
     <script type="module">
-      import { FormFill } from "/js/form-fill.js";
+      import { Application }      from "@hotwired/stimulus"
+      import FormFillController   from "/js/form-fill-controller.js"
 
-      // Sync chevron with collapse state
-      const collapseEl = document.getElementById("headlinesBody");
-      const chevron = document.getElementById("headlinesChevron");
-      collapseEl.addEventListener("hide.bs.collapse", () =>
-        chevron.classList.add("collapsed"),
-      );
-      collapseEl.addEventListener("show.bs.collapse", () =>
-        chevron.classList.remove("collapsed"),
-      );
-
-      // Init FormFill for the headlines group
-      const ff = new FormFill({
-        groupClass: "form-fill-headlines",
-        modalId: "formFillModal",
-      }).init();
-
-      document
-        .getElementById("openFormFill")
-        .addEventListener("click", () => ff.open());
+      const app = Application.start()
+      app.register("form-fill", FormFillController)
     </script>
   </body>
 </html>
