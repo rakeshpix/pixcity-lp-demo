@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Content Wall — Pix.city</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,600;0,700;0,800;1,700&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --px-teal:      #129FB5;
+      --px-teal-dark: #006877;
+      --px-teal-bg:   rgba(18,159,181,0.08);
+      --px-bg:        #F4F6F8;
+      --px-surface:   #ffffff;
+      --px-border:    #E4E7EB;
+      --px-text:      #1A1A1B;
+      --px-muted:     #6B7280;
+    }
+
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: var(--px-bg);
+      color: var(--px-text);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ══ HEADER ══════════════════════════════ */
+    .px-header {
+      background: var(--px-surface);
+      border-bottom: 1px solid var(--px-border);
+      padding: 0 40px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .px-logo {
+      font-family: 'Epilogue', sans-serif;
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: -0.05em;
+      color: var(--px-text);
+      text-decoration: none;
+    }
+    .px-logo span { color: var(--px-teal); }
+
+    .px-header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .px-lang {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--px-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: flex;
+      gap: 8px;
+    }
+    .px-lang a {
+      color: var(--px-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .px-lang a:hover, .px-lang a.active { color: var(--px-teal); }
+    .px-lang span { opacity: 0.3; }
+
+    .px-header-badge {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--px-teal);
+      background: var(--px-teal-bg);
+      border: 1px solid rgba(18,159,181,0.2);
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    /* ══ PAGE HERO ══════════════════════════ */
+    .px-page-hero {
+      background: var(--px-surface);
+      border-bottom: 1px solid var(--px-border);
+      padding: 28px 40px 24px;
+    }
+
+    .px-page-eyebrow {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--px-teal);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .px-page-eyebrow::before {
+      content: '';
+      display: block;
+      width: 16px;
+      height: 1px;
+      background: var(--px-teal);
+    }
+
+    .px-page-title {
+      font-family: 'Epilogue', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      color: var(--px-text);
+      margin-bottom: 4px;
+    }
+
+    .px-page-sub {
+      font-size: 0.8rem;
+      color: var(--px-muted);
+      font-weight: 400;
+    }
+
+    /* ══ MAIN CONTENT ═══════════════════════ */
+    .px-main {
+      flex: 1;
+      padding: 28px 40px 48px;
+    }
+
+    @media (max-width: 768px) {
+      .px-header  { padding: 0 20px; }
+      .px-page-hero { padding: 20px; }
+      .px-main    { padding: 20px; }
+    }
+
+    /* ══ POST CARD ══════════════════════════ */
+    .post-card {
+      background: var(--px-surface);
+      border: 1px solid var(--px-border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .post-card:hover {
+      box-shadow: 0 6px 24px rgba(0,0,0,0.09);
+      transform: translateY(-2px);
+    }
+
+    /* Card header */
+    .post-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px 10px;
+    }
+
+    .post-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--px-teal);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-family: 'Epilogue', sans-serif;
+    }
+
+    .post-meta-name {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--px-text);
+      line-height: 1.2;
+    }
+
+    .post-meta-loc {
+      font-size: 0.65rem;
+      color: var(--px-muted);
+      letter-spacing: 0.03em;
+      font-weight: 500;
+    }
+
+    /* Thumbnail */
+    .post-media {
+      position: relative;
+      background: #1A1A1B;
+      overflow: hidden;
+      aspect-ratio: 4/5;
+    }
+
+    .post-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Media overlay bar */
+    .media-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%);
+      padding: 24px 10px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .media-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #fff;
+      font-size: 0.68rem;
+      font-weight: 500;
+    }
+
+    .play-btn {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      border: 1px solid rgba(255,255,255,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .media-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .media-bar-right svg { cursor: pointer; }
+
+    .media-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: rgba(255,255,255,0.2);
+    }
+    .media-progress-fill {
+      height: 100%;
+      background: var(--px-teal);
+      width: 0%;
+    }
+
+    /* Stats row */
+    .post-stats {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px 6px;
+      border-top: 1px solid var(--px-border);
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--px-muted);
+    }
+
+    .stat-item svg { flex-shrink: 0; }
+
+    /* Tags */
+    .post-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      padding: 4px 14px 10px;
+    }
+
+    .post-tag {
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .post-tag-pink   { background: #FDE8F0; color: #BE185D; }
+    .post-tag-teal   { background: #D1F5F0; color: #047857; }
+    .post-tag-blue   { background: #DBEAFE; color: #1D4ED8; }
+    .post-tag-amber  { background: #FEF3C7; color: #92400E; }
+
+    /* Description */
+    .post-desc {
+      font-size: 0.75rem;
+      color: var(--px-muted);
+      line-height: 1.55;
+      padding: 0 14px 14px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .post-desc a {
+      color: var(--px-teal);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .post-desc a:hover { text-decoration: underline; }
+
+    /* ══ FOOTER ═════════════════════════════ */
+    footer {
+      background: var(--px-surface);
+      border-top: 1px solid var(--px-border);
+      padding: 18px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-logo {
+      font-family: 'Epilogue', sans-serif;
+      font-weight: 800;
+      font-size: 0.9rem;
+      letter-spacing: -0.04em;
+      color: var(--px-text);
+      text-decoration: none;
+    }
+    .footer-logo span { color: var(--px-teal); }
+
+    .footer-copy {
+      font-size: 0.68rem;
+      color: var(--px-muted);
+      letter-spacing: 0.02em;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 16px;
+    }
+
+    .footer-links a {
+      font-size: 0.68rem;
+      color: var(--px-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .footer-links a:hover { color: var(--px-teal); }
+  </style>
+</head>
+<body>
+
+  <!-- ══ HEADER ════════════════════════════════════════ -->
+  <header class="px-header">
+    <a href="https://pix.city" class="px-logo">pix<span>.</span>city</a>
+    <div class="px-header-right">
+      <nav class="px-lang">
+        <a href="#" class="active">FR</a>
+        <span>/</span>
+        <a href="#">EN</a>
+        <span>/</span>
+        <a href="#">ES</a>
+      </nav>
+      <span class="px-header-badge">Content Wall</span>
+    </div>
+  </header>
+
+  <!-- ══ PAGE HERO ══════════════════════════════════════ -->
+  <section class="px-page-hero">
+    <p class="px-page-eyebrow">Pix.city — Shared Library</p>
+    <h1 class="px-page-title">CM Requirement Wall — VISIPERF</h1>
+    <p class="px-page-sub">Vidéos UGC · Curated content selection for review</p>
+  </section>
+
+  <!-- ══ WALL GRID ═════════════════════════════════════ -->
+  <main class="px-main">
+    <div class="row g-3 row-cols-1 row-cols-md-2 row-cols-xl-3 align-items-start">
+
+      <!-- CARD 1 -->
+      <div class="col">
+        <div class="post-card">
+          <div class="post-card-header">
+            <div class="post-avatar">J</div>
+            <div>
+              <div class="post-meta-name">jane_smith</div>
+              <div class="post-meta-loc">ARGENTRÉ-DU-PLESSIS, FR</div>
+            </div>
+          </div>
+          <div class="post-media">
+            <img src="https://placehold.co/400x500/f5e6d3/9a6e5a?text=▶" alt="Video thumbnail" />
+            <div class="media-bar">
+              <div class="media-bar-left">
+                <div class="play-btn">
+                  <svg width="8" height="9" viewBox="0 0 8 9" fill="white"><path d="M1 1l6 3.5L1 8V1z"/></svg>
+                </div>
+                <span>0:00 / 0:34</span>
+              </div>
+              <div class="media-bar-right">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+              </div>
+            </div>
+            <div class="media-progress"><div class="media-progress-fill"></div></div>
+          </div>
+          <div class="post-stats">
+            <span class="stat-item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="#EF4444"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>3.9K
+            </span>
+            <span class="stat-item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>59
+            </span>
+            <span class="stat-item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </span>
+          </div>
+          <div class="post-tags">
+            <span class="post-tag post-tag-pink">REEL</span>
+            <span class="post-tag post-tag-pink">UGC 1 V2</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="col">
+        <div class="post-card">
+          <div class="post-card-header">
+            <div class="post-avatar">S</div>
+            <div>
+              <div class="post-meta-name">Saint ferdinand developpement</div>
+              <div class="post-meta-loc">PARIS, FR</div>
+            </div>
+          </div>
+          <div class="post-media">
+            <img src="https://placehold.co/400x500/d3e8d3/3a6b3a?text=▶" alt="Video thumbnail" />
+            <div class="media-bar">
+              <div class="media-bar-left">
+                <div class="play-btn">
+                  <svg width="8" height="9" viewBox="0 0 8 9" fill="white"><path d="M1 1l6 3.5L1 8V1z"/></svg>
+                </div>
+                <span>0:00 / 0:49</span>
+              </div>
+              <div class="media-bar-right">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+              </div>
+            </div>
+            <div class="media-progress"><div class="media-progress-fill"></div></div>
+          </div>
+          <div class="post-stats">
+            <span class="stat-item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="#EF4444"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>8.7K
+            </span>
+            <span class="stat-item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>13
+            </span>
+            <span class="stat-item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </span>
+          </div>
+          <div class="post-tags">
+            <span class="post-tag post-tag-pink">REEL</span>
+            <span class="post-tag post-tag-teal">V2 VIDÉO 1 — NEUILLY</span>
+          </div>
+          <div class="post-desc">
+            🖤 NEUILLY-SUR-SEINE — SAINT JAMES, UNE PARENTHÈSE VERDOYANTE Dans le très recherché quartier Saint James, cet appartement de 194 m² s'ouvre sur un jardin paysager de 752 m² exposé… <a href="#">Read More</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="col">
+        <div class="post-card">
+          <div class="post-card-header">
+            <div class="post-avatar">C</div>
+            <div>
+              <div class="post-meta-name">Calao 30</div>
+              <div class="post-meta-loc">ANAIS, FR</div>
+            </div>
+          </div>
+          <div class="post-media">
+            <img src="https://placehold.co/400x500/d3e0f5/2d5fa3?text=▶" alt="Video thumbnail" />
+            <div class="media-bar">
+              <div class="media-bar-left">
+                <div class="play-btn">
+                  <svg width="8" height="9" viewBox="0 0 8 9" fill="white"><path d="M1 1l6 3.5L1 8V1z"/></svg>
+                </div>
+                <span>0:00 / 0:36</span>
+              </div>
+              <div class="media-bar-right">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+              </div>
+            </div>
+            <div class="media-progress"><div class="media-progress-fill"></div></div>
+          </div>
+          <div class="post-stats">
+            <span class="stat-item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="#EF4444"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>6.5K
+            </span>
+            <span class="stat-item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>52
+            </span>
+            <span class="stat-item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </span>
+          </div>
+          <div class="post-tags">
+            <span class="post-tag post-tag-pink">REEL</span>
+            <span class="post-tag post-tag-teal">VIDÉO UGC 2</span>
+          </div>
+          <div class="post-desc">
+            Une semaine plus tard, le chantier continue de se transformer à grande vitesse ! 🏗️ Les nouveaux équipements s'installent, les espaces prennent forme et on commence vraiment à imaginer… <a href="#">Read More</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 4 -->
+      <div class="col">
+        <div class="post-card">
+          <div class="post-card-header">
+            <div class="post-avatar">V</div>
+            <div>
+              <div class="post-meta-name">Visiperf</div>
+              <div class="post-meta-loc">AUDINCOURT, FR</div>
+            </div>
+          </div>
+          <div class="post-media">
+            <img src="https://placehold.co/400x500/e8d3f5/6b3a9a?text=▶" alt="Video thumbnail" />
+            <div class="media-bar">
+              <div class="media-bar-left">
+                <div class="play-btn">
+                  <svg width="8" height="9" viewBox="0 0 8 9" fill="white"><path d="M1 1l6 3.5L1 8V1z"/></svg>
+                </div>
+                <span>0:00 / 0:30</span>
+              </div>
+              <div class="media-bar-right">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+              </div>
+            </div>
+            <div class="media-progress"><div class="media-progress-fill"></div></div>
+          </div>
+          <div class="post-stats">
+            <span class="stat-item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="#EF4444"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>1.7K
+            </span>
+            <span class="stat-item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>11
+            </span>
+            <span class="stat-item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </span>
+          </div>
+          <div class="post-tags">
+            <span class="post-tag post-tag-blue">REEL</span>
+          </div>
+          <div class="post-desc">
+            C'est le moment idéal pour venir découvrir l'univers Parot Automotive directement sur place ! Toute l'équipe vous accueille avec le sourire… <a href="#">Read More</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 5 -->
+      <div class="col">
+        <div class="post-card">
+          <div class="post-card-header">
+            <div class="post-avatar">L</div>
+            <div>
+              <div class="post-meta-name">ltm ouest f</div>
+              <div class="post-meta-loc">ARGENTRÉ-DU-PLESSIS, FR</div>
+            </div>
+          </div>
+          <div class="post-media">
+            <img src="https://placehold.co/400x500/1a1a1b/444?text=▶" alt="Video thumbnail" />
+            <div class="media-bar">
+              <div class="media-bar-left">
+                <div class="play-btn">
+                  <svg width="8" height="9" viewBox="0 0 8 9" fill="white"><path d="M1 1l6 3.5L1 8V1z"/></svg>
+                </div>
+                <span>0:00 / 0:22</span>
+              </div>
+              <div class="media-bar-right">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+              </div>
+            </div>
+            <div class="media-progress"><div class="media-progress-fill"></div></div>
+          </div>
+          <div class="post-stats">
+            <span class="stat-item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="#EF4444"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>2.1K
+            </span>
+            <span class="stat-item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>8
+            </span>
+            <span class="stat-item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </span>
+          </div>
+          <div class="post-tags">
+            <span class="post-tag post-tag-amber">UGC 3</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 6 -->
+      <div class="col">
+        <div class="post-card">
+          <div class="post-card-header">
+            <div class="post-avatar">H</div>
+            <div>
+              <div class="post-meta-name">Harmonie</div>
+              <div class="post-meta-loc">VILLENEUVE-D'ASCQ, FR</div>
+            </div>
+          </div>
+          <div class="post-media">
+            <img src="https://placehold.co/400x500/f5f0e6/9a8060?text=▶" alt="Video thumbnail" />
+            <div class="media-bar">
+              <div class="media-bar-left">
+                <div class="play-btn">
+                  <svg width="8" height="9" viewBox="0 0 8 9" fill="white"><path d="M1 1l6 3.5L1 8V1z"/></svg>
+                </div>
+                <span>0:00 / 0:13</span>
+              </div>
+              <div class="media-bar-right">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+              </div>
+            </div>
+            <div class="media-progress"><div class="media-progress-fill"></div></div>
+          </div>
+          <div class="post-stats">
+            <span class="stat-item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="#EF4444"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>4.2K
+            </span>
+            <span class="stat-item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>27
+            </span>
+            <span class="stat-item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </span>
+          </div>
+          <div class="post-tags">
+            <span class="post-tag post-tag-teal">REEL</span>
+            <span class="post-tag post-tag-blue">VIDÉO UGC 1</span>
+          </div>
+          <div class="post-desc">
+            Une expérience culinaire d'exception au cœur de Villeneuve-d'Ascq. Le chef vous invite à découvrir une cuisine créative, locale et de saison… <a href="#">Read More</a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /row -->
+  </main>
+
+  <!-- ══ FOOTER ═════════════════════════════════════════ -->
+  <footer>
+    <a href="https://pix.city" class="footer-logo">pix<span>.</span>city</a>
+    <span class="footer-copy">© 2026 Pix.city — All rights reserved.</span>
+    <nav class="footer-links">
+      <a href="#">Legal notice</a>
+      <a href="#">Privacy</a>
+      <a href="#">Contact</a>
+    </nav>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

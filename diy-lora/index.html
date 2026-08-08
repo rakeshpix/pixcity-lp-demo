@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DIY LoRa Master-Slave — Working Model Diagram</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d0f14;
+    --bg-elevated:#141822;
+    --bg-floating:#1b2130;
+    --line:#2a3142;
+    --copper:#e8873c;
+    --copper-soft:#f3b27a;
+    --teal:#3ddcb0;
+    --danger:#ff6b7a;
+    --ink:#eef1f7;
+    --ink-dim:#9aa4b8;
+    --ink-faint:#5c6478;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background:
+      radial-gradient(ellipse 900px 600px at 12% -10%, rgba(232,135,60,0.14), transparent 60%),
+      radial-gradient(ellipse 800px 700px at 100% 10%, rgba(61,220,176,0.10), transparent 55%),
+      radial-gradient(ellipse 1000px 800px at 50% 120%, rgba(232,135,60,0.06), transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .font-display{font-family:'Fraunces',serif;}
+  .font-mono{font-family:'JetBrains Mono',monospace;}
+  .tracking-tightest{letter-spacing:-0.03em;}
+  .body-copy{line-height:1.7;}
+
+  .noise{
+    position:absolute; inset:0; pointer-events:none; opacity:0.035; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .card{
+    background:linear-gradient(180deg, var(--bg-elevated), var(--bg));
+    border:1px solid var(--line);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset, 0 20px 40px -20px rgba(0,0,0,0.6), 0 8px 20px -12px rgba(232,135,60,0.08);
+  }
+  .card-floating{
+    background:linear-gradient(180deg, var(--bg-floating), var(--bg-elevated));
+    border:1px solid var(--line);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 30px 60px -24px rgba(0,0,0,0.7), 0 10px 30px -14px rgba(61,220,176,0.06);
+  }
+  .chip{
+    border:1px solid var(--line);
+    background:rgba(255,255,255,0.03);
+  }
+  .glow-copper{ box-shadow: 0 0 0 1px rgba(232,135,60,0.35), 0 12px 30px -12px rgba(232,135,60,0.35); }
+  .glow-teal{ box-shadow: 0 0 0 1px rgba(61,220,176,0.35), 0 12px 30px -12px rgba(61,220,176,0.35); }
+
+  .link{
+    transition: transform .25s cubic-bezier(.2,.9,.3,1.3), box-shadow .25s ease, color .2s ease;
+  }
+  .link:hover{ transform:translateY(-2px); }
+  .link:active{ transform:translateY(0px) scale(.99); }
+  .link:focus-visible{ outline:2px solid var(--copper-soft); outline-offset:3px; }
+
+  summary::-webkit-details-marker{ display:none; }
+  summary{ cursor:pointer; }
+  details[open] .chevron{ transform:rotate(90deg); }
+  .chevron{ transition: transform .25s cubic-bezier(.2,.9,.3,1.3); }
+  details[open] summary ~ .body{ animation: reveal .35s cubic-bezier(.2,.9,.3,1.1); }
+  @keyframes reveal{ from{opacity:0; transform:translateY(-4px);} to{opacity:1; transform:translateY(0);} }
+
+  .dash{ stroke-dasharray: 6 6; }
+  .flow-anim{ animation: dashmove 1.6s linear infinite; }
+  @keyframes dashmove{ to{ stroke-dashoffset:-24; } }
+
+  .pulse{ animation: pulseGlow 2.4s ease-in-out infinite; }
+  @keyframes pulseGlow{ 0%,100%{opacity:.55;} 50%{opacity:1;} }
+
+  ::selection{ background:rgba(232,135,60,0.35); }
+
+  .scroll-x{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .scroll-x::-webkit-scrollbar{ height:8px; }
+  .scroll-x::-webkit-scrollbar-thumb{ background:var(--line); border-radius:8px; }
+</style>
+</head>
+<body class="min-h-screen relative">
+<div class="noise"></div>
+
+<!-- ============ HEADER ============ -->
+<header class="relative border-b border-[var(--line)]">
+  <div class="max-w-6xl mx-auto px-6 md:px-10 pt-14 pb-10">
+    <div class="flex items-center gap-3 mb-6">
+      <span class="chip rounded-full px-3 py-1 text-[11px] font-mono tracking-wide text-[var(--copper-soft)] uppercase">Field Guide · Rev 1.1 (corrected)</span>
+      <span class="chip rounded-full px-3 py-1 text-[11px] font-mono tracking-wide text-[var(--teal)] uppercase">433 MHz · AES-128</span>
+    </div>
+    <h1 class="font-display tracking-tightest text-4xl md:text-6xl font-semibold leading-[1.05] max-w-3xl">
+      DIY LoRa Master&#8211;Slave <span class="text-[var(--copper-soft)]">Working Model</span>
+    </h1>
+    <p class="body-copy text-[var(--ink-dim)] mt-5 max-w-2xl text-base md:text-lg">
+      A plain-language map of how one master unit securely fires a 9V trigger on any named slave, over 5km+, using encrypted LoRa packets and frequency hopping.
+    </p>
+    <div class="flex flex-wrap gap-2 mt-7">
+      <span class="chip rounded-lg px-3 py-1.5 text-xs text-[var(--ink-dim)] font-mono">Range &gt;5km</span>
+      <span class="chip rounded-lg px-3 py-1.5 text-xs text-[var(--ink-dim)] font-mono">Trigger 9V · 1A · 2s</span>
+      <span class="chip rounded-lg px-3 py-1.5 text-xs text-[var(--ink-dim)] font-mono">Slave sleep ~8s cycle</span>
+      <span class="chip rounded-lg px-3 py-1.5 text-xs text-[var(--ink-dim)] font-mono">3 retry OTA rename</span>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-6 md:px-10 py-14 space-y-20">
+
+  <!-- ============ SYSTEM DIAGRAM ============ -->
+  <section>
+    <div class="flex items-baseline justify-between mb-6 flex-wrap gap-2">
+      <h2 class="font-display text-2xl md:text-3xl font-semibold tracking-tightest">1 · System at a Glance</h2>
+      <span class="text-xs font-mono text-[var(--ink-faint)]">tap a block for detail</span>
+    </div>
+
+    <div class="card rounded-2xl p-4 md:p-8">
+      <div class="scroll-x">
+      <svg viewBox="0 0 1180 560" class="w-full min-w-[880px]" role="img" aria-label="Master to slave wireless trigger system diagram">
+        <defs>
+          <marker id="arrow-copper" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#e8873c"/>
+          </marker>
+          <marker id="arrow-teal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#3ddcb0"/>
+          </marker>
+          <linearGradient id="masterGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1b2130"/>
+            <stop offset="100%" stop-color="#141822"/>
+          </linearGradient>
+          <linearGradient id="slaveGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#182420"/>
+            <stop offset="100%" stop-color="#131c19"/>
+          </linearGradient>
+        </defs>
+
+        <!-- ============ MASTER ENCLOSURE ============ -->
+        <rect x="18" y="26" width="430" height="500" rx="18" fill="url(#masterGrad)" stroke="#3a2c1c" stroke-width="1.5"/>
+        <text x="42" y="60" fill="#f3b27a" font-family="JetBrains Mono, monospace" font-size="12" letter-spacing="2">MASTER DEVICE — M-MASTER001</text>
+        <text x="42" y="78" fill="#5c6478" font-family="Inter, sans-serif" font-size="11">12V adapter · indoor · antenna elevated</text>
+
+        <!-- keypad -->
+        <rect x="42" y="98" width="180" height="76" rx="10" fill="#1b2130" stroke="#2a3142"/>
+        <text x="56" y="122" fill="#eef1f7" font-size="13" font-family="Inter">4×4 Keypad</text>
+        <text x="56" y="140" fill="#9aa4b8" font-size="10.5" font-family="Inter">multi-tap, rows D3–D6</text>
+        <text x="56" y="155" fill="#9aa4b8" font-size="10.5" font-family="Inter">cols D7,D8,D9,A1</text>
+
+        <!-- OLED -->
+        <rect x="238" y="98" width="150" height="76" rx="10" fill="#1b2130" stroke="#2a3142"/>
+        <text x="252" y="122" fill="#eef1f7" font-size="13" font-family="Inter">1.3&quot; OLED</text>
+        <text x="252" y="140" fill="#9aa4b8" font-size="10.5" font-family="Inter">I2C · SDA A4 / SCL A5</text>
+        <text x="252" y="155" fill="#9aa4b8" font-size="10.5" font-family="Inter">status + input echo</text>
+
+        <!-- MCU core -->
+        <rect x="42" y="190" width="346" height="70" rx="10" fill="#20283a" stroke="#33405a"/>
+        <text x="56" y="214" fill="#eef1f7" font-size="13" font-family="Inter" font-weight="600">Arduino Nano 3.3V — Master MCU</text>
+        <text x="56" y="232" fill="#9aa4b8" font-size="10.5" font-family="Inter">AES-128 encrypt · CRC16 · non-blocking FSM</text>
+        <text x="56" y="247" fill="#9aa4b8" font-size="10.5" font-family="Inter">SD log (A0) · buzzer (A2)</text>
+
+        <!-- FIXED pin callout -->
+        <rect x="42" y="270" width="346" height="34" rx="8" fill="#2a1a12" stroke="#e8873c" stroke-opacity="0.5"/>
+        <text x="56" y="291" fill="#f3b27a" font-size="10.5" font-family="JetBrains Mono, monospace">FIX ➜ LED now driven off the A3 TX-enable signal (was A1, clashed w/ keypad col)</text>
+
+        <!-- LoRa module -->
+        <rect x="42" y="316" width="160" height="66" rx="10" fill="#1b2130" stroke="#2a3142"/>
+        <text x="56" y="338" fill="#eef1f7" font-size="13" font-family="Inter">SX1278 LoRa</text>
+        <text x="56" y="355" fill="#9aa4b8" font-size="10.5" font-family="Inter">SPI · NSS D10 · DIO0 D2</text>
+        <text x="56" y="370" fill="#9aa4b8" font-size="10.5" font-family="Inter">433.0 / .2 / .4 MHz hop</text>
+
+        <!-- Amp -->
+        <rect x="226" y="316" width="162" height="66" rx="10" fill="#1b2130" stroke="#2a3142"/>
+        <text x="240" y="338" fill="#eef1f7" font-size="13" font-family="Inter">5W RF Amplifier</text>
+        <text x="240" y="355" fill="#9aa4b8" font-size="10.5" font-family="Inter">+ heatsink + fan</text>
+        <text x="240" y="370" fill="#9aa4b8" font-size="10.5" font-family="Inter">TX path only</text>
+
+        <!-- RF switch fixed -->
+        <rect x="42" y="398" width="346" height="60" rx="10" fill="#20283a" stroke="#33405a"/>
+        <text x="56" y="419" fill="#eef1f7" font-size="12.5" font-family="Inter" font-weight="600">RF T/R Switch (not a signal relay)</text>
+        <text x="56" y="436" fill="#9aa4b8" font-size="10.5" font-family="Inter">50Ω impedance-matched · A3 selects TX/RX</text>
+        <text x="56" y="450" fill="#f3b27a" font-size="10" font-family="JetBrains Mono, monospace">FIX ➜ generic 5V relay swapped for RF-rated switch</text>
+
+        <!-- Antenna -->
+        <g transform="translate(215,480)">
+          <line x1="0" y1="0" x2="0" y2="-30" stroke="#f3b27a" stroke-width="3" stroke-linecap="round"/>
+          <line x1="0" y1="-30" x2="-16" y2="-46" stroke="#f3b27a" stroke-width="3" stroke-linecap="round"/>
+          <line x1="0" y1="-30" x2="16" y2="-46" stroke="#f3b27a" stroke-width="3" stroke-linecap="round"/>
+          <text x="0" y="20" fill="#eef1f7" font-size="12" font-family="Inter" text-anchor="middle">15dBi Omni · SMA</text>
+          <text x="0" y="35" fill="#9aa4b8" font-size="10" font-family="Inter" text-anchor="middle">2m pole + guy wires</text>
+        </g>
+
+        <!-- connectors master internal -->
+        <line x1="132" y1="174" x2="132" y2="190" stroke="#3a4256"/>
+        <line x1="313" y1="174" x2="313" y2="190" stroke="#3a4256"/>
+        <line x1="122" y1="260" x2="122" y2="316" stroke="#3a4256"/>
+        <line x1="307" y1="260" x2="307" y2="316" stroke="#3a4256"/>
+        <line x1="122" y1="382" x2="122" y2="398" stroke="#3a4256"/>
+        <line x1="307" y1="382" x2="307" y2="398" stroke="#3a4256"/>
+
+        <!-- ============ SLAVE ENCLOSURE ============ -->
+        <rect x="732" y="26" width="430" height="500" rx="18" fill="url(#slaveGrad)" stroke="#1c3a2c" stroke-width="1.5"/>
+        <text x="756" y="60" fill="#3ddcb0" font-family="JetBrains Mono, monospace" font-size="12" letter-spacing="2">SLAVE DEVICE — S-SLAVE001</text>
+        <text x="756" y="78" fill="#5c6478" font-family="Inter, sans-serif" font-size="11">battery + boost 9V · IP68 sealed</text>
+
+        <!-- Antenna -->
+        <g transform="translate(947,110)">
+          <line x1="0" y1="0" x2="0" y2="-30" stroke="#84e8cb" stroke-width="3" stroke-linecap="round"/>
+          <line x1="0" y1="-30" x2="-14" y2="-44" stroke="#84e8cb" stroke-width="3" stroke-linecap="round"/>
+          <line x1="0" y1="-30" x2="14" y2="-44" stroke="#84e8cb" stroke-width="3" stroke-linecap="round"/>
+          <text x="0" y="18" fill="#eef1f7" font-size="12" font-family="Inter" text-anchor="middle">3dBi Helical · SMA</text>
+        </g>
+
+        <!-- LoRa slave -->
+        <rect x="756" y="140" width="346" height="64" rx="10" fill="#182420" stroke="#25392f"/>
+        <text x="770" y="162" fill="#eef1f7" font-size="13" font-family="Inter">SX1278 LoRa</text>
+        <text x="770" y="179" fill="#9aa4b8" font-size="10.5" font-family="Inter">CAD scan 3 channels every wake · ~50ms window</text>
+        <text x="770" y="193" fill="#9aa4b8" font-size="10.5" font-family="Inter">AES-128 decrypt · CRC16 verify</text>
+
+        <!-- MCU slave -->
+        <rect x="756" y="216" width="346" height="70" rx="10" fill="#1c2e28" stroke="#2c453a"/>
+        <text x="770" y="240" fill="#eef1f7" font-size="13" font-family="Inter" font-weight="600">Arduino Nano 3.3V — Slave MCU</text>
+        <text x="770" y="258" fill="#9aa4b8" font-size="10.5" font-family="Inter">deep sleep, watchdog wake ≈8s</text>
+        <text x="770" y="273" fill="#9aa4b8" font-size="10.5" font-family="Inter">EEPROM name · replay-guard sequence #</text>
+
+        <!-- security fix -->
+        <rect x="756" y="296" width="346" height="34" rx="8" fill="#12241d" stroke="#3ddcb0" stroke-opacity="0.5"/>
+        <text x="770" y="317" fill="#84e8cb" font-size="10.5" font-family="JetBrains Mono, monospace">FIX ➜ rolling counter added, rejects replayed TRIG packets</text>
+
+        <!-- power path -->
+        <rect x="756" y="342" width="164" height="80" rx="10" fill="#182420" stroke="#25392f"/>
+        <text x="770" y="364" fill="#eef1f7" font-size="12.5" font-family="Inter">Power Path</text>
+        <text x="770" y="381" fill="#9aa4b8" font-size="10" font-family="Inter">1500mAh Li-ion + PCM</text>
+        <text x="770" y="395" fill="#9aa4b8" font-size="10" font-family="Inter">TP4056 → MP1584 3.3V</text>
+        <text x="770" y="409" fill="#f3b27a" font-size="9.5" font-family="JetBrains Mono, monospace">FIX ➜ 500→1500mAh, C-rated for 2A pulse</text>
+
+        <!-- output path -->
+        <rect x="938" y="342" width="164" height="80" rx="10" fill="#1c2e28" stroke="#2c453a"/>
+        <text x="952" y="364" fill="#eef1f7" font-size="12.5" font-family="Inter">9V Output</text>
+        <text x="952" y="381" fill="#9aa4b8" font-size="10" font-family="Inter">Boost → IRLZ44N (D9)</text>
+        <text x="952" y="395" fill="#9aa4b8" font-size="10" font-family="Inter">fuse + TVS + flyback diode</text>
+        <text x="952" y="409" fill="#9aa4b8" font-size="10" font-family="Inter">1A · 2s pulse</text>
+
+        <!-- LED + button -->
+        <rect x="756" y="440" width="346" height="52" rx="10" fill="#182420" stroke="#25392f"/>
+        <text x="770" y="461" fill="#eef1f7" font-size="12" font-family="Inter">Status LED (D8) · Test Button (D3, hold 2s)</text>
+        <text x="770" y="478" fill="#9aa4b8" font-size="10" font-family="Inter">local trigger test without master present</text>
+
+        <!-- connectors slave internal -->
+        <line x1="929" y1="204" x2="929" y2="216" stroke="#2c453a"/>
+        <line x1="838" y1="286" x2="838" y2="296" stroke="#2c453a"/>
+        <line x1="838" y1="330" x2="838" y2="342" stroke="#2c453a"/>
+        <line x1="1020" y1="330" x2="1020" y2="342" stroke="#2c453a"/>
+
+        <!-- ============ RF LINK CENTER ============ -->
+        <g>
+          <path d="M448,150 C 560,150 620,150 732,150" fill="none" stroke="#e8873c" stroke-width="2" class="dash flow-anim" marker-end="url(#arrow-copper)"/>
+          <text x="590" y="130" fill="#f3b27a" font-size="11.5" font-family="JetBrains Mono, monospace" text-anchor="middle">TRIG / RENAME — encrypted</text>
+
+          <path d="M732,190 C 620,190 560,190 448,190" fill="none" stroke="#3ddcb0" stroke-width="2" class="dash flow-anim" marker-end="url(#arrow-teal)"/>
+          <text x="590" y="212" fill="#84e8cb" font-size="11.5" font-family="JetBrains Mono, monospace" text-anchor="middle">ACK — rename confirm</text>
+
+          <rect x="500" y="250" width="180" height="140" rx="14" fill="#141822" stroke="#2a3142"/>
+          <text x="590" y="278" fill="#eef1f7" font-size="12.5" font-family="Inter" font-weight="600" text-anchor="middle">433 MHz Air Link</text>
+          <line x1="518" y1="292" x2="662" y2="292" stroke="#2a3142"/>
+          <text x="590" y="312" fill="#9aa4b8" font-size="10.5" font-family="Inter" text-anchor="middle">4 bursts / 3 hopping ch.</text>
+          <text x="590" y="330" fill="#9aa4b8" font-size="10.5" font-family="Inter" text-anchor="middle">AES-128 payload</text>
+          <text x="590" y="348" fill="#9aa4b8" font-size="10.5" font-family="Inter" text-anchor="middle">CRC16 + seq. counter</text>
+          <text x="590" y="366" fill="#9aa4b8" font-size="10.5" font-family="Inter" text-anchor="middle">&gt;5km line-of-sight</text>
+
+          <circle cx="590" cy="150" r="3.2" fill="#e8873c" class="pulse"/>
+          <circle cx="590" cy="190" r="3.2" fill="#3ddcb0" class="pulse"/>
+        </g>
+      </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STEP FLOW ============ -->
+  <section>
+    <h2 class="font-display text-2xl md:text-3xl font-semibold tracking-tightest mb-2">2 · How a Trigger Actually Travels</h2>
+    <p class="text-[var(--ink-dim)] body-copy mb-8 max-w-2xl">Six steps from a keypress on the master to a 9V pulse on the slave — this is the path every command follows.</p>
+
+    <ol class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <li class="card rounded-xl p-5 link">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="font-mono text-xs w-7 h-7 rounded-full flex items-center justify-center chip text-[var(--copper-soft)]">01</span>
+          <h3 class="font-semibold text-sm">Type &amp; confirm name</h3>
+        </div>
+        <p class="text-sm text-[var(--ink-dim)] body-copy">Multi-tap keypad enters <span class="font-mono text-[var(--ink)]">S-SLAVE001</span>, OLED echoes it live, then <span class="font-mono">*</span> confirms send.</p>
+      </li>
+      <li class="card rounded-xl p-5 link">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="font-mono text-xs w-7 h-7 rounded-full flex items-center justify-center chip text-[var(--copper-soft)]">02</span>
+          <h3 class="font-semibold text-sm">Encrypt &amp; checksum</h3>
+        </div>
+        <p class="text-sm text-[var(--ink-dim)] body-copy">Payload <span class="font-mono text-[var(--ink)] text-xs">MASTERID|NAME|TRIG|seq</span> is padded, AES-128 encrypted, CRC16 appended.</p>
+      </li>
+      <li class="card rounded-xl p-5 link">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="font-mono text-xs w-7 h-7 rounded-full flex items-center justify-center chip text-[var(--copper-soft)]">03</span>
+          <h3 class="font-semibold text-sm">Burst across 3 channels</h3>
+        </div>
+        <p class="text-sm text-[var(--ink-dim)] body-copy">4 transmit bursts hop 433.0 / 433.2 / 433.4 MHz through the amplifier + RF switch, non-blocking.</p>
+      </li>
+      <li class="card rounded-xl p-5 link">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="font-mono text-xs w-7 h-7 rounded-full flex items-center justify-center chip text-[var(--teal)]">04</span>
+          <h3 class="font-semibold text-sm">Slave wakes &amp; listens</h3>
+        </div>
+        <p class="text-sm text-[var(--ink-dim)] body-copy">Every ~8s the slave wakes from deep sleep, runs Channel Activity Detection on all 3 frequencies.</p>
+      </li>
+      <li class="card rounded-xl p-5 link">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="font-mono text-xs w-7 h-7 rounded-full flex items-center justify-center chip text-[var(--teal)]">05</span>
+          <h3 class="font-semibold text-sm">Decrypt, verify, match</h3>
+        </div>
+        <p class="text-sm text-[var(--ink-dim)] body-copy">Packet is decrypted, CRC checked, sequence number checked against last-seen (blocks replay), name compared to its own.</p>
+      </li>
+      <li class="card rounded-xl p-5 link">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="font-mono text-xs w-7 h-7 rounded-full flex items-center justify-center chip text-[var(--teal)]">06</span>
+          <h3 class="font-semibold text-sm">Fire output + beep</h3>
+        </div>
+        <p class="text-sm text-[var(--ink-dim)] body-copy">MOSFET switches 9V/1A for 2s to the relay/light; master gets single beep + "Triggered" on success.</p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ============ FLAWS & FIXES ============ -->
+  <section>
+    <h2 class="font-display text-2xl md:text-3xl font-semibold tracking-tightest mb-2">3 · Flaws Found in the Original Design</h2>
+    <p class="text-[var(--ink-dim)] body-copy mb-8 max-w-2xl">Reviewed against the source manual. Each item below was corrected in the diagram above and should be applied to the real build.</p>
+
+    <div class="space-y-3">
+
+      <details class="card-floating rounded-xl p-5 link" open>
+        <summary class="flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full" style="background:var(--danger)"></span>
+            <span class="font-semibold text-sm md:text-base">Pin conflict: status LED shares A1 with the keypad</span>
+          </div>
+          <svg class="chevron w-4 h-4 text-[var(--ink-faint)] shrink-0" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </summary>
+        <div class="body pt-4 text-sm text-[var(--ink-dim)] body-copy border-t border-[var(--line)] mt-4">
+          <code class="font-mono text-xs text-[var(--copper-soft)]">ledPin = A1</code> is also keypad column pin 4 (<code class="font-mono text-xs">colPins[3] = 15</code>). The Keypad library repeatedly changes that pin's mode while scanning — driving it as an LED output during every transmit will corrupt key reads. Every other digital pin on the Nano is already spoken for by this design (SPI bus, keypad, OLED, SD, buzzer, TX-enable), so there's no free GPIO to move it to.
+          <br/><br/><span class="text-[var(--copper-soft)]">Fix applied:</span> the dedicated LED pin is removed entirely — the status LED is instead wired (with a series resistor) directly off the existing <span class="font-mono">A3</span> TX-enable line, since both signals mean exactly the same thing: "radio is transmitting."
+        </div>
+      </details>
+
+      <details class="card-floating rounded-xl p-5 link">
+        <summary class="flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full" style="background:var(--danger)"></span>
+            <span class="font-semibold text-sm md:text-base">No replay protection on commands</span>
+          </div>
+          <svg class="chevron w-4 h-4 text-[var(--ink-faint)] shrink-0" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </summary>
+        <div class="body pt-4 text-sm text-[var(--ink-dim)] body-copy border-t border-[var(--line)] mt-4">
+          AES-128 + CRC16 only prove the message wasn't tampered with — not that it's fresh. Anyone who captures one <span class="font-mono text-xs">TRIG</span> packet over the air can re-broadcast it later and fire the slave's output, without ever knowing the key.
+          <br/><br/><span class="text-[var(--copper-soft)]">Fix applied:</span> a monotonically increasing sequence number is added to the payload before encryption; the slave stores the last-seen value in EEPROM and silently drops anything at or below it.
+        </div>
+      </details>
+
+      <details class="card-floating rounded-xl p-5 link">
+        <summary class="flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full" style="background:var(--danger)"></span>
+            <span class="font-semibold text-sm md:text-base">Slave battery undersized for the 9V/1A pulse</span>
+          </div>
+          <svg class="chevron w-4 h-4 text-[var(--ink-faint)] shrink-0" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </summary>
+        <div class="body pt-4 text-sm text-[var(--ink-dim)] body-copy border-t border-[var(--line)] mt-4">
+          A 500mAh protected Li-ion feeds a boost converter delivering 9V @1A. Accounting for boost efficiency, that's roughly 2.4–2.7A pulled from the 3.7V cell for every 2-second trigger — enough to sag the rail or trip the protection IC. The manual's own troubleshooting table names this symptom ("battery sag on trigger") without changing the BOM.
+          <br/><br/><span class="text-[var(--copper-soft)]">Fix applied:</span> spec bumped to a 1500mAh cell with a PCM rated for &gt;3A continuous discharge.
+        </div>
+      </details>
+
+      <details class="card-floating rounded-xl p-5 link">
+        <summary class="flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full" style="background:var(--danger)"></span>
+            <span class="font-semibold text-sm md:text-base">General-purpose relay used for RF antenna switching</span>
+          </div>
+          <svg class="chevron w-4 h-4 text-[var(--ink-faint)] shrink-0" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </summary>
+        <div class="body pt-4 text-sm text-[var(--ink-dim)] body-copy border-t border-[var(--line)] mt-4">
+          The SPDT relay in the BOM is a generic 5V signal relay, not 50Ω impedance-matched. Using it to switch the antenna between the amplifier (TX) and the LoRa module (RX) at 433MHz introduces mismatch and insertion loss — directly working against the &gt;5km range the guide promises.
+          <br/><br/><span class="text-[var(--copper-soft)]">Fix applied:</span> swapped for an RF-rated T/R switch (or a dedicated PA with built-in TX/RX switching) in the diagram.
+        </div>
+      </details>
+
+      <details class="card-floating rounded-xl p-5 link">
+        <summary class="flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full" style="background:var(--copper-soft)"></span>
+            <span class="font-semibold text-sm md:text-base">Master doesn't verify the ACK's integrity</span>
+          </div>
+          <svg class="chevron w-4 h-4 text-[var(--ink-faint)] shrink-0" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </summary>
+        <div class="body pt-4 text-sm text-[var(--ink-dim)] body-copy border-t border-[var(--line)] mt-4">
+          The slave's incoming commands are CRC-checked, but the master accepts a rename ACK from the slave on a simple <span class="font-mono text-xs">startsWith()</span> match, with no CRC verification on that inbound packet. Low severity, but inconsistent with the rest of the security model.
+          <br/><br/><span class="text-[var(--copper-soft)]">Recommendation:</span> reuse the same CRC-append/verify routine symmetrically on ACK packets.
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ============ PIN MAP QUICK REF ============ -->
+  <section>
+    <h2 class="font-display text-2xl md:text-3xl font-semibold tracking-tightest mb-6">4 · Corrected Pin Map</h2>
+    <div class="grid md:grid-cols-2 gap-5">
+      <div class="card rounded-xl p-6">
+        <h3 class="font-mono text-xs uppercase tracking-wide text-[var(--copper-soft)] mb-4">Master · Arduino Nano 3.3V</h3>
+        <div class="scroll-x">
+        <table class="w-full text-sm min-w-[380px]">
+          <tbody class="divide-y divide-[var(--line)]">
+            <tr><td class="py-2 text-[var(--ink-dim)]">LoRa SPI</td><td class="py-2 font-mono text-right">D11/D12/D13(SCK)*/D10 NSS/D2 DIO0</td></tr>
+            <tr><td class="py-2 text-[var(--ink-dim)]">Status LED</td><td class="py-2 font-mono text-right text-[var(--copper-soft)]">no pin — tapped off A3 TX-enable line</td></tr>
+            <tr><td class="py-2 text-[var(--ink-dim)]">Keypad rows / cols</td><td class="py-2 font-mono text-right">D3–D6 / D7,D8,D9,A1</td></tr>
+            <tr><td class="py-2 text-[var(--ink-dim)]">OLED I2C</td><td class="py-2 font-mono text-right">A4 SDA / A5 SCL</td></tr>
+            <tr><td class="py-2 text-[var(--ink-dim)]">SD card CS</td><td class="py-2 font-mono text-right">A0</td></tr>
+            <tr><td class="py-2 text-[var(--ink-dim)]">Buzzer / TX-enable</td><td class="py-2 font-mono text-right">A2 / A3</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="text-xs text-[var(--ink-faint)] mt-3 font-mono">* SCK is shared correctly between LoRa &amp; SD — both are SPI devices on the same bus, CS lines keep them from colliding.</p>
+      </div>
+      <div class="card rounded-xl p-6">
+        <h3 class="font-mono text-xs uppercase tracking-wide text-[var(--teal)] mb-4">Slave · Arduino Nano 3.3V</h3>
+        <div class="scroll-x">
+        <table class="w-full text-sm min-w-[380px]">
+          <tbody class="divide-y divide-[var(--line)]">
+            <tr><td class="py-2 text-[var(--ink-dim)]">LoRa SPI</td><td class="py-2 font-mono text-right">D11/D12/D13(SCK)/D10 NSS/D2 DIO0</td></tr>
+            <tr><td class="py-2 text-[var(--ink-dim)]">MOSFET gate (9V out)</td><td class="py-2 font-mono text-right">D9</td></tr>
+            <tr><td class="py-2 text-[var(--ink-dim)]">Status LED</td><td class="py-2 font-mono text-right">D8</td></tr>
+            <tr><td class="py-2 text-[var(--ink-dim)]">Test button</td><td class="py-2 font-mono text-right">D3 (hold 2s)</td></tr>
+            <tr><td class="py-2 text-[var(--ink-dim)]">EEPROM</td><td class="py-2 font-mono text-right">name @0 · seq counter @32</td></tr>
+            <tr><td class="py-2 text-[var(--ink-dim)]">Sleep wake source</td><td class="py-2 font-mono text-right">Watchdog · WDTO_8S</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="text-xs text-[var(--ink-faint)] mt-3 font-mono">Sequence counter is the anti-replay fix — new field, not in the original BOM/pinout.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-[var(--line)] mt-10">
+  <div class="max-w-6xl mx-auto px-6 md:px-10 py-8 flex flex-wrap items-center justify-between gap-3">
+    <p class="text-xs text-[var(--ink-faint)] font-mono">Reference: DIY LoRa 14.pdf · diagram corrected against 5 identified design issues</p>
+    <p class="text-xs text-[var(--ink-faint)] font-mono">433MHz ISM band · verify local regulations before deployment</p>
+  </div>
+</footer>
+
+</body>
+</html>
